@@ -45,9 +45,9 @@ export default class Home extends React.Component {
 					width: 330,
 					height: 400,
 				}} >
-					<Video source="http://snowwhite:7001/video/TV.m3u8" />
+					<Video source="http://studio:7001/video/TV/TV.m3u8" />
 					<br />
-					<Video source="http://snowwhite:7001/alvin/channel/2/play.mp4"  /> 
+					<Video source="http://studio:7001/video/Recent/Recent.m3u8"  /> 
 				</div>	
 		</div>);
 		
