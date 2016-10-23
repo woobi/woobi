@@ -20,8 +20,20 @@ var snowstreams = function() {
 	}
 	this.channels = {};
 	this.servers = {};
+	this.programs = {};
 	this.proxies = [];
 	this.lib = false;
+	
+	
+	this.Source = this.import('lib/source');
+	this.Stream = this.import('lib/stream');
+	/**
+	 * Channel management
+	 * var myChannel = new ss.Channel('8', properties);
+	 * */
+	this.Channel =  require('./lib/channel.js')(this);
+	
+	this.version = require('./package.json').version;
 }
  
  snowstreams.prototype.init = function(opts, callback) {
@@ -39,11 +51,10 @@ var snowstreams = function() {
 		}
 		this.Stream.sourceProxy(opts.proxy, (err, result) => {
 			if(err) console.log('ERROR', err);
-			if(result) console.log(result);
 		});
 	}
 	
-	// set the correct library adapter
+	// set the correct library adapters
 	async.map(opts.adapters,
 		(v, next) => {
 			Adapter(this, v, (err, adapted) => {
@@ -59,6 +70,17 @@ var snowstreams = function() {
 			}	
 		}
 	);
+	this.filler = {
+		name: 'River', 
+		file: path.join(this.get('module root'), 'lib/assets/river.mp4'),
+		loop: false,
+	};
+
+	this.filler2 = {
+		name: 'Waterfall', 
+		file: path.join(this.get('module root'), 'lib/assets/waterfall.mp4'),
+		loop: false
+	};
 	
 }
 
@@ -67,39 +89,18 @@ _.extend(snowstreams.prototype, require('./lib/core/options')());
 // standalone server
 _.extend(snowstreams.prototype, require('./lib/core/createServer')());
 
-
 snowstreams.prototype.addChannel = function(channel, opts) {
 	this.channels[channel] = new this.Channel(channel, opts);
 	return this.channels[channel];
 }
 
+snowstreams.prototype.addProgram = function(program, opts, callback) {
+	opts.name = program;
+	this.programs[program] = new this.Source.Program(opts, callback);
+	return this.programs[program];
+}
+
 var Broadcast = new snowstreams();
-
-/**
- * Channel management
- * 
- * -- var myChannel = new ss.Channel('8', properties);
- * 
- * */
-Broadcast.Channel = require('./lib/channel.js')(Broadcast);
-
-// source classes
-var Sources = function() {};
-_.extend(Sources.prototype, Broadcast.import('lib/source'));
-Broadcast.Source = new Sources();
-
-// stream classes
-var Streams = function() {};
-_.extend(Streams.prototype, Broadcast.import('lib/stream'));
-Broadcast.Stream = new Streams();
-
-// listener functions for sockets and routes
-/*
-var socketListeners = function() {};
-_.extend(socketListeners.prototype, sockets.listeners.call(Broadcast));
-Broadcast.Listen = new socketListeners();
-*/
-Broadcast.version = require('./package.json').version;
 
 /**
  * The exports object is an instance of snowstreams.
