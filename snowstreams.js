@@ -40,9 +40,9 @@ var snowstreams = function() {
  
  snowstreams.prototype.init = function(opts, callback) {
 	if(!_.isArray(opts.adapters)) {
-		console.log('No adapter configs found!  Exiting now.');
-		process.exit();
-		return false;
+		console.log('No adapter configs found! ');
+		//process.exit();
+		//return false;
 	}
 	
 	this.channelPort = opts.channelPort || 13000;
