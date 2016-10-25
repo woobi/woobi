@@ -44,6 +44,10 @@ var snowstreams = function() {
 	}
 	
 	this.channelPort = opts.channelPort || 13000;
+	this.host =opts.host ||  opts.proxy.host || 'localhost';
+	this.port = opts.proxy.port || 7001;
+	
+	this.uri = this.host + ':' + this.port;
 	
 	if(opts.proxy) {
 		if(opts.proxy === true)  {
@@ -70,13 +74,13 @@ var snowstreams = function() {
 			}	
 		}
 	);
-	this.filler = {
+	this.filler2 = {
 		name: 'River', 
 		file: path.join(this.get('module root'), 'lib/assets/river.mp4'),
 		loop: false,
 	};
 
-	this.filler2 = {
+	this.filler = {
 		name: 'Waterfall', 
 		file: path.join(this.get('module root'), 'lib/assets/waterfall.mp4'),
 		loop: false

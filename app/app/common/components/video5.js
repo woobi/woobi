@@ -53,13 +53,13 @@ export default class Video5 extends React.Component {
 			parent: this.refs.player,
 			source: source,
 			preload: 'none',
-			width: this.props.width || '320',
-			height: this.props.height || '180',
-			mute: this.props.mute || true,
-			autoPlay: this.props.autoPlay || false,
-			actualLiveTime: this.props.actualLiveTime || true,
-			mimeType: this.props.mimeType || false,
-			poster: this.props.poster || 'http://clappr.io/poster.png',
+			width: this.props.width,
+			height: this.props.height,
+			mute: this.props.mute,
+			autoPlay: this.props.autoPlay,
+			actualLiveTime: this.props.actualLiveTime,
+			mimeType: this.props.mimeType,
+			poster: this.props.poster,
 			hlsjsConfig: {
 				enableWorker: true
 			},
@@ -83,11 +83,7 @@ export default class Video5 extends React.Component {
 	render() {
 		debug('## RENDER ## Player',  this.state, this.props);
 						
-		return (
-			<div>
-				<div ref="player"></div>
-			</div>
-		);
+		return (<div style={{ width: this.props.width, height: this.props.height, ...this.props.style }}  ref="player" />);
 	}
 }
 
@@ -95,3 +91,12 @@ Video5.propTypes = {
 	video: React.PropTypes.string
 };
 
+Video5.defaultProps = {
+	width: 320,
+	height: 180,
+	poster: '/images/fanart.jpg',
+	autoPlay: false,
+	actualLiveTime: false,
+	mimeType: false,
+	mute: true
+};

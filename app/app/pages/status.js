@@ -14,6 +14,7 @@ export default class Status extends React.Component {
 			status: '<span></span>'
 		}
 		this._update = false
+		this.onData = this.onData.bind(this)
 	}
 	
 	componentWillReceiveProps(props) {
@@ -24,15 +25,22 @@ export default class Status extends React.Component {
 		snowUI.fadeIn();
 		debug('didUpdate');
 	}
+	
+	onData(data) {
+		debug('### STATUS ###', data);
+		this.setState({
+			status: data.html
+		});
+	}
+	
 	componentDidMount() {
 		debug('did mount');
 		snowUI.fadeIn();
-		this.props.Sockets.io.on('status', (data) => {
-			//debug('### STATUS ###', data);
-			this.setState({
-				status: data.html
-			});
-		});
+		this.props.Sockets.io.on('status', this.onData);
+	}
+	
+	componentWillUnmount() {
+		this.props.Sockets.io.removeListener('status', this.onData);
 	}
 	render() {
 		debug('status render', this.state, this.props);

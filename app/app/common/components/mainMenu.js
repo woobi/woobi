@@ -135,9 +135,9 @@ export default class mainMenu extends React.Component {
 					
 					<MenuItem
 						primaryText="Channels"
-						rightIcon={<ArrowDropRight />}
+						//rightIcon={<ArrowDropRight />}
 						leftIcon={<FontIcon className="material-icons">live_tv</FontIcon>} 
-						menuItems={[
+						/*menuItems={[
 							<MenuItem 
 								primaryText="View Channels" 
 								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
@@ -162,9 +162,16 @@ export default class mainMenu extends React.Component {
 									}, {}, () => { this.toggleDrawer(false, false) });
 								}}
 								style={{}}
-								href="/noscript/channels/add"
+								href="/noscript/channels"
 							/>,
-						]}
+						]}*/
+						onClick={(e) => {
+							e.preventDefault(e);
+							this.props.goTo({
+								page: 'Channels',
+								path: '/channels',
+							}, {}, () => { this.toggleDrawer(false, false) });
+						}}
 					/>
 					<MenuItem
 						primaryText="TV Shows"

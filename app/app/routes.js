@@ -21,7 +21,7 @@ Routes.push({ path: 'fetch', component: Fetch });
 Routes.push({ path: 'json', component: Fetch });
 Routes.push({ path: 'markdown', component: Fetch });
 Routes.push({ path: 'status', component: Fetch });
-Routes.push({ path: 'home', component: Home });
+//Routes.push({ path: 'home', component: Home });
 Routes.push({ path: '404', component: FourZeroFour });
 
 // redirects
@@ -35,9 +35,12 @@ function sendToStatus(nextState, replaceState) {
 }
 Routes.push({ path: 'disconnected', onEnter: sendToStatus })
 
-function sendToHome(nextState, replaceState) {
-	replaceState({ nextPathname: nextState.location.pathname }, '/home')
+function sendToChannels(nextState, replaceState) {
+	replaceState({ nextPathname: nextState.location.pathname }, '/channels')
 }
+
+Routes.push({ path: '/home', onEnter: sendToChannels });
+Routes.push({ path: '/', onEnter: sendToChannels });
 
 Routes.push({
     path: 'channels', 
@@ -49,8 +52,6 @@ Routes.push({
 		{ path: 'view/:channel', component: Channels.Home },
     ]
 });
-
-Routes.push({ path: '/', onEnter: sendToHome })
 
 Routes.push({ path: '*', component: FourZeroFour })
 
