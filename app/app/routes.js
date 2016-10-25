@@ -39,6 +39,9 @@ function sendToChannels(nextState, replaceState) {
 	replaceState({ nextPathname: nextState.location.pathname }, '/channels')
 }
 
+Routes.push({ path: '/home', onEnter: sendToChannels });
+Routes.push({ path: '/', onEnter: sendToChannels });
+
 Routes.push({
     path: 'channels', 
     component: Channel,
@@ -55,8 +58,8 @@ Routes.push({ path: '*', component: FourZeroFour })
 // export
 export const routeConfig = [
   { path: '/',
-    component: Channel,
-    indexRoute: { component: Channels.Home },
+    component: App,
+    indexRoute: { component: Home },
     catchAll: { component: FourZeroFour },
     childRoutes: Routes
   }
