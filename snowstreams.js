@@ -90,6 +90,13 @@ var snowstreams = function() {
 	
 }
 
+// send socket notifications
+snowstreams.prototype.notify = function(emitter, data) {
+	process.nextTick(() => {
+		this.lodge.emit(emitter, data);
+	});
+}
+
 // options and utils
 _.extend(snowstreams.prototype, require('./lib/core/options')());
 // standalone server
