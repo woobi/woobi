@@ -43,6 +43,7 @@ var snowstreams = function() {
 		console.log('No adapter configs found! ');
 		//process.exit();
 		//return false;
+		opts.adapters = [];
 	}
 	
 	this.channelPort = opts.channelPort || 13000;
