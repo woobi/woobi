@@ -102,8 +102,12 @@ _.extend(snowstreams.prototype, require('./lib/core/options')());
 // standalone server
 _.extend(snowstreams.prototype, require('./lib/core/createServer')());
 
-snowstreams.prototype.addChannel = function(channel, opts) {
+snowstreams.prototype.addChannel = function(channel, opts, callback) {
+	delete this.channels[channel];
 	this.channels[channel] = new this.Channel(channel, opts);
+	if(_.isFunction(callback)) {
+		callback(null, this.channels[channel]);
+	}
 	return this.channels[channel];
 }
 
