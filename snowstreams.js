@@ -25,7 +25,7 @@ var snowstreams = function() {
 	this.servers = {};
 	this.programs = {};
 	this.proxies = [];
-	this.sources = {};
+	this.streams = {};
 	this.lib = false;
 	
 	// source and stream libs
