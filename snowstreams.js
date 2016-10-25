@@ -18,13 +18,17 @@ var snowstreams = function() {
 		'name': 'snowstreams',
 		'module root': moduleRoot,
 	}
+	
+	this.version = require('./package.json').version;
+	
 	this.channels = {};
 	this.servers = {};
 	this.programs = {};
 	this.proxies = [];
+	this.sources = {};
 	this.lib = false;
 	
-	
+	// source and stream libs
 	this.Source = this.import('lib/source');
 	this.Stream = this.import('lib/stream');
 	/**
@@ -32,8 +36,6 @@ var snowstreams = function() {
 	 * var myChannel = new ss.Channel('8', properties);
 	 * */
 	this.Channel =  require('./lib/channel.js')(this);
-	
-	this.version = require('./package.json').version;
 }
  
  snowstreams.prototype.init = function(opts, callback) {
@@ -102,6 +104,10 @@ snowstreams.prototype.addProgram = function(program, opts, callback) {
 	opts.name = program;
 	this.programs[program] = new this.Source.Program(opts, callback);
 	return this.programs[program];
+}
+
+snowstreams.prototype.randomName = function(pre) {
+	return pre + (+new Date).toString(36).slice(-15);
 }
 
 var Broadcast = new snowstreams();
