@@ -110,6 +110,7 @@ snowstreams.prototype.addChannel = function(channel, opts) {
 snowstreams.prototype.addProgram = function(program, opts, callback) {
 	opts.name = program;
 	this.programs[program] = new this.Source.Program(opts, callback);
+	debug(this.programs)
 	return this.programs[program];
 }
 
