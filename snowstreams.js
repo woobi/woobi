@@ -73,10 +73,10 @@ var snowstreams = function() {
 		loop: false
 	};
 	
-	if(opts.adapters.length == 0) {
+	if(opts.adapters.length === 0) {
 		if(_.isFunction(callback)) {
-				callback();
-			}	
+			callback();
+		}	
 		return;
 	}
 	
