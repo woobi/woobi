@@ -61,6 +61,25 @@ var snowstreams = function() {
 		});
 	}
 	
+	this.filler2 = {
+		name: 'River', 
+		file: path.join(this.get('module root'), 'lib/assets/river.mp4'),
+		loop: false,
+	};
+
+	this.filler = {
+		name: 'Waterfall', 
+		file: path.join(this.get('module root'), 'lib/assets/waterfall.mp4'),
+		loop: false
+	};
+	
+	if(opts.adapters.length == 0) {
+		if(_.isFunction(callback)) {
+				callback();
+			}	
+		return;
+	}
+	
 	// set the correct library adapters
 	async.map(opts.adapters,
 		(v, next) => {
@@ -77,17 +96,7 @@ var snowstreams = function() {
 			}	
 		}
 	);
-	this.filler2 = {
-		name: 'River', 
-		file: path.join(this.get('module root'), 'lib/assets/river.mp4'),
-		loop: false,
-	};
-
-	this.filler = {
-		name: 'Waterfall', 
-		file: path.join(this.get('module root'), 'lib/assets/waterfall.mp4'),
-		loop: false
-	};
+	
 	
 }
 
