@@ -45,7 +45,7 @@ var snowstreams = function() {
 		//return false;
 		opts.adapters = [];
 	}
-	
+	console.log('init! ');
 	this.channelPort = opts.channelPort || 13000;
 	this.host =opts.host ||  opts.proxy.host || 'localhost';
 	this.port = opts.proxy.port || 7001;
@@ -79,7 +79,7 @@ var snowstreams = function() {
 		}	
 		return;
 	}
-	
+	console.log('adapters! ');
 	// set the correct library adapters
 	async.map(opts.adapters,
 		(v, next) => {
