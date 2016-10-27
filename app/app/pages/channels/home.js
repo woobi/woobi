@@ -4,9 +4,10 @@ import Gab from '../../common/gab';
 import { Card, CardActions, CardHeader, CardMedia, CardText, CardTitle, FlatButton, FontIcon, IconButton, Paper, Table, TableRow, TableHeader, TableHeaderColumn, TableBody, TableRowColumn } from 'material-ui';
 import { Styles } from '../../common/styles';
 import moment from 'moment';
-import { ColorMe } from 'app/common/utils';
+import { ColorMe, naturalSort } from 'app/common/utils';
 import Video from '../../common/components/video5';
 import { each as Each, map as Map } from 'lodash';
+
 
 let debug = Debug('lodge:app:pages:channels:home');
 
@@ -224,7 +225,7 @@ export default class Home extends React.Component {
 									stripedRows={false}
 								>
 								  
-									{Map(c.playing.metadata, (s,k) => {
+									{Map(c.playing.metadata.sort(naturalSort), (s,k) => {
 											return (<TableRow>
 											<TableRowColumn>{k}</TableRowColumn>
 											<TableRowColumn>{s ? s : 'UA'}</TableRowColumn>

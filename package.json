@@ -103,7 +103,6 @@
     "babel-core": "",
     "babel-loader": "",
     "chokidar-socket-emitter": "snowkeeper/chokidar-socket-emitter",
-    "fs-extra": "",
     "gulp": "",
     "gulp-concat": "",
     "gulp-nodemon": "",

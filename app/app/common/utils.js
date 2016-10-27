@@ -2,6 +2,7 @@ import TinyColor from 'tinycolor';
 import React, { Component } from 'react';
 import { FontIcon, IconButton } from 'material-ui';
 import { Styles } from './styles';
+import naturalSorter from 'javascript-natural-sort';
 
 import debugging from 'debug';
 let	debug = debugging('lodge:app:common:utils');
@@ -18,42 +19,7 @@ export let Request = function (props, emitTo, list = 'Game') {
 	return true; 
 }
 
-export let normalizePitch = (pitched, normalized, config) => {
-	let pitch = { ...pitched };
-	pitch.normalized = normalized;
-	let PZ = Number(pitch.pz);
-	let ZTOP = Number(pitch.sz_top);
-	let ZBOT = Number(pitch.sz_bot);
-	let BALL = config.halfBall / 12;
-	let normalizedZoneBox = normalized.zoneHeight;
-	let isInYZone = (PZ <= (ZTOP ) && PZ >= (ZBOT ));
-	let aboveTopZone = PZ > (ZTOP );
-	let zoneBox = (ZTOP - ZBOT).clip(3);
-	if (isInYZone) {
-		let ballPos = ((ZTOP ) - PZ);
-		let ballPercent = 0;
-		if (ballPos > 0 && zoneBox > 0 ) {
-			ballPercent = (ballPos / zoneBox);
-		}
-		let normalizedBall = (normalizedZoneBox - (normalizedZoneBox * ballPercent));
-		pitch.normalized.pz = (normalizedBall + normalized.sz_bot).clip(3);	
-	} else if (aboveTopZone) {
-		let ballPos2 = (PZ - (ZTOP));
-		let ballPercent = (ballPos2 / (normalized.boundTop - ZTOP));
-		let normalizedBall = (normalized.aboveTop * ballPercent);
-		pitch.normalized.pz = (normalizedBall + normalized.sz_top).clip(3);
-	} else {
-		let ballPercent = (PZ / (ZBOT ));
-		pitch.normalized.pz = (normalized.belowBottom * ballPercent).clip(3);				
-	}
-	if (!PZ) {
-		pitch.normalized.style.ballBottom = 0;
-	} else {
-		let BALLY = pitch.normalized.pz * 12;
-		pitch.normalized.style.ballBottom = (BALLY - BALL);
-	}
-	return pitch;
-};
+export let naturalSort = naturalSorter;
 
 export let ColorMe = function ColorMe(value, color) {
 	
