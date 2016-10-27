@@ -15,37 +15,65 @@ export default class Home extends React.Component {
 		super(props)
 		
 		let channels = [];
+		let names = [];
+		let progress = {};
 		if(props.initialData) {
-			channels = props.initialData.channels || []
+			channels = props.initialData.channels || [];
+			names = channels.map(c => { progress[c.channel] = c.playing.progress; return c.channel });
+			this._skipMount = true;
 		}
 		this.displayName = 'Home';
 		this.state = {
 			loading: true,
-			channels
+			channels,
+			names,
+			progress
 		};
 		
 		this.doRequestCommand = this.doRequestCommand.bind(this);
+		this.gotChannels = this.gotChannels.bind(this);
+		this.listenForProgress = this.listenForProgress.bind(this);
 	}
 	
 	componentDidMount() {
 		debug('######### componentDidMount  ##  Home',  this.props);
-		this.getChannels();
-		this.props.Sockets.io.on('channels', (data) => {
-			//debug('### STATUS ###', data);
-			this.setState({
-				channels: data.channels
-			});
-		});
+		if(!this._skipMount) {
+			this.getChannels();
+		}
+		this.props.Sockets.io.on('channels', this.gotChannels);
+		this.props.Sockets.io.on('progress report', this.listenForProgress);
 	}
 	
+	gotChannels(data) {
+		//debug('### STATUS ###', data);
+		var progress = {};
+		this.setState({
+			channels: data.channels,
+			names: data.channels.map(c => { progress[c.channel] = c.playing.progress; return c.channel }),
+			progress
+		});
+	}
 	componentWillUnmount() {
-
+		this.props.Sockets.io.removeListener('channels', this.gotChannels);
+		this.props.Sockets.io.removeListener('progress report', this.listenForProgress);
 	}
 	
 	componentWillReceiveProps(props) {
 		debug('## componentWillReceiveProps  ##  Channels Home got props', props);
 		this.getChannels();
 	}
+	
+	listenForProgress(who) {
+		// debug('Got progress report', who.channel);
+		if(this.state.names.indexOf(who.channel) > -1) {
+			//debug('use progress report', who);
+			var progress = { ...this.state.progress };
+			progress[who.channel] = who.progress;
+			this.setState({ progress });
+		}
+				
+	}
+	
 	
 	doRequestCommand(link) {
 		Gab.rawRequest(link.link, 'nowhere')
@@ -95,6 +123,7 @@ export default class Home extends React.Component {
 	}
 	
 	render() { 
+		//debug('## render  ##  Channels Home render', this.props, this.state);
 		
 		let channels = this.state.channels.map((c) => {
 		
@@ -150,6 +179,15 @@ export default class Home extends React.Component {
 			if(c.playing.metadata.art) {
 				art = c.playing.metadata.art.replace('<thumb>','').replace('</thumb>','');
 			}
+			
+			let progress = this.state.progress[c.channel];
+			if(progress) {
+				
+				progress = <span>{progress.timemark + ' of ' + Math.round(c.playing.duration) + ' min @ ' + progress.currentKbps + ' kbps'}</span>;
+				
+			} else {
+				progress = <span />;
+			}
 			return (<div  className="col-xs-12 col-md-6" style={{paddingRight:2, paddingLeft:2 }} >
 				
 				<Card >
@@ -166,7 +204,7 @@ export default class Home extends React.Component {
 					<Card>
 						<CardHeader 
 							title={c.playing.name}
-							subtitle={!c.playing.duration ? '' : Math.round(c.playing.duration) + ' minutes'}
+							subtitle={progress}
 							avatar={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >subscriptions</FontIcon>}
 
 							actAsExpander={true}
@@ -277,7 +315,7 @@ export default class Home extends React.Component {
 			</div>);
 			
 		});
-		debug('## render  ##  Channels Home render', this.props, this.state);
+		
 		return (<div style={{ padding: '0 20px' }}>
 				<Card style={{paddingRight:0, paddingLeft:0}} >
 					<CardHeader 

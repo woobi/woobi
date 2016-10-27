@@ -18,11 +18,12 @@ export default class Video5 extends React.Component {
 	}
 	
 	shouldComponentUpdate(nextProps, nextState) {
-		debug('clappr', this.props, nextProps);
+		
 		let changed = (nextProps.source != this.props.source);
 		this.props = nextProps;
 		this.state = nextState;
 		if (changed && this._update) {
+			debug('clappr', this.props, nextProps);
 			this.change(nextProps.source);
 		}
 		return false;

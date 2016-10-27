@@ -22,7 +22,7 @@ var snowUI = {
 	shortenTitle: false,
 	usesockets: true,
 	port: 7001,
-	host: 'studio',
+	host: 'fire.snowpi.org',
 	homepage: '/',
 	breaks: {
 		xs: {
