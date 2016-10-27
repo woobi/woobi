@@ -34,6 +34,7 @@ System.config({
     "history": "npm:history@3.0.0",
     "hls.js": "npm:hls.js@0.6.6",
     "inquisive-cards": "npm:inquisive-cards@1.0.0",
+    "javascript-natural-sort": "npm:javascript-natural-sort@0.7.1",
     "lodash": "npm:lodash@4.15.0",
     "marked": "npm:marked@0.3.6",
     "material-ui": "npm:material-ui@0.15.4",

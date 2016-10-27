@@ -33,6 +33,7 @@
       "fs": "github:jspm/nodelibs-fs",
       "history": "npm:history",
       "hls.js": "npm:hls.js@^0.6.6",
+      "javascript-natural-sort": "npm:javascript-natural-sort@^0.7.1",
       "lodash": "npm:lodash",
       "marked": "npm:marked@^0.3.6",
       "material-ui": "npm:material-ui",
