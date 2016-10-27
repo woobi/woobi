@@ -6,7 +6,8 @@ import { Styles } from '../../common/styles';
 import moment from 'moment';
 import { ColorMe, naturalSort } from 'app/common/utils';
 import Video from '../../common/components/video5';
-import { each as Each, map as Map } from 'lodash';
+import VideoProgress from '../../common/components/videoProgress';
+import { each as Each, map as Map, sortBy } from 'lodash';
 
 
 let debug = Debug('lodge:app:pages:channels:home');
@@ -17,23 +18,18 @@ export default class Home extends React.Component {
 		
 		let channels = [];
 		let names = [];
-		let progress = {};
 		if(props.initialData) {
 			channels = props.initialData.channels || [];
-			names = channels.map(c => { progress[c.channel] = c.playing.progress; return c.channel });
 			this._skipMount = true;
 		}
 		this.displayName = 'Home';
 		this.state = {
 			loading: true,
-			channels,
-			names,
-			progress
+			channels
 		};
 		
 		this.doRequestCommand = this.doRequestCommand.bind(this);
 		this.gotChannels = this.gotChannels.bind(this);
-		this.listenForProgress = this.listenForProgress.bind(this);
 	}
 	
 	componentDidMount() {
@@ -42,39 +38,22 @@ export default class Home extends React.Component {
 			this.getChannels();
 		}
 		this.props.Sockets.io.on('channels', this.gotChannels);
-		this.props.Sockets.io.on('progress report', this.listenForProgress);
 	}
 	
 	gotChannels(data) {
 		//debug('### STATUS ###', data);
-		var progress = {};
 		this.setState({
 			channels: data.channels,
-			names: data.channels.map(c => { progress[c.channel] = c.playing.progress; return c.channel }),
-			progress
 		});
 	}
 	componentWillUnmount() {
 		this.props.Sockets.io.removeListener('channels', this.gotChannels);
-		this.props.Sockets.io.removeListener('progress report', this.listenForProgress);
 	}
 	
 	componentWillReceiveProps(props) {
 		debug('## componentWillReceiveProps  ##  Channels Home got props', props);
 		this.getChannels();
-	}
-	
-	listenForProgress(who) {
-		// debug('Got progress report', who.channel);
-		if(this.state.names.indexOf(who.channel) > -1) {
-			//debug('use progress report', who);
-			var progress = { ...this.state.progress };
-			progress[who.channel] = who.progress;
-			this.setState({ progress });
-		}
-				
-	}
-	
+	}	
 	
 	doRequestCommand(link) {
 		Gab.rawRequest(link.link, 'nowhere')
@@ -181,14 +160,11 @@ export default class Home extends React.Component {
 				art = c.playing.metadata.art.replace('<thumb>','').replace('</thumb>','');
 			}
 			
-			let progress = this.state.progress[c.channel];
-			if(progress) {
-				
-				progress = <span>{progress.timemark + ' of ' + Math.round(c.playing.duration) + ' min @ ' + progress.currentKbps + ' kbps'}</span>;
-				
-			} else {
-				progress = <span />;
-			}
+			let meta = {};
+			Object.keys(c.playing.metadata).sort().forEach(function(key) {
+				meta[key] = c.playing.metadata[key];
+			});
+			
 			return (<div  className="col-xs-12 col-md-6" style={{paddingRight:2, paddingLeft:2 }} >
 				
 				<Card >
@@ -205,7 +181,7 @@ export default class Home extends React.Component {
 					<Card>
 						<CardHeader 
 							title={c.playing.name}
-							subtitle={progress}
+							subtitle={<VideoProgress channel={c.channel} Sockets={this.props.Sockets} />}
 							avatar={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >subscriptions</FontIcon>}
 
 							actAsExpander={true}
@@ -225,7 +201,7 @@ export default class Home extends React.Component {
 									stripedRows={false}
 								>
 								  
-									{Map(c.playing.metadata.sort(naturalSort), (s,k) => {
+									{Map(meta, (s,k) => {
 											return (<TableRow>
 											<TableRowColumn>{k}</TableRowColumn>
 											<TableRowColumn>{s ? s : 'UA'}</TableRowColumn>
