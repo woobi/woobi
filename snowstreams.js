@@ -58,45 +58,49 @@ var snowstreams = function() {
 		}
 		this.Stream.sourceProxy(opts.proxy, (err, result) => {
 			if(err) console.log('ERROR', err);
+			finish.call(this);
 		});
+	} else {
+		 finish.call(this);
 	}
 	
-	this.filler2 = {
-		name: 'River', 
-		file: path.join(this.get('module root'), 'lib/assets/river.mp4'),
-		loop: false,
-	};
+	function finish() {
+		this.filler2 = {
+			name: 'River', 
+			file: path.join(this.get('module root'), 'lib/assets/river.mp4'),
+			loop: false,
+		};
 
-	this.filler = {
-		name: 'Waterfall', 
-		file: path.join(this.get('module root'), 'lib/assets/waterfall.mp4'),
-		loop: false
-	};
-	
-	if(opts.adapters.length === 0) {
-		if(_.isFunction(callback)) {
-			callback();
-		}	
-		return;
-	}
-	console.log('adapters! ');
-	// set the correct library adapters
-	async.map(opts.adapters,
-		(v, next) => {
-			Adapter(this, v, (err, adapted) => {
-				debug(v.type, 'Adapter configured');
-				next(null, adapted);
-			});
-		},
-		(err, all) => {
-			debug('Init finished');
-			this.libs = all;
+		this.filler = {
+			name: 'Waterfall', 
+			file: path.join(this.get('module root'), 'lib/assets/waterfall.mp4'),
+			loop: false
+		};
+		
+		if(opts.adapters.length === 0) {
 			if(_.isFunction(callback)) {
 				callback();
 			}	
+			return;
 		}
-	);
-	
+		console.log('adapters! ');
+		// set the correct library adapters
+		async.map(opts.adapters,
+			(v, next) => {
+				Adapter(this, v, (err, adapted) => {
+					debug(v.type, 'Adapter configured');
+					next(null, adapted);
+				});
+			},
+			(err, all) => {
+				debug('Init finished');
+				this.libs = all;
+				if(_.isFunction(callback)) {
+					callback();
+				}	
+			}
+		);
+	};
 	
 }
 
