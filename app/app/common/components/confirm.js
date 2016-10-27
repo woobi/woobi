@@ -2,11 +2,6 @@ import React from 'react';
 import { RaisedButton, FlatButton, Dialog } from 'material-ui';
 import { Styles } from '../styles';
 
-import debugging from 'debug';
-let	debug = debugging('lodge:app:common:components:confirm');
-
-debug('styles', Styles); 
-	
 let myStyles = {
 	//textColor: Styles.Colors.blue600,
 	//alternateTextColor: Styles.Colors.amber400,
@@ -42,7 +37,6 @@ export default class Modal extends React.Component {
 	}
 	
 	renderHTML() {
-		debug(this.props);
 		if(this.props.component) {
 			return (<div children={this.props.component} />);
 		} else {
