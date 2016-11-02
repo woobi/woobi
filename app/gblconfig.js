@@ -11,7 +11,7 @@ Number.prototype.clip = function(numbers) {
 	return Math.round(this * number) / number;
 }; 
 var snowUI = {
-	name: 'snowstreams',
+	name: 'The Lodge',
 	materialStyle: {},
 	defaultTheme: 'rommie',
 	__currentTheme: 'rommie',
@@ -22,7 +22,7 @@ var snowUI = {
 	shortenTitle: false,
 	usesockets: true,
 	port: 7001,
-	host: 'fire.snowpi.org',
+	host: 'studio',
 	homepage: '/',
 	breaks: {
 		xs: {
@@ -108,6 +108,10 @@ snowUI.fadeIn = function(speed, me, callback) {
 	} else {
 		callback();
 	}
+}
+
+snowUI.artStringReplace = function(art) {
+	return art.replace('smb://VIZIO','/media');
 }
 
 // sticky menu

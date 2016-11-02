@@ -19,6 +19,10 @@ export let Request = function (props, emitTo, list = 'Game') {
 	return true; 
 }
 
+export let Random = function randomIntFromInterval(min,max) {
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+
 export let naturalSort = naturalSorter;
 
 export let ColorMe = function ColorMe(value, color) {

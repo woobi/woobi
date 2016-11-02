@@ -39,12 +39,12 @@ export default class videoProgress extends React.Component {
 			} else {
 				perc = 'UA';
 			}
-			text.push(<span key="45">{progress.timemark} </span>);
+			text.push(<span key="45">{progress.timemark} of {Math.round(this.props.data.duration)} mins @ </span>);
 			if(progress.currentKbps) {
-				text.push(<span key="3">  /   {'  ' + progress.currentKbps + '  '} kbps  </span>);
+				text.push(<span key="3">   {'  ' + progress.currentKbps + '  '} kbps  </span>);
 			}
 			if(perc !=='UA') {
-				text.push(<span key="6">  /  {perc }</span>);
+				text.push(<span key="6">  --  {perc } done</span>);
 			}
 		} else {
 			text.push(<span key="1" />);
@@ -56,4 +56,9 @@ export default class videoProgress extends React.Component {
 		//debug('## RENDER ## videoProgress',  this.state, this.props);
 		return (this.progress());
 	}
+}
+
+videoProgress.defaultProps = {
+	data: {},
+	progress: {}
 }

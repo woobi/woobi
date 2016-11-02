@@ -44,7 +44,12 @@ export default (Component) => {
 			console.log('LOADING Listeners', snowUI.serverRendered, props.noscript);
 			
 			if(!snowUI.serverRendered) {
-				var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+				var w=window;
+				var d=document;
+				var e=d.documentElement;
+				var g=d.getElementsByTagName('body')[0];
+				var x=w.innerWidth || e.clientWidth || g.clientWidth;
+				var y=w.innerHeight || e.clientHeight || g.clientHeight;
 				var desktop = x <= snowUI.breaks.xs.width ? 'xs' : x < snowUI.breaks.sm.width ? 'sm' : 'md';
 				var contentWidth =  x * (!desktop ? 1 : desktop == 'md' ? 0.80 : 0.80);
 			} else {
@@ -68,9 +73,12 @@ export default (Component) => {
 				sockets: Sockets,
 				Sockets,
 				window: { width: x, height: y },	
+				movieImages: false,
+				tvImages: false,
+				tvBanners: true,
+				moviePosters: true,
 			}, _props);
 			
-			debug('INITIAL ASSETS', this.state.assets);
 			debug('new state:', this.state);
 			
 			if(!snowUI.serverRendered) {
@@ -89,7 +97,6 @@ export default (Component) => {
 			
 			const State = { ...props.location.state } || {};
 			delete State.theme;
-			debug('Listener received props', props, 'current state', this.state);
 			debug('Listener update proposed changes:', State);
 			this.newState(Object.assign({ ...State }, props));
 			this._update = true;
@@ -108,19 +115,18 @@ export default (Component) => {
 				Sockets.io.removeAllListeners();
 			}
 			Gab.removeAllListeners();
-			
 			snowUI.unstickyMenu();
 			snowUI.code.__unmountUI();
-			//window.removeEventListener("mousemove", this.mousemove);
 		}
 		
 		componentDidMount() {
 			snowUI.stickyMenu();
 			snowUI.code.__mountedUI();
-			this.newState({ mounted: true, initialData: false });
+			if(!snowUI.serverRendered) {
+				this.newState({ mounted: true, initialData: false });
+			}
 			debug('LOADED Listeners');
 			snowUI.loaded = true;
-			//window.addEventListener("mousemove", this.mousemove);
 		}
 		
 		mousemove(e) {
@@ -132,7 +138,7 @@ export default (Component) => {
 			let thisComponent = this;
 			
 			// listen for error
-			Gab.on('error',(data) => {
+			Gab.on('error', (data) => {
 				this.setState({
 					newalert: {
 						style: 'danger',
@@ -201,10 +207,15 @@ export default (Component) => {
 			
 			// window resize emitter
 			let _resizing = (force = false) => {
-				var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
+				var w=window;
+				var d=document;
+				var e=d.documentElement;
+				var g=d.getElementsByTagName('body')[0];
+				var x=w.innerWidth || e.clientWidth || g.clientWidth;
+				var y=w.innerHeight || e.clientHeight || g.clientHeight;
 				// only update once done moving
-				let muchX = x < this.state.window.width ? x + 50 < this.state.window.width : x - 50 > this.state.window.width;
-				let muchY = y < this.state.window.height ? y + 50 < this.state.window.height : y - 50 > this.state.window.height;
+				let muchX = x < this.state.window.width ? (x + 100 < this.state.window.width) : (x - 100 > this.state.window.width);
+				let muchY = y < this.state.window.height ? (y + 100 < this.state.window.height) : (y - 100 > this.state.window.height);
 				debug((muchX || muchY) || force === true);
 				if((muchX || muchY) || force === true) {
 					if(snowUI.__resizing) {
@@ -223,7 +234,6 @@ export default (Component) => {
 		
 		newState(state, cb) {
 			this.setState(state, () => {
-				// snowUI.__state = { ...this.state };
 				if(cb) cb();
 			});		
 		}

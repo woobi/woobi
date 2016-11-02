@@ -1,6 +1,7 @@
 import React from 'react';
 import { RaisedButton, FlatButton, Dialog } from 'material-ui';
 import { Styles } from '../styles';
+import Gab from '../gab';
 
 import debugging from 'debug';
 let	debug = debugging('lodge:app:common:components:dialog');
@@ -9,7 +10,20 @@ export default class Dialog2 extends React.Component {
 	constructor(props) {
 		super(props);
 		
+		this.setProps = this.setProps.bind(this);
+		
+		Gab.on('dialog open', this.setProps);
+		
 		this.handleNo = this.handleNo.bind(this);
+	}
+	
+	componentWillUnmount() {
+		Gab.removeListener('dialog open', this.setProps);
+	}
+	
+	setProps(data) {
+		this.props = Object.assign(this.props, data);
+		this.forceUpdate();
 	}
 	
 	handleNo() {

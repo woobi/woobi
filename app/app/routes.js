@@ -4,6 +4,10 @@ import Status from './pages/status';
 import Page from './pages/page';
 import Channel from './pages/channels';
 import Channels from './pages/channels/index';
+import TV from './pages/tvshows';
+import TVs from './pages/tvshows/index';
+import Movies from './pages/movies';
+import Movie from './pages/movies/index';
 import Fetch from './pages/fetch';
 import { isObject } from 'lodash';
 import Debug from 'debug';
@@ -50,6 +54,29 @@ Routes.push({
     childRoutes: [
 		{ path: 'add', component: Channels.Home },
 		{ path: 'view/:channel', component: Channels.Home },
+    ]
+});
+
+Routes.push({
+    path: 'library/tv', 
+    component: TV,
+    indexRoute: { component: TVs.Home },
+    catchAll: { component: TVs.Home },
+    childRoutes: [
+		{ path: 'recent', component: TVs.Recent },
+		{ path: ':imdb', component: TVs.Show },
+    ]
+});
+
+
+Routes.push({
+    path: 'library/movies', 
+    component: Movies,
+    indexRoute: { component: Movie.Home },
+    catchAll: { component: Movie.Home },
+    childRoutes: [
+		{ path: 'recent', component: Movie.Home },
+		{ path: ':imdb', component: Movie.Show },
     ]
 });
 

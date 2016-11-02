@@ -19,7 +19,7 @@ System.config({
 
   map: {
     "babel": "npm:babel-core@5.8.38",
-    "babel-runtime": "npm:babel-runtime@5.8.38",
+    "babel-runtime": "npm:babel-runtime@6.18.0",
     "bluebird": "npm:bluebird@3.4.3",
     "capaj/systemjs-hot-reloader": "github:capaj/systemjs-hot-reloader@0.6.0",
     "clappr": "npm:clappr@0.2.63",
@@ -35,17 +35,20 @@ System.config({
     "hls.js": "npm:hls.js@0.6.6",
     "inquisive-cards": "npm:inquisive-cards@1.0.0",
     "javascript-natural-sort": "npm:javascript-natural-sort@0.7.1",
-    "lodash": "npm:lodash@4.15.0",
+    "lodash": "npm:lodash@4.16.5",
     "marked": "npm:marked@0.3.6",
     "material-ui": "npm:material-ui@0.15.4",
     "moment": "npm:moment@2.15.1",
     "path": "github:jspm/nodelibs-path@0.1.0",
     "react": "npm:react@15.3.2",
+    "react-copy-to-clipboard": "npm:react-copy-to-clipboard@4.2.3",
     "react-dom": "npm:react-dom@15.3.1",
     "react-html5video": "npm:react-html5video@1.2.12",
+    "react-motion": "npm:react-motion@0.4.5",
     "react-router": "npm:react-router@2.4.1",
     "react-search-bar": "npm:react-search-bar@1.1.4",
     "react-select": "npm:react-select@1.0.0-beta14",
+    "react-swipeable-views": "npm:react-swipeable-views@0.7.11",
     "react-tap-event-plugin": "npm:react-tap-event-plugin@1.0.0",
     "react-tooltip": "npm:react-tooltip@3.1.6",
     "socket.io-client": "npm:socket.io-client@1.4.8",
@@ -56,6 +59,7 @@ System.config({
     "url": "npm:url@0.10.3",
     "util": "github:jspm/nodelibs-util@0.1.0",
     "xml-to-json-promise": "npm:xml-to-json-promise@0.0.3",
+    "xml2js-es6-promise": "npm:xml2js-es6-promise@1.1.1",
     "github:capaj/systemjs-hot-reloader@0.6.0": {
       "debug": "npm:debug@2.2.0",
       "socket.io-client": "github:socketio/socket.io-client@1.4.8",
@@ -206,8 +210,9 @@ System.config({
       "querystring": "github:jspm/nodelibs-querystring@0.1.0",
       "url": "github:jspm/nodelibs-url@0.1.0"
     },
-    "npm:babel-runtime@5.8.38": {
-      "process": "github:jspm/nodelibs-process@0.1.2"
+    "npm:babel-runtime@6.18.0": {
+      "core-js": "npm:core-js@2.4.1",
+      "regenerator-runtime": "npm:regenerator-runtime@0.9.5"
     },
     "npm:babel@5.8.38": {
       "babel-core": "npm:babel-core@5.8.38",
@@ -404,7 +409,16 @@ System.config({
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0"
     },
+    "npm:copy-to-clipboard@3.0.5": {
+      "toggle-selection": "npm:toggle-selection@1.0.5"
+    },
     "npm:core-js@1.2.7": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
+    "npm:core-js@2.4.1": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -556,7 +570,7 @@ System.config({
       "core-js": "npm:core-js@1.2.7",
       "immutable": "npm:immutable@3.8.1",
       "isomorphic-fetch": "npm:isomorphic-fetch@2.2.1",
-      "loose-envify": "npm:loose-envify@1.2.0",
+      "loose-envify": "npm:loose-envify@1.3.0",
       "object-assign": "npm:object-assign@4.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "promise": "npm:promise@7.1.1",
@@ -828,7 +842,7 @@ System.config({
       "hyphenate-style-name": "npm:hyphenate-style-name@1.0.1"
     },
     "npm:invariant@2.2.1": {
-      "loose-envify": "npm:loose-envify@1.2.0",
+      "loose-envify": "npm:loose-envify@1.3.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:is-binary-path@1.0.1": {
@@ -899,17 +913,17 @@ System.config({
     "npm:lodash@3.10.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:loose-envify@1.2.0": {
+    "npm:loose-envify@1.3.0": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "js-tokens": "npm:js-tokens@1.0.3",
+      "js-tokens": "npm:js-tokens@2.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:material-ui@0.15.4": {
       "inline-style-prefixer": "npm:inline-style-prefixer@2.0.1",
-      "keycode": "npm:keycode@2.1.4",
-      "lodash": "npm:lodash@4.15.0",
+      "keycode": "npm:keycode@2.1.7",
+      "lodash": "npm:lodash@4.16.5",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "react": "npm:react@15.3.2",
       "react-addons-create-fragment": "npm:react-addons-create-fragment@15.3.1",
@@ -1097,6 +1111,9 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
+    "npm:performance-now@0.2.0": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:pinkie-promise@2.0.1": {
       "pinkie": "npm:pinkie@2.0.4"
     },
@@ -1131,6 +1148,10 @@ System.config({
       "object-assign": "npm:object-assign@4.1.0",
       "strict-uri-encode": "npm:strict-uri-encode@1.1.0"
     },
+    "npm:raf@3.3.0": {
+      "performance-now": "npm:performance-now@0.2.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:randomatic@1.1.5": {
       "is-number": "npm:is-number@2.1.0",
       "kind-of": "npm:kind-of@3.0.3"
@@ -1152,7 +1173,14 @@ System.config({
     "npm:react-addons-create-fragment@15.3.1": {
       "react": "npm:react@15.3.2"
     },
+    "npm:react-addons-shallow-compare@15.3.2": {
+      "react": "npm:react@15.3.2"
+    },
     "npm:react-addons-transition-group@15.3.1": {
+      "react": "npm:react@15.3.2"
+    },
+    "npm:react-copy-to-clipboard@4.2.3": {
+      "copy-to-clipboard": "npm:copy-to-clipboard@3.0.5",
       "react": "npm:react@15.3.2"
     },
     "npm:react-dom@0.14.8": {
@@ -1164,6 +1192,11 @@ System.config({
     "npm:react-event-listener@0.2.1": {
       "fbjs": "npm:fbjs@0.8.5"
     },
+    "npm:react-event-listener@0.4.0": {
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "react-addons-shallow-compare": "npm:react-addons-shallow-compare@15.3.2",
+      "warning": "npm:warning@3.0.0"
+    },
     "npm:react-html5video@1.2.12": {
       "lodash.throttle": "npm:lodash.throttle@3.0.4",
       "path": "github:jspm/nodelibs-path@0.1.0",
@@ -1171,6 +1204,12 @@ System.config({
       "react": "npm:react@15.3.2"
     },
     "npm:react-input-autosize@1.1.0": {
+      "react": "npm:react@15.3.2"
+    },
+    "npm:react-motion@0.4.5": {
+      "performance-now": "npm:performance-now@0.2.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "raf": "npm:raf@3.3.0",
       "react": "npm:react@15.3.2"
     },
     "npm:react-router@2.4.1": {
@@ -1196,6 +1235,15 @@ System.config({
       "react-dom": "npm:react-dom@15.3.1",
       "react-input-autosize": "npm:react-input-autosize@1.1.0"
     },
+    "npm:react-swipeable-views@0.7.11": {
+      "babel-runtime": "npm:babel-runtime@6.18.0",
+      "keycode": "npm:keycode@2.1.7",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "react": "npm:react@0.14.8",
+      "react-addons-shallow-compare": "npm:react-addons-shallow-compare@15.3.2",
+      "react-event-listener": "npm:react-event-listener@0.4.0",
+      "warning": "npm:warning@3.0.0"
+    },
     "npm:react-tap-event-plugin@1.0.0": {
       "fbjs": "npm:fbjs@0.2.1",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -1212,7 +1260,7 @@ System.config({
     },
     "npm:react@15.3.2": {
       "fbjs": "npm:fbjs@0.8.5",
-      "loose-envify": "npm:loose-envify@1.2.0",
+      "loose-envify": "npm:loose-envify@1.3.0",
       "object-assign": "npm:object-assign@4.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -1276,6 +1324,10 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2",
       "react": "npm:react@15.3.2",
       "symbol-observable": "npm:symbol-observable@0.2.4"
+    },
+    "npm:regenerator-runtime@0.9.5": {
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:regex-cache@0.4.3": {
       "is-equal-shallow": "npm:is-equal-shallow@0.1.3",
@@ -1533,11 +1585,11 @@ System.config({
       "indexof": "npm:indexof@0.0.1"
     },
     "npm:warning@2.1.0": {
-      "loose-envify": "npm:loose-envify@1.2.0",
+      "loose-envify": "npm:loose-envify@1.3.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:warning@3.0.0": {
-      "loose-envify": "npm:loose-envify@1.2.0",
+      "loose-envify": "npm:loose-envify@1.3.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:wide-align@1.1.0": {
@@ -1550,6 +1602,9 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "xml2js": "npm:xml2js@0.4.17"
     },
+    "npm:xml2js-es6-promise@1.1.1": {
+      "xml2js": "npm:xml2js@0.4.17"
+    },
     "npm:xml2js@0.4.17": {
       "events": "github:jspm/nodelibs-events@0.1.1",
       "process": "github:jspm/nodelibs-process@0.1.2",
@@ -1558,7 +1613,7 @@ System.config({
       "xmlbuilder": "npm:xmlbuilder@4.2.1"
     },
     "npm:xmlbuilder@4.2.1": {
-      "lodash": "npm:lodash@4.15.0",
+      "lodash": "npm:lodash@4.16.5",
       "process": "github:jspm/nodelibs-process@0.1.2"
     }
   }

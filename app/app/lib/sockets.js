@@ -21,9 +21,9 @@ let Sockets = function() {
 Sockets.prototype.connect = function(callback) {
 	// connection
 	debug('init io connect', '//' + this.host + ':' + this.port + snowUI.namespace);
-	this.io = io(this.host + ':' + this.port + snowUI.namespace, { 'forceNew': true });
+	this.io = io(this.host + ':' + this.port + snowUI.namespace, { 'forceNew': false });
 	
-	this.io.on('connect',(data) => {
+	this.io.on('connect', (data) => {
 		debug('io connected', snowUI.namespace);
 		this.connected.open = true;
 		this.connected.firstRun = false;
@@ -35,6 +35,7 @@ Sockets.prototype.connect = function(callback) {
 		
 		if(isFunction(callback)) {
 			callback(null,true);
+			callback = false;
 		}
 	});
 	this.io.on('connect-error',(err) => {
@@ -42,7 +43,11 @@ Sockets.prototype.connect = function(callback) {
 		if(isFunction(callback)) {
 			callback(err);
 		}
-	});	
+	});
+	this.io.on('disconnect',(err) => {
+		debug('io disconnect',err);
+		//this.io.connect();
+	});		
 	
 }
 

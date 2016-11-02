@@ -3,6 +3,8 @@ var _ = require('lodash');
 var path = require('path');
 var async = require('async');
 var Adapter = require('./lib/core/adapter');
+var fs = require('fs-extra');
+var sanitize = require("sanitize-filename");
 
 // sockets
 //var sockets =  require('./lib/core/socket')();
@@ -36,6 +38,8 @@ var snowstreams = function() {
 	 * var myChannel = new ss.Channel('8', properties);
 	 * */
 	this.Channel =  require('./lib/channel.js')(this);
+	
+	
 }
  
  snowstreams.prototype.init = function(opts, callback) {
@@ -52,11 +56,39 @@ var snowstreams = function() {
 	
 	this.uri = this.host + ':' + this.port;
 	
+	this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
+	fs.emptyDir(path.join(this.mediaPath,'channels'), (err) => {
+		if(err) debug('Error emptuing / creating mediaPath dir for channels', err);
+	})
+	this.fillers = [
+		/*{name: 'River', 
+		file: path.join(Broadcast.get('module root'), 'lib/assets/waterfall.mp4'),
+		videoFilters: {
+			filter: 'drawtext',
+			options: {
+				fontfile: '/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
+				text: 'TestText',
+				fontcolor: 'white',
+				fontsize: 24,
+				box: 1,
+				boxcolor: 'black@0.75',
+				boxborderw: 5,
+				x: '(w-text_w)/2',
+				y: '(h-text_h)/2'
+			}
+		},
+		onlyOptions: []
+	},*/
+	{
+		name: 'River', 
+		file: path.join(Broadcast.get('module root'), 'lib','assets','river.mp4'),
+	}];
+	
 	if(opts.proxy) {
 		if(opts.proxy === true)  {
 			opts.proxy = {};
 		}
-		this.Stream.sourceProxy(opts.proxy, (err, result) => {
+		this.Stream.proxy(opts.proxy, (err, result) => {
 			if(err) console.log('ERROR', err);
 			finish.call(this);
 		});
@@ -65,17 +97,6 @@ var snowstreams = function() {
 	}
 	
 	function finish() {
-		this.filler2 = {
-			name: 'River', 
-			file: path.join(this.get('module root'), 'lib/assets/river.mp4'),
-			loop: false,
-		};
-
-		this.filler = {
-			name: 'Waterfall', 
-			file: path.join(this.get('module root'), 'lib/assets/waterfall.mp4'),
-			loop: false
-		};
 		
 		if(opts.adapters.length === 0) {
 			if(_.isFunction(callback)) {
@@ -138,10 +159,17 @@ snowstreams.prototype.addProgram = function(program, opts, callback) {
 }
 
 snowstreams.prototype.randomName = function(pre) {
-	return pre + (+new Date).toString(36).slice(-15);
+	return sanitize(pre + (+new Date).toString(36).slice(-15)).replace(/\s/g, "");;
 }
 
 var Broadcast = new snowstreams();
+
+Object.defineProperty(Broadcast, 'filler', {
+    get: () => { 
+		let num = Date.now();
+		return Broadcast.fillers[0];
+	}
+});
 
 /**
  * The exports object is an instance of snowstreams.

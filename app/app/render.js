@@ -376,48 +376,26 @@ class Render extends Component {
 			{this.menu()}	
 			{this.contents()}
 			
-			{this.state.dialog.open ? this.dialogBox() : <span />}
-			{this.state.newalert.show ? this.snackbar() : <span />}
-			{this.state.newconfirm.open ? this.confirmBox() : <span />}
+			{this.dialogBox() }
+			{this.snackbar() }
+			{this.confirmBox() }
         </div>);
 
 	}
 	
 	snackbar() {
-		if(this.state.newalert.show) { 
-			const colors = {
-				danger: {
-					bg: Styles.Colors.deepOrangeA700,
-					color: '#fff'
-				},
-				warning: {
-					bg: Styles.Colors.amber800,
-					color: '#000'
-				},
-				info: {
-					bg: Styles.Colors.blue800,
-					color: '#fff'
-				},
-				success: {
-					bg: Styles.Colors.limeA700,
-					color: '#fff'
-				}
-			};
-			const bodyStyle =  {
-				backgroundColor: colors[this.state.newalert.style] ? colors[this.state.newalert.style].bg : colors.info.bg,
-				color: colors[this.state.newalert.style] ? colors[this.state.newalert.style].color : colors.info.color
-			};
+		
 			return (<Snackbar 
-					bodyStyle={bodyStyle}
+					style={this.state.newalert.style}
 					setParentState={this.props.appState}
-					html={'<div style="color:' +bodyStyle.color+ '">' +this.state.newalert.html+ '</div>'}
+					html={this.state.newalert.html}
 					data={this.state.newalert.data}
 					component={this.state.newalert.component}
 					open={this.state.newalert.show}
 					autoHideDuration={this.state.newalert.duration >= 0 ? this.state.newalert.duration : 5000}
 					onRequestClose={() => {this.setState({ newalert: { show: false }});}}
 			/>);
-		}
+		
 	}
 	
 	dialogBox() {

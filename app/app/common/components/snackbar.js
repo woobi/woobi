@@ -1,6 +1,10 @@
 import React from 'react';
 import { Snackbar } from 'material-ui';
 import debugging from 'debug';
+import Gab from '../gab';
+import { Styles } from '../styles';
+import { ColorMe, naturalSort } from '../utils';
+
 let	debug = debugging('lodge:app:common:components:snackbar');
 
 class SnackbarExampleSimple extends React.Component {
@@ -16,7 +20,20 @@ class SnackbarExampleSimple extends React.Component {
 		// binders
 		this.handleChangeDuration = this.handleChangeDuration.bind(this);
 		this.handleRequestClose = this.handleRequestClose.bind(this);
+ 		this.setProps = this.setProps.bind(this);
 		
+		Gab.on('snackbar', this.setProps);
+		
+	}
+	
+	setProps(data) {
+		console.log('snackbar got emitted');
+		this.props = Object.assign(this.props, data);
+		this.forceUpdate();
+	}
+	
+	componentWillUnmount() {
+		Gab.removeListener('snackbar', this.setProps);
 	}
 	
 	handleTouchTap()  {
@@ -37,11 +54,10 @@ class SnackbarExampleSimple extends React.Component {
 	}
 
 	handleRequestClose() {
-		this.props.setParentState({
-			newalert: {
-				show: false
-			}
-		});
+		this.setProps({ open: false });
+		if (typeof this.props.onRequestClose === 'function') {
+			this.props.onRequestClose();
+		}
 	}
 	
 	renderError(data) {
@@ -59,7 +75,7 @@ class SnackbarExampleSimple extends React.Component {
 		return data;
 	}
 	
-	renderHTML() {
+	renderHTML(bodyStyle) {
 		debug(this.props);
 		if(this.props.data) {
 			if(this.props.data.error) {
@@ -69,29 +85,49 @@ class SnackbarExampleSimple extends React.Component {
 		} else if(this.props.component) {
 			return this.props.component;
 		} else {
-			return <div dangerouslySetInnerHTML={{__html:this.props.html}} />
+			return <div dangerouslySetInnerHTML={{__html: '<div style="color:' +bodyStyle.color+ '">' + this.props.html + '</div>'}} />
 		}
 	}
 	
 	render() {
 		
-		let message = this.renderHTML();
 		
+		let bodyStyle = {};
+		if(this.props.style) {
+			const colors = {
+				danger: {
+					bg: Styles.Colors.deepOrangeA700,
+					color: '#fff'
+				},
+				warning: {
+					bg: Styles.Colors.amber800,
+					color: '#000'
+				},
+				info: {
+					bg: Styles.Colors.blue800,
+					color: '#fff'
+				},
+				success: {
+					bg: Styles.Colors.lightGreen500,
+					color: Styles.Colors.grey900
+				}
+			};
+			bodyStyle =  {
+				backgroundColor: colors[this.props.style] ? colors[this.props.style].bg : colors.info.bg,
+				color: colors[this.props.style] ? colors[this.props.style].color : colors.info.color
+			};
+		}
+		
+		let message = this.renderHTML(bodyStyle);
 		return (<div>
 				<Snackbar
-					bodyStyle={this.props.bodyStyle || {}}
+					bodyStyle={bodyStyle}
 					open={this.props.open}
 					message={message}
 					action={this.props.action}
 					autoHideDuration={this.props.autoHideDuration}
 					onActionTouchTap={this.props.onActionTouchTap || this.handleRequestClose}
-					onRequestClose={() => {
-						this.props.setParentState({
-							newalert: {
-								show: false
-							}
-						});
-					}}
+					onRequestClose={this.onRequestClose}
 				/>
 		</div>);
 	}
@@ -109,6 +145,7 @@ SnackbarExampleSimple.defaultProps = {
 	html: 'Hi!',
 	action: 'x',
 	autoHideDuration: 0,
+	style: 'info'
 };
 
 export default SnackbarExampleSimple;

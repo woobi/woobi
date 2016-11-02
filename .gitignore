@@ -24,16 +24,17 @@ coverage
 .lock-wscript
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+build*
 
 # Dependency directories
 node_modules
 jspm_packages
 video/*
-
+bin/*
+heap*
+media/*
 # Optional npm cache directory
 .npm
-yarn*
 test*
 
 # Optional REPL history

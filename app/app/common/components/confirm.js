@@ -1,6 +1,7 @@
 import React from 'react';
 import { RaisedButton, FlatButton, Dialog } from 'material-ui';
 import { Styles } from '../styles';
+import Gab from '../gab';
 
 let myStyles = {
 	//textColor: Styles.Colors.blue600,
@@ -16,12 +17,26 @@ export default class Modal extends React.Component {
 				
 		this.handleYes = this.handleYes.bind(this);
 		this.handleNo = this.handleNo.bind(this);
+		
+ 		this.setProps = this.setProps.bind(this);
+		
+		Gab.on('confirm open', this.setProps);
+		
 	}
 	
 	getChildContext() {
 		return {
 			muiTheme: this.props.theme
 		};
+	}
+	
+	setProps(data) {
+		this.props = Object.assign(this.props, data);
+		this.forceUpdate();
+	}
+	
+	componentWillUnmount() {
+		Gab.removeListener('confirm open', this.setProps);
 	}
 	
 	handleYes() {
@@ -46,16 +61,17 @@ export default class Modal extends React.Component {
 	
 	render() {
 		const actions = [
-			<FlatButton
+			<RaisedButton
 				label={this.props.noText}
-				secondary={true}
-				onTouchTap={this.handleNo}
-				style={{float: 'left', color: this.props.theme.baseTheme.palette.alternateTextColor }} 
-			/>,
-			<FlatButton
-				label={this.props.yesText}
 				primary={true}
+				onTouchTap={this.handleNo}
+				
+			/>,
+			<RaisedButton
+				label={this.props.yesText}
+				primary={false}
 				onTouchTap={this.handleYes} 
+				style={{float: 'left', color: this.props.theme.baseTheme.palette.alternateTextColor }} 
 			/>,
 			
 		];
