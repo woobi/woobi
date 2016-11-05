@@ -23,7 +23,7 @@ HLS.add({
 	name:  { type: Types.Text, required: true, initial: true },
 	ext: Types.Text ,
 	log: Types.TextArray ,
-	state: { Type: Types.Select, options: ['ready','failed','playing','paused','stopped'], default: 'ready' },
+	state: { type: Types.Select, options: ['ready','failed','playing','paused','stopped'], default: 'ready' },
 	codec: {
 		audio: Types.Text ,
 		audio_long: Types.Text ,

@@ -19,11 +19,12 @@ var Fluent = new keystone.List('Fluent', {
 });
 
 Fluent.add({
+	state: { type: Types.Select, options: 'ready , failed, playing, paused, stopped', default: 'ready' },
 	source: { type: Types.Text, required: true, initial: true },
 	name:  { type: Types.Text, required: true, initial: true },
 	ext: Types.Text ,
 	log: Types.TextArray ,
-	state: { Type: Types.Select, options: ['ready','failed','playing','paused','stopped'], default: 'ready' },
+	
 	codec: {
 		audio: Types.Text ,
 		audio_long: Types.Text ,

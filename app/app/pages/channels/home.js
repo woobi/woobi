@@ -66,7 +66,7 @@ export default class Home extends React.Component {
 	
 	render() { 
 		//debug('## render  ##  Channels Home render', this.props, this.state);
-		let ret = <span/>;
+		let ret = [<span />];
 		if (this.state.channels.length > 0) {
 			ret =  this.state.channels.map((c, i) => {
 				return (<MiniChannel key={i} { ...this.props } channel={c} />)
@@ -83,10 +83,30 @@ export default class Home extends React.Component {
 					/>
 				</Card>
 			</div>
-			{ret}
+			{this.renderChannelList(ret)}
 		</div>);
 	}
 	
+	renderChannelList(list) {
+		if(this.props.desktop !== 'xs') {
+			var list2=[];
+			list = list.filter((v,i) => {
+				if(i%2 === 0) {
+					return true;
+				} else {
+					list2.push(v);
+					return false;
+				}
+			});
+			return (<div>
+				<div style={{ padding: '10px 10px 10px 0' }} className="col-sm-6" children={list} />
+				<div style={{ padding: '10px 0px 10px 10px' }} className="col-sm-6" children={list2}  />
+			</div>);
+			
+		} else {
+			return (<div children={list} />);
+		}
+	}
 }
 
 Home.getInitialData = function(params) {

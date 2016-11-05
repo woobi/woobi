@@ -42,17 +42,6 @@ export default class miniChannel extends React.Component {
 		//this.props.Sockets.io.on('channels', this.gotChannels);
 	}
 	
-	gotChannels(data) {
-		//debug('### STATUS ###', data);
-		var asset = _.find(data.channels, { channel: this.state.channel.channel });
-		if(asset) {
-			this._update = true;
-			this.setState({
-				channel: asset,
-			});
-		}
-	}
-	
 	componentWillUnmount() {
 		//this.props.Sockets.io.removeListener('channels', this.gotChannels);
 	}
@@ -71,12 +60,23 @@ export default class miniChannel extends React.Component {
 		this._update = false;
 	}	
 	
-	shouldComponentUpdate() {
-		if(this._update === true) {
+	shouldComponentUpdate(nextProps) {
+		if(this._update  || this.props.currentTheme !== nextProps.currentTheme) {
 			this._update = false;
 			return true;
 		}
 		return false;
+	}
+	
+	gotChannels(data) {
+		//debug('### STATUS ###', data);
+		var asset = _.find(data.channels, { channel: this.state.channel.channel });
+		if(asset) {
+			this._update = true;
+			this.setState({
+				channel: asset,
+			});
+		}
 	}
 	
 	doRequestCommand(link) {
@@ -92,14 +92,14 @@ export default class miniChannel extends React.Component {
 			if(data.success) {
 				Gab.emit('snackbar', {
 					style: 'success',
-					html: link.success || 'Command Success',
+					html: data.message || link.success || 'Command Success',
 					open: true,
 					onRequestClose: () => {}
 				});
 			} else {
 				Gab.emit('snackbar', {
 					style: 'danger',
-					html: link.error || 'Command Failed',
+					html: data.error || link.error || 'Command Failed',
 					open: true,
 					onRequestClose: () => {}
 				});
@@ -108,7 +108,7 @@ export default class miniChannel extends React.Component {
 		.catch(e => {
 			Gab.emit('snackbar', {
 				style: 'danger',
-				html: link.error || 'Command Failed',
+				html: data.error ||  link.error || 'Command Failed',
 				open: true,
 				onRequestClose: () => {}
 			});
@@ -122,9 +122,9 @@ export default class miniChannel extends React.Component {
 		});
 	}
 	
-	dialog(row, col) {
+	dialog(row, col, source) {
 		let c = this.state.channel;
-		let s = c.sources[row];
+		let s = source[row];
 		debug(s);
 		const buttonStyle = {
 			margin: '30 0 0 12',
@@ -203,17 +203,22 @@ export default class miniChannel extends React.Component {
 		});
 	}
 	
-	list(list, history = false) {
+	list(list) {
 		let c = this.state.channel;
 		
 		let sourceMap = list.map((s, iii) => {
-				return (<TableRow>
+			let poster= '/images/fanart.gif';
+			if(s.metadata.thumb) {
+					poster = s.metadata.thumb;
+			}
+			return (<TableRow key={iii}>
 				<TableRowColumn style={{ width: 40 }}>{s.position}</TableRowColumn>
+				<TableRowColumn style={{ width: 64, paddingLeft: '0' }}><img src={poster} width="64" height="36"  /></TableRowColumn>
 				<TableRowColumn style={{ cursor: 'pointer' }}>{s.name}</TableRowColumn>
 			</TableRow>)
 		});
 		
-		
+			
 		
 		return (
 			<CardText expandable={true}>		
@@ -221,7 +226,9 @@ export default class miniChannel extends React.Component {
 					fixedHeader={true}
 					selectable={false}
 					multiSelectable={true}
-					onCellClick={this.dialog.bind(this)}
+					onCellClick={(a, b) => {
+						this.dialog.call(this, a, b, list);
+					}}
 				>
 					<TableHeader
 						displaySelectAll={false}
@@ -230,6 +237,7 @@ export default class miniChannel extends React.Component {
 					>
 						<TableRow>
 							<TableHeaderColumn style={{ width: 40 }}>#</TableHeaderColumn>
+							<TableHeaderColumn style={{ width: 64 }}></TableHeaderColumn>
 							<TableHeaderColumn>Name</TableHeaderColumn>
 						</TableRow>
 					</TableHeader>
@@ -246,17 +254,7 @@ export default class miniChannel extends React.Component {
 		);
 	}
 	
-	render() { 
-		debug('## render  ##  Channel render', this.props, this.state);
-		
-		let c = this.state.channel;
-		
-		if(!c.commands) {
-			return (<Card><div>Loading Channel {c.channel}</div> </Card>);
-		}
-		
-		var links = [];
-		
+	buttons(c, buttons, powerButtons) {
 		const buttonStyle = {
 			margin: '30 0 0 12',
 			borderRadius: 0,
@@ -268,29 +266,8 @@ export default class miniChannel extends React.Component {
 			float: 'left',
 			color: 'white',
 		};
-		
-		if(c.links) {
-			Each(c.links, (l,ii) => {
-				if(ii == 'local' || ii == 'unicast') {
-					links.push(
-						<CopyToClipboard key={ii} text={l} onCopy={()=>{Gab.emit('snackbar',{ open: true, html: 'Link copied to clipboard.'});}}>
-							<FlatButton label={ii} />
-						</CopyToClipboard>
-					);
-				} else {
-					l.forEach((li, il) => {
-						links.push(
-						<CopyToClipboard  key={ii + il} text={li} onCopy={()=>{Gab.emit('snackbar',{ open: true, html: 'Link copied to clipboard.'});}}>
-							<FlatButton label={ii} />
-						</CopyToClipboard>
-					);
-					});
-				}
-			});
-		}
-		
 		// cycle through the commands first
-		let buttons = c.commands.request.map((cc, i) => {
+		buttons = c.commands.request.map((cc, i) => {
 			return (<FlatButton key={cc.name+i} label={cc.label} onClick={()=>{
 				Gab.emit('confirm open', {
 					html:"If you switch between HD and SD feeds the channel may need to be restarted for HLS feeds to continue. You can switch back to the original feed type and a restart is not required. ",
@@ -306,10 +283,12 @@ export default class miniChannel extends React.Component {
 			}} />)
 		});
 		
-		let newC = { name: 'RESTART', label: 'RESTART CHANNEL', link: '/alvin/restart/channel/' + c.channel, success: 'Channel ' + c.channel + ' restarting fresh. ', error: 'Could not restart ' + c.channel };
-		let newC2 = { name: 'RESTART', label: 'RESTART CHANNEL', link: '/alvin/restart2/channel/' + c.channel, success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel };
+		let newC = { name: 'RebootChannel', label: 'REBOOT CHANNEL', link: '/alvin/restart/channel/' + c.channel , success: 'Channel ' + c.channel + ' restarting fresh. ', error: 'Could not restart ' + c.channel };
+		let newC2 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=no', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel };
+		let newC3 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=yes', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel, onSuccess: () => {} };
 		let newStop = { name: 'KILL', label: 'REMOVE CHANNEL', link: '/alvin/kill/channel/' + c.channel, success: 'Channel ' + c.channel + ' stopping. ', error: 'Could not stop ' + c.channel };
-		buttons.unshift(<FlatButton key={newStop.name} label={newStop.label} onClick={()=>{
+		
+		powerButtons.unshift(<IconButton key={newStop.name} label={newStop.label} title={newStop.label} onClick={()=>{
 			Gab.emit('dialog open', {
 				title:"Remove Channel",
 				answer:() => { 
@@ -319,7 +298,7 @@ export default class miniChannel extends React.Component {
 				noText: 'Cancel',
 				component: (<div>
 					<p>This will stop the channel and remove it completely.  Continue?</p>
-					<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Remove Channel" onClick={(e) => {
+					<RaisedButton style={buttonStyleP} key="freshf"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Remove Channel" onClick={(e) => {
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
 						Gab.emit('confirm open', {
@@ -342,78 +321,164 @@ export default class miniChannel extends React.Component {
 					}} />
 				</div>)
 			});
-		}} />);
-		buttons.unshift(<FlatButton key={newC.name} label={newC.label} onClick={()=>{
+		}} >
+			<FontIcon style={{ }} className="material-icons"  hoverColor={Styles.Colors.red900} color={Styles.Colors.deepOrange900} >visibility_off</FontIcon>
+		</IconButton>);
+		powerButtons.unshift(<IconButton key={newC.name} label={newC.label}  title={newC.label}  onClick={()=>{
 			Gab.emit('dialog open', {
-				html:"Do you want to restart this channel?<br />Any HLS feeds will lose its saved stream.",
-				title:"Restart Channel?",
+				title:"Reboot Channel?",
 				answer:() => { 
 					Gab.emit('dialog open', { open: false });
 				},
 				open: true,
 				noText: 'Cancel',
 				component: (<div>
-					<p>Do you want to restart this channel?<br />Any HLS feeds will lose its saved stream</p>
-					<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Fresh State" onClick={(e) => {
+					<p>Do you want to reboot this channel?<br />All feeds will be lost and start over.</p><p>  If you are having issues with audio or video you can try rebooting with transcoding enabled.</p>
+					<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Reboot Channel" onClick={(e) => {
+						
+						
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
-						Gab.emit('confirm open', {
-							title: newC.name +  "",
-							answer:(yesno) => { 
-								Gab.emit('confirm open', { open: false });
-								if(yesno) {
-									this.doRequestCommand(newC); 
-								}else {
-									Gab.emit('dialog open', { open: true });
-								}
-							},
+						Gab.emit('dialog2 open', {
+							title: newC.label +  "",
 							open: true,
-							noText: 'Cancel',
-							yesText: 'Restart Fresh', 
-							html: 'This will stop the channel and start over with the initial options.  Continue?</b>'
+							answer:(yesno) => { 
+								Gab.emit('dialog2 open', { open: false });
+							},
+							component: (<div>
+								<p>This will stop the channel and reboot.  </p><p>You can start with a clean queue or keep your current one.</p>
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0,  }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									this.doRequestCommand(newC);	
+								}} />
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									this.doRequestCommand({ ...newC, link: newC.link + '?keepQueue=yes' });	
+								}} />
+								<RaisedButton style={buttonStyle} key="staler"  primary={true} buttonStyle={{  borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Back" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									Gab.emit('dialog open', { open: true });
+								}} />
+							</div>)	
 						})
+						
+						
 					}} />
-					<RaisedButton style={buttonStyleP} key="save"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Save State" onClick={(e) => {
+					
+					<RaisedButton style={buttonStyleP} key="save"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="with Transcoding" onClick={(e) => {
+						
+						
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
-						Gab.emit('confirm open', {
-							title: newC2.name +  "",
-							answer:(yesno) => { 
-								Gab.emit('confirm open', { open: false });
-								if(yesno) {
-									this.doRequestCommand(newC2); 
-								}else {
-									Gab.emit('dialog open', { open: true });
-								}
-							},
+						Gab.emit('dialog2 open', {
+							title: newC2.label +  "",
 							open: true,
-							noText: 'Cancel',
-							yesText: 'Restart with Current State', 
-							html: 'This will stop the channel and restart with the current source list.  Continue?</b>'
+							answer:(yesno) => { 
+								Gab.emit('dialog2 open', { open: false });
+							},
+							component: (<div>
+								<p>This will stop the channel and reboot. <br />The HLS stream will be transcoded with <code>-codec:v libx264</code> and <code>-codec:a  aac</code> and format as <code>mpegts</code>.  </p><p>You can start with a clean queue or keep your current one.</p>
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									this.doRequestCommand(newC2);	
+								}} />
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									this.doRequestCommand({ ...newC2, link: newC2.link + '&keepQueue=yes' });	
+								}} />
+								<RaisedButton style={buttonStyle} key="staler"  primary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Back" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									Gab.emit('dialog open', { open: true });
+								}} />
+							</div>)
+						});
+						
+					}} />
+					<RaisedButton style={buttonStyleP} key="pass"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="with Passthrough" onClick={(e) => {
+						e.preventDefault();
+						Gab.emit('dialog open', { open: false });
+						Gab.emit('dialog2 open', {
+							title: newC3.label +  "",
+							open: true,
+							answer:(yesno) => { 
+								Gab.emit('dialog2 open', { open: false });
+							},
+							component: (<div>
+								<p>This will stop the channel and reboot using the video as is. </p><p>  You can start with a clean queue or keep your current one.</p>
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									this.doRequestCommand(newC3);	
+								}} />
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									this.doRequestCommand({ ...newC3, link: newC3.link + '&keepQueue=yes' });	
+								}} />
+								<RaisedButton style={buttonStyle} key="staler"  primary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Back" onClick={(e) => {
+									e.preventDefault();
+									Gab.emit('dialog2 open', { open: false });
+									Gab.emit('dialog open', { open: true });
+								}} />
+							</div>)	
 						})
 					}} />
-					<RaisedButton style={buttonStyle} key="clodes"  secondary={true}  label="Cancel" onClick={(e) => {
-						e.preventDefault();						
-						Gab.emit('dialog open', { open: false });
-					}} />
+					
 				</div>)
 			});
-		}} />)
+		}}  >
+			<FontIcon style={{ }} className="material-icons"  color={Styles.Colors.amber500}  hoverColor={Styles.Colors.amber900} >settings_backup_restore</FontIcon>
+		</IconButton>)
+	}
+	
+	render() { 
+		debug('## render  ##  Channel render', this.props, this.state);
 		
-		const styles = {
-			headline: {
-				fontSize: 24,
-				paddingTop: 16,
-				marginBottom: 12,
-				fontWeight: 400,
-			},
-			slide: {
-				padding: 0,
-			},
-		};
-		let art = '/images/fanart.jpg';
-		let banner =  "url('/images/banner.jpg')no-repeat  center top";
+		let c = this.state.channel;
+		
+		if(!c.commands) {
+			return (<Card><div>Loading Channel {c.channel}</div> </Card>);
+		}
+		
+		var links = [];
+				
+		if(c.links) {
+			Each(c.links, (l,ii) => {
+				if(!Array.isArray(l)) {
+					links.push(
+						<CopyToClipboard key={ii} text={l} onCopy={()=>{Gab.emit('snackbar',{ open: true, html: 'Link copied to clipboard.'});}}>
+							<FlatButton label={ii} />
+						</CopyToClipboard>
+					);
+				} else {
+					l.forEach((li, il) => {
+						links.push(
+						<CopyToClipboard  key={ii + il} text={li} onCopy={()=>{Gab.emit('snackbar',{ open: true, html: 'Link copied to clipboard.'});}}>
+							<FlatButton label={ii} />
+						</CopyToClipboard>
+					);
+					});
+				}
+			});
+		}
+		
+		let buttons = [];
+		let powerButtons = [];
+		this.buttons(c, buttons, powerButtons);
+		
+		let art = '/images/fanart.gif';
+		let poster ='/images/fanart.gif';
+		let banner =  "url('/images/banner.jpg')no-repeat  center";
 		let bgSize = 'cover';
+		if(c.playing.metadata.thumb) {
+				poster = c.playing.metadata.thumb;
+		}
 		if(c.playing.metadata.art) {
 			var asset = Find(c.playing.metadata.art, { type: 'fanart' });
 			if(asset) art = encodeURI(snowUI.artStringReplace(asset.url));
@@ -433,26 +498,53 @@ export default class miniChannel extends React.Component {
 		
 		let keys = Object.keys(meta);
 		
-		return (<div  className="col-xs-12 col-md-6" style={{paddingRight:5, paddingLeft:5, marginBottom: 15 }} >
+		const styles = {
+			headline: {
+				fontSize: 24,
+				paddingTop: 16,
+				marginBottom: 12,
+				fontWeight: 400,
+			},
+			slide: {
+				padding: 0,
+			},
+		};
+		const buttonStyle = {
+			margin: '30 0 0 12',
+			borderRadius: 0,
+			float: 'right',
+		};
+		const buttonStyleP = {
+			margin: '30 12 0 0',
+			borderRadius: 0,
+			float: 'left',
+			color: 'white',
+		};
+		
+		let countRows = 0;
+		
+		return (<div   style={{paddingRight:0, paddingLeft:0, marginBottom: 15 }}>
 				
-			<Card zDepth={1}>
+			<Card zDepth={1} containerStyle={{ paddingBottom: 0 }} style={{ background: "url('" + art + "')no-repeat", backgroundPosition: '50%  top', backgroundSize: '100% auto' }}>
+				
 				<CardHeader
-					style={{ overflow: 'hidden', background: banner, backgroundSize: bgSize }}
-					subtitle={c.channel}
-					title={<span>On Air: <b>{c.playing.name}</b></span>}
+					style={{ overflow: 'hidden', background: this.props.theme.palette.canvasColor, opacity: '.90' }}
+					subtitle={<span style={{  }}>{c.channel}</span>}
+					title={<span >On Air: <b>{c.playing.name}</b></span>}
 					avatar={<FontIcon style={{fontSize:'42px'}} className="material-icons" color={ColorMe(10, this.props.theme.baseTheme.palette.canvasColor).bgcolor}  >dvr</FontIcon>}
 					actAsExpander={true}
 					showExpandableButton={true}
 				/>
 				<CardText expandable={true} style={{padding: 0}} >	
-					<CardMedia style={{ background: ColorMe(10, this.props.theme.baseTheme.palette.canvasColor).bgcolor }}>
+					<CardMedia style={{ overflow: 'hidden', background: 'transparent' }}>
 						<div id="vid-box" style={{ position: 'relative', width: '100%' }} >
-							<Video source={c.links.hls[0] || c.link} style={{ margin: 'auto'  }} poster={art}  mute={false} channel={c} doRequestCommand={this.doRequestCommand} />
+							<Video source={c.links.hls || c.link} style={{ margin: 'auto'  }} poster={false}  mute={false} channel={c} doRequestCommand={this.doRequestCommand} controls={true} />
 						</div>
 					</CardMedia>	
 					 <Tabs
 						onChange={this.handleChange}
 						value={this.state.slideIndex}
+						style={{ background: this.props.theme.palette.canvasColor, opacity: '.80' }}
 					>
 						<Tab label="Links" value={0} icon={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >link</FontIcon>} />
 						<Tab label="Queue" value={1} icon={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >subscriptions</FontIcon>} />
@@ -464,6 +556,7 @@ export default class miniChannel extends React.Component {
 					<SwipeableViews
 						onChangeIndex={this.handleChange}
 						index={this.state.slideIndex}
+						style={{ background: this.props.theme.palette.canvasColor }}
 					>
 						<div style={styles.slide}>
 							<Card zDepth={0}>
@@ -488,11 +581,11 @@ export default class miniChannel extends React.Component {
 						<div>
 							<Card zDepth={0}>
 								<CardHeader 
-									subtitle={meta.description}
+									subtitle={<p><img src={poster} width="80" height="45"  style={{ float: 'left', margin: 10 }} />{meta.description}</p>}
 									title={<span><VideoProgress channel={c.channel} Sockets={this.props.Sockets} data={c.playing} /><br /><b>{c.playing.name}</b></span>}
 									actAsExpander={true}
 									showExpandableButton={true}
-									
+									style={{ overflow: 'hidden'  }}
 								/>
 								<CardText expandable={true}>		
 									
@@ -501,9 +594,10 @@ export default class miniChannel extends React.Component {
 										selectable={true}
 										multiSelectable={false}
 										onCellClick={(row, col) => {
+											debug(this['row:'+row]);
 											Gab.emit('dialog open', {
-												html: meta[keys[row]],
-												title: keys[row],
+												html: this['row:'+row].props['data-html'],
+												title: this['row:'+row].props.title,
 												answer:(yesno) => { 
 													Gab.emit('dialog open', { open: false });
 												},
@@ -519,14 +613,13 @@ export default class miniChannel extends React.Component {
 											showRowHover={true}
 											stripedRows={false}
 										>
-										  
-											{Map(meta, (s,k) => {
-													return (<TableRow>
-													<TableRowColumn>{k}</TableRowColumn>
-													<TableRowColumn>{s ? s : 'UA'}</TableRowColumn>
-												</TableRow>)
+											{keys.map((v,k) => {
+												let s = meta[v];
+												if (Array.isArray(s)) {
+													return s.map(r => this.mapRow(r.url, r.type, countRows++))
+												}
+												return this.mapRow(s,v, countRows++);
 											})}
-											
 										</TableBody>
 									</Table>
 								</CardText>
@@ -535,7 +628,13 @@ export default class miniChannel extends React.Component {
 						
 						<div style={styles.slide}>
 							<Card zDepth={0}>
-								<CardText expandable={false}>
+								<CardHeader 
+									title={'Commands - click arrow for additional'}
+									subtitle={powerButtons}
+									actAsExpander={false}
+									showExpandableButton={true}
+								/>
+								<CardText expandable={true}>
 									<CardActions>
 										{buttons}
 									</CardActions>
@@ -560,6 +659,12 @@ export default class miniChannel extends React.Component {
 		</div>);
 	}
 	
+	mapRow(s, k, row) {
+		return (<TableRow key={k} style= {{ cursor: 'pointer' }} ref={(input) => this['row:'+row] = input} data-html={s} title={k}>
+			<TableRowColumn>{k}</TableRowColumn>
+			<TableRowColumn>{s ? s : 'UA'}</TableRowColumn>
+		</TableRow>);
+	}
 }
 
 

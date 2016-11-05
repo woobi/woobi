@@ -31,9 +31,9 @@ export default class mainMenu extends React.Component {
 		
 	}
 	
-	shouldComponentUpdate() {
+	shouldComponentUpdate(nextProps) {
 		debug('## shouldComponentUpdate ## mainMenu should update? ', this._update);
-		if(this._update) {
+		if(this._update  || this.props.currentTheme !== nextProps.currentTheme) {
 			this._update = false;
 			return true;
 		}
@@ -114,7 +114,7 @@ export default class mainMenu extends React.Component {
 							menuStyle={{}}
 						>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Default" value="reset" />
-						  <MenuItem style={{lineHeight: 2}} primaryText="Rommie" value="roms"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Rommie" value="rommie"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Graphite" value="graphite"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Night" value="night"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Nite Lite" value="nitelite"/>

@@ -6,24 +6,35 @@ import { ColorMe } from './utils';
 
 export let NIGHT  = deep( {
 	palette: {
-		primary1Color: '#223E77',
-		textColor: colors.blue200,
-		alternateTextColor: colors.lightBlue50,
-		primary2Color: '#3B71E2',
-		canvasColor: '#303234',
+		primary2Color: '#223E77',
+		textColor: colors.blue100,
+		alternateTextColor: colors.blueGrey900,
+		primary1Color: 'initial',
+		canvasColor: '#001933',
 		bodyColor: 'initial',
 		contentColor: 'initial',
-		accent1Color: colors.blue50,
-		accent2Color: colors.blue400,
-		accent3Color: "#582208",
+		accent1Color: colors.blue500,
+		accent2Color: colors.blue700,
+		accent3Color: colors.blue900,
 		disabledColor: colors.grey600,
 	},
 	snackbar: {
 		textColor: '#222',
-		
+	},
+	drawer: {
+		backgroundColor: colors.lightBlue100,
+	},
+	tabs: {
+		textColor: colors.lightBlue300,
+		selectedTextColor: colors.lightBlue50,
+	},
+	raisedButton: {
+		textColor: colors.lightBlue900,
 	},
 	appBar: {
-		buttonColor: colors.blue200
+		buttonColor: colors.blue200	,
+		backgroundColor: colors.lightBlue900,
+		textColor: colors.lightBlue300,
 	},
 	searchBar: {
 		large: 'initial',
@@ -192,6 +203,12 @@ export let ROMS  = deep( {
 	flatButton: {
 		textColor: '#fff',
 	},
+	tabs: {
+		textColor: colors.blue900,
+		selectedTextColor: colors.amber700,
+	},
+	raisedButton: {
+	},
 	menuItem: {
 		textColor: '#fff',
 	},
@@ -247,7 +264,7 @@ export let BLUE  = deep( {
 		accent2Color: colors.blue200,
 		accent3Color: "#5C6BC0",
 		textColor: colors.indigo100,
-		alternateTextColor: colors.blue400,
+		alternateTextColor: colors.blue800,
 	},
 	snackbar: {
 		textColor: '#222',
@@ -259,6 +276,13 @@ export let BLUE  = deep( {
 	},
 	flatButton: {
 		textColor: '#fff',
+	},
+	tabs: {
+		textColor: colors.blue100,
+		selectedTextColor: colors.orangeA700,
+	},
+	raisedButton: {
+		textColor: '#222',
 	},
 	menuItem: {
 		textColor: '#fff',

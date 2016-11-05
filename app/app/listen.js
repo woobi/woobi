@@ -6,7 +6,6 @@ import { Request } from './common/utils';
 import Sockets from './lib/sockets';
 import Path from 'path';
 import { withRouter } from 'react-router';
-import { Script as ScriptDefaults, NoScript as NoScriptDefaults } from './common/defaults';
 
 let debug = Debug('lodge:app:listen');
 
@@ -41,7 +40,7 @@ export default (Component) => {
 				});
 			}
 			
-			console.log('LOADING Listeners', snowUI.serverRendered, props.noscript);
+			debug('LOADING Listeners', snowUI.serverRendered, props.noscript);
 			
 			if(!snowUI.serverRendered) {
 				var w=window;
@@ -60,7 +59,6 @@ export default (Component) => {
 			} 
 			
 			this.state = Object.assign({ 
-				_defaults: props.noscript ? NoScriptDefaults : ScriptDefaults,
 				connected: false,
 				contentWidth,
 				desktop,
@@ -224,8 +222,8 @@ export default (Component) => {
 					snowUI.__resizing = setTimeout((resize) => { debug('## SEND RESIZE EVENT ##', force);Gab.emit('resize', resize);snowUI.__resizing = false }, 500, { width: x, height: y });
 				}
 			}
-			window.removeEventListener('resize', _resizing);
-			window.addEventListener('resize', _resizing);
+			//window.removeEventListener('resize', _resizing);
+			//window.addEventListener('resize', _resizing);
 			
 			_resizing(true);
 			

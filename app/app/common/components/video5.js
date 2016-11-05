@@ -5,7 +5,6 @@ import { Styles } from '../styles';
 import { ColorMe } from 'app/common/utils';
 import Gab from '../gab';
 
-
 let debug = Debug('lodge:app:common:components:video5'); 
 	
 export default class Video5 extends React.Component {
@@ -17,23 +16,28 @@ export default class Video5 extends React.Component {
 		//update bit
 		this._update = false;
 		this.run = this.run.bind(this);
+		this.doSomething = this.doSomething.bind(this);
+		this.curtain = null;
+		Gab.on(props.source, this.doSomething);
 		
 		this.buttonStyle = { margin: '0 auto',  width: 36, height: 36, padding: 0};
 	}
 	
 	shouldComponentUpdate(nextProps, nextState) {
 		
-		let changed = (nextProps.source != this.props.source);
-		this.props = nextProps;
-		this.state = nextState;
-		if (changed && this._update) {
+		let changed = (nextProps.source != this.props.source);		
+		if (changed) {
 			debug('clappr', this.props, nextProps);
+			this.props = nextProps;
 			this.change(nextProps.source);
+			return true;
 		}
+		debug('video5 should NOT update');
 		return false;
 	}
 
 	componentDidMount() {
+		debug('video5 didMount');
 		this.change(this.props.source);
 		this._update = true;
 		
@@ -41,8 +45,13 @@ export default class Video5 extends React.Component {
 
 	componentWillUnmount() {
 		this.destroyPlayer();
+		Gab.removeListener(this.props.source, this.doSomething);
 	}
-
+	
+	doSomething(data) {
+		
+	}
+	
 	destroyPlayer() {
 		if (this.player) {
 			this.player.destroy();
@@ -64,30 +73,42 @@ export default class Video5 extends React.Component {
 			parent: this.refs.player,
 			source: source,
 			//preload: 'none',
+			chromeless: this.props.chromeless,
 			width: this.props.width,
 			height: this.props.height,
 			mute: this.props.mute,
 			autoPlay: this.props.autoPlay,
 			actualLiveTime: this.props.actualLiveTime,
 			mimeType: this.props.mimeType,
-			poster: this.props.poster,
+			//poster: this.props.poster,
+			//plugins: [ChromecastPlugin],
 			maxBufferLength: 240,
 			hlsjsConfig: {
 				enableWorker: true
 			},
 			events: {
-				onReady: function() {  }, //Fired when the player is ready on startup
-				onResize: function() {  },//Fired when player resizes
-				onPlay: function() {  },//Fired when player starts to play
-				onPause: function() {  },//Fired when player pauses
-				onStop: function() {  },//Fired when player stops
-				onEnded: function() {  },//Fired when player ends the video
-				onSeek: function() {  },//Fired when player seeks the video
-				onError: function(err) { 
-						debug(err, 'Error playing video');
+				onReady: () => { }, //Fired when the player is ready on startup
+				onResize: () => {  },//Fired when player resizes
+				onPlay: () => { 
+					this.curtain.style.backgroundColor = 'black';
+				},//Fired when player starts to play
+				onPause:  () => {  
+					this.curtain.style.backgroundColor = 'initial';
+				},//Fired when player pauses
+				onStop: () => {  
+					this.curtain.style.backgroundColor = 'initial';
+				},//Fired when player stops
+				onEnded:  () => {  
+					this.curtain.style.backgroundColor = 'initial';
+				},//Fired when player ends the video
+				onSeek: () => {  },//Fired when player seeks the video
+				onError: (err) => { 
+					if(err.error) debug(err, 'Error playing video: ' + err.error);
 				},//Fired when player receives an error
-				onTimeUpdate: function() {  },//Fired when the time is updated on player
-				onVolumeUpdate: function() {  },//Fired when player updates its volume
+				onTimeUpdate: (time) => {  
+					//debug(time);
+				},//Fired when the time is updated on player
+				onVolumeUpdate: () => {  },//Fired when player updates its volume
 			}
 		});
 	}
@@ -134,7 +155,7 @@ export default class Video5 extends React.Component {
 		let buttonStyle = this.buttonStyle;
 		//let iconStyle={styles.smallIcon}
 		let playing = this.player && this.player.playing();
-		return(<div style={{ paddingTop: 12, float: 'left', align:'center',  margin: 'auto', background: Styles.Colors.blue900, height: this.props.height }}>
+		return(<div style={{ paddingTop: 12, position: 'absolute', width: 36, height: '100%', right: 0, top: 0,  align:'center',  margin: 'auto', background: Styles.Colors.lightBlue900, height: this.props.height }}>
 			<div style={{  }}>
 				<IconButton title="Stop Playing" style={buttonStyle} key="stop"  secondary={true} onClick={(e) => { this.run('stop') }} >
 					<FontIcon style={{ }} className="material-icons" color={Styles.Colors.blue600} hoverColor={Styles.Colors.blue600} >stop</FontIcon>
@@ -156,7 +177,7 @@ export default class Video5 extends React.Component {
 	controlsLeft() {
 		let buttonStyle = this.buttonStyle;
 		//let iconStyle={styles.smallIcon}
-		return(<div style={{ paddingTop: 12, float: 'left',  align:'center',  margin: 'auto', background: Styles.Colors.blue900, height: this.props.height }}>
+		return(<div style={{ paddingTop: 12, position: 'absolute', width: 36, height: '100%', left: 0, top: 0, align:'center',  margin: 'auto', background: Styles.Colors.lightBlue900, height: this.props.height }}>
 			<div>
 				<IconButton title="Reload Player" style={buttonStyle} key="reload"  secondary={true} onClick={(e) => { 
 					e.preventDefault();
@@ -214,11 +235,13 @@ export default class Video5 extends React.Component {
 	render() {
 		debug('## RENDER ## Player',  this.state, this.props, this.player);					
 			
-		let player =  (<div style={{ float: 'left', width: this.props.width, height: this.props.height }}  ref="player" />);
-		return (<div style={{  width: this.props.width + 72,  ...this.props.style }}>
-			{this.controlsLeft()}
-			{player}
-			{this.controlsRight()}
+		let player =  (<div style={{  width: this.props.width, height: this.props.height }}  ref="player" />);
+		return (<div ref={(input) => this.curtain = input} style={{ position: 'relative'}}>
+			{this.props.controls ? this.controlsLeft() : ''}
+			<div style={{  width: this.props.width,  ...this.props.style }}>
+				{player}
+			</div>
+			{this.props.controls ? this.controlsRight() : ''}
 			<div className="clearfix" />
 		</div>);		
 	}
@@ -230,13 +253,16 @@ Video5.propTypes = {
 
 Video5.defaultProps = {
 	width: 288,
-	height: 148,
-	poster: '/images/fanart.jpg',
+	height: 162,
+	poster: false,
 	autoPlay: false,
 	actualLiveTime: false,
 	mimeType: false,
 	mute: false,
 	channel: {
 		prev: {}
-	}
+	},
+	controls: false,
+	listenTo: false,
+	chromeless: false
 };

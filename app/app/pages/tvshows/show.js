@@ -1,10 +1,11 @@
 import React from 'react';
 import Debug from 'debug';
 import Gab from '../../common/gab';
-import { Card, CardActions, CardHeader, CardText, FontIcon, IconButton, RaisedButton, Table, TableRow, TableHeader, TableHeaderColumn, TableBody, TableRowColumn } from 'material-ui';
+import { Card, CardActions, CardHeader, CardMedia, CardText, FontIcon, IconButton, RaisedButton, Table, TableRow, TableHeader, TableHeaderColumn, TableBody, TableRowColumn, Toggle } from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 import { find as Find } from 'lodash';
+import Video from '../../common/components/video5';
 
 let debug = Debug('lodge:app:pages:tvshows:show');
 
@@ -25,7 +26,11 @@ export default class Show extends React.Component {
 		this.state = {
 			loading: true,
 			show,
-			channels
+			channels,
+			episode: {},
+			fixAudio: false,
+			fixVideo: false,
+			play: false,//'http://studio:7001/alvin/channel/recentEpisodes'
 		};
 		
 		this.gotShow = this.gotShow.bind(this);
@@ -84,8 +89,8 @@ export default class Show extends React.Component {
 	}
 	
 	dialog(row, col) {
-		let c = this.state.channel;
-		let s = c.sources[row];
+		let c = this.state.show;
+		let s = c.episodes[row];
 		debug(s);
 		const buttonStyle = {
 			margin: '30 0 0 12',
@@ -100,54 +105,60 @@ export default class Show extends React.Component {
 		};
 		Gab.emit('dialog open', {
 			component: (<div>
+				
+				
 				<b>Season {s.season} Episode {s.episode}</b><br />
-				{s.description}<br /> 
-				<RaisedButton style={buttonStyleP} key="play"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Play" onClick={(e) => {
+				<p>{s.description}</p> 
+				<p><br />{s.filename}</p>
+				<RaisedButton style={buttonStyleP} key="play"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Play Direct" onClick={e => {
+						Gab.emit('dialog open', { open: false });
+						window.scrollTo(0,0);
+						this._update = true;
+						this.setState({
+							play: encodeURI(snowUI.videoStringReplace(s.file)),
+							episode: s,
+						});	
+				}} />
+				<RaisedButton style={buttonStyleP} key="create"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel" onClick={(e) => {
 					e.preventDefault();
 					Gab.emit('dialog open', { open: false });
-					Gab.emit('confirm open', {
+					Gab.emit('dialog2 open', {
 						title: s.name +  "",
 						answer:(yesno) => { 
-							Gab.emit('confirm open', { open: false });
+							Gab.emit('dialog2 open', { open: false });
 							if(yesno) {
 								
+							} else {
+								Gab.emit('dialog open', { open: true });
 							}
-							Gab.emit('dialog open', { open: true });
 						},
 						open: true,
 						noText: 'Cancel',
-						yesText: 'Please Play', 
-						html: 'This will stop the current stream and play <b>' + s.name + '</b>.  It could take a couple minutes for your stream to show the change.  Continue?'
+						component: (<div>
+							<p>Some files can not be streamed directly.  You can create a channel to convert those files so they can be viewed everywhere.</p>
+							
+							<RaisedButton style={buttonStyleP} key="play"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel"  />
+							
+							<RaisedButton style={buttonStyle} key="clodes"  primary={true}  label="Cancel" onClick={(e) => {
+								e.preventDefault();						
+								Gab.emit('dialog2 open', { open: false });
+								Gab.emit('dialog open', { open: true });
+							}} />
+							<div className="clearfix" />
+							
+						</div>)
 					})
+				}} />	
+				<RaisedButton style={buttonStyleP} key="info"  primary={true}  label="Info" onClick={(e) => {
+					e.preventDefault();						
+					this.props.goTo({
+						page: s.name,
+						path: '/library/tv/episode/' + s.idShow + '/' + s.episodeID
+					});
 				}} />
+				<div className="clearfix" style={{ height: 20, width:1}} />
 				
-				<IconButton title="Remove this program from the source queue" style={buttonStyle} key="del" primary={true}   
-					children={<FontIcon style={{ }} className="material-icons" color={Styles.Colors.orange600} hoverColor={Styles.Colors.redA400} >remove_from_queue</FontIcon>}
-					onClick={(e) => {
-						e.preventDefault();
-						Gab.emit('dialog open', { open: false });
-						Gab.emit('confirm open', {
-							title: s.name +  "",
-							answer:(yesno) => { 
-								Gab.emit('confirm open', { open: false });
-								if(yesno) {
-									
-								} else {
-									Gab.emit('dialog open', { open: true });
-								}
-							},
-							open: true,
-							noText: 'Cancel',
-							yesText: 'Yes, remove from queue',
-							html: 'This will <b>REMOVE  </b>' + s.name + '.  Continue?'
-						})
-					}} 
-				/>													
-				
-				<IconButton title="Skip this Program" disabled={true} style={buttonStyle} key="skip"  secondary={true}  >
-					<FontIcon style={{ }} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blue600} >pause</FontIcon>
-				</IconButton>
-				
+							
 			</div>),
 			title: s.name +  "",
 			answer:(yesno) => { 
@@ -158,31 +169,45 @@ export default class Show extends React.Component {
 		});
 	}
 	
+	fixAudio(s,e,t) {
+		debug(s,e)
+		this.setState({
+			fixAudio: e
+		});
+	}
+	
 	list(list) {
 		let c = this.state.show;
+		let poster= '/images/fanart.gif';
 		
 		let sourceMap = list.map((s, iii) => {
-				return (<TableRow>
+			if(s.thumb) {
+				poster = s.thumb;
+			}
+			return (<TableRow style={{ background: this.props.theme.palette.canvasColor, opacity: '0.80', fontWeight: 'bold' }}>
 				<TableRowColumn style={{ width: 100 }}>S{s.season}E{s.episode}</TableRowColumn>
+				<TableRowColumn style={{ width: 64, paddingLeft: '0' }}><img src={poster} width="64" height="36"  /></TableRowColumn>
 				<TableRowColumn style={{ cursor: 'pointer' }}>{s.name}</TableRowColumn>
 			</TableRow>)
 		});
 		
 		let art = '';
 		let banner = 'initial';
-		if(c.art) {
-			var asset = Find(c.art, { type: 'fanart' });
+		if(c.thumb) {
+			art = "url('" + encodeURI(c.thumb) + "')   no-repeat center fixed " + this.props.theme.palette.canvasColor;
+		
+		} else if(c.art) {
+			var asset = Find(c.art, { type: 'fanart' , media_type: 'tvshow' });
 			if(asset) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')   no-repeat center fixed " + this.props.theme.palette.canvasColor;
-			
-			if (!this._skipMount) {
-				//document.body.style.backgroundColor = this.props.theme.pallete.canvasColor;
-				document.body.style.background = art;
-				document.body.style.backgroundSize = 'cover';
-			}
+		}
+		
+		if (!this._skipMount) {
+			//document.body.style.backgroundColor = this.props.theme.pallete.canvasColor;
+			document.body.style.background = art;
+			document.body.style.backgroundSize = 'cover';
 		}
 		
 		return (
-			<CardText expandable={false}>		
 				<Table
 					style={{ background: 'transparent' }}
 					fixedHeader={true}
@@ -205,12 +230,32 @@ export default class Show extends React.Component {
 						deselectOnClickaway={true}
 						showRowHover={true}
 						stripedRows={false}
+						
 					>
 						{sourceMap}
 					</TableBody>
 				</Table>
-			</CardText>
 		);
+	}
+	
+	video() {
+		if(this.state.play) {
+			let art = false;
+			if(this.state.episode.thumb) {
+				art = this.state.episode.thumb;
+			} else if (this.state.episode) {
+				var asset = Find(this.state.episode.art, { type: 'fanart', media_type: 'tvshow' });
+				if(asset) art =  encodeURI(snowUI.artStringReplace(asset.url));
+			} else if (this.state.show.art) {
+				var asset = Find(this.state.show.art, { type: 'fanart', media_type: 'tvshow'  });
+				if(asset) art =  encodeURI(snowUI.artStringReplace(asset.url));
+			}
+			let source = this.state.play + '?';
+			if(this.state.fixAudio) source += 'audio=yes';
+			if(this.state.fixVideo) source += '&video=yes';
+			return (<div style={{  background: 'transparent', width: '100%', position: 'relative' }} ><Video  style={{ margin: 'auto'  }} chromeless={true} source={source} poster={art} mimeType="video/mp4"  width={480} height={270} mute={false} controls={true} listenTo={this.state.show.name + ":video"}  /></div>);
+		}
+		return <span />;
 	}
 	
 	render() { 
@@ -221,13 +266,17 @@ export default class Show extends React.Component {
 		//return <div>{ret}</div>;
 		return (<div style={{ padding: '0 10px' }}>
 			<div style={{ padding: '10px 0px' }}>
-				<Card   zDepth={1} style={{ opacity: '.9' }}>
+				<Card   zDepth={1} style={{}} initiallyExpanded={this.state.play == ''} style={{ overflow: 'hidden', background: this.props.theme.palette.canvasColor, opacity: '.85' }}>
 					<CardHeader 
-						style={{ overflow: 'hidden' }}
+						
 						title={this.state.show.description}
 						avatar={<FontIcon style={{fontSize:'42px', cursor: 'pointer'}} className="material-icons" onClick={(e) => {this.props.goTo({page: 'TV Shows', path: '/library/tv'})}} color={ColorMe(5, this.props.theme.baseTheme.palette.accent1Color).color} title={'Return to TV Shows'} >backspace</FontIcon>}
+						actAsExpander={false}
+						showExpandableButton={false}
 					/>
+					
 				</Card>
+				{this.video()}
 			</div>
 			{ret}
 		</div>);

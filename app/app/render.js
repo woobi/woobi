@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Path from 'path';
 import wrapListeners from './listen';
 import Debug from 'debug';
-import BottomNav from './common/components/bottomNav';
 import MainMenu from './common/components/mainMenu';
 import Confirm from './common/components/confirm';
 import Dialog from './common/components/dialog';
@@ -21,7 +20,7 @@ let merge = Object.assign;
 let styles = {
 	'cream': Styles.getMuiTheme(deep(Styles.CREAM,  snowUI.materialStyle.serverRendered)),
 	'alternate blue': Styles.getMuiTheme(deep(Styles.ALTERNATEBLUE,  snowUI.materialStyle.serverRendered)),
-	'roms': Styles.getMuiTheme(deep(Styles.ROMS,  snowUI.materialStyle.serverRendered)),
+	'rommie': Styles.getMuiTheme(deep(Styles.ROMS,  snowUI.materialStyle.serverRendered)),
 	'blue': Styles.getMuiTheme(deep(Styles.BLUE,  snowUI.materialStyle.serverRendered)),
 	'dark': Styles.getMuiTheme(deep(Styles.DARK, snowUI.materialStyle.serverRendered)),
 	'default': Styles.getMuiTheme(deep(Styles.DEFAULT, snowUI.materialStyle.serverRendered )),
@@ -55,7 +54,7 @@ class Render extends Component {
 		this.displayName = 'Render';
 					
 		var state = merge({
-			theme: styles[snowUI.__userTheme] || styles[snowUI.defaultTheme] || styles.roms,
+			theme: styles[snowUI.__userTheme] || styles[snowUI.defaultTheme] || styles.rommie,
 			styles,
 		}, _DEFAULTS());
 				
@@ -121,10 +120,10 @@ class Render extends Component {
 		//Gab.removeListener('Render', this.onData);
 	}
 	
-	switchTheme(theme = 'roms', update = true, callback, userSelect = false) {
+	switchTheme(theme = 'rommie', update = true, callback, userSelect = false) {
 		let style = this.state.styles[theme];
 		if(!style) {
-			style = this.state.styles.roms;
+			style = this.state.styles.rommie;
 		} 
 		if( theme == 'dark' ) {
 			snowUI.setTheme('dark-theme');
@@ -153,6 +152,9 @@ class Render extends Component {
 		} else if( theme == 'blue' ) {
 			snowUI.setTheme('light-theme blue');
 			snowUI.shortenTitle = false; 
+		} else if( theme == 'night' ) {
+			snowUI.setTheme('night default');
+			snowUI.shortenTitle = false; 
 		} else {
 			/** theme == 'roms' || theme == 'night' || reset **/
 			snowUI.setTheme('dark-theme default');
@@ -168,6 +170,7 @@ class Render extends Component {
 			
 			let appstate = {
 				theme: style,
+				currentTheme: theme,
 				forceUpdate: true,
 				firstrun: false
 			};
@@ -184,6 +187,7 @@ class Render extends Component {
 		} else {
 			let appstate = {
 				theme: style,
+				currentTheme: theme,
 				forceUpdate: true,
 				firstrun: false
 			};
@@ -399,7 +403,7 @@ class Render extends Component {
 	}
 	
 	dialogBox() {
-		return (
+		return (<div>
 			<Dialog 
 				component={this.state.dialog.component}
 				html={this.state.dialog.html}
@@ -409,7 +413,19 @@ class Render extends Component {
 				closeText={this.state.dialog.closeText}
 				theme={this.state.theme}
 			/>
-		);
+			<Dialog 
+				name="2"
+				open={false}
+			/>
+			<Dialog 
+				name="3"
+				open={false}
+			/>
+			<Dialog 
+				name="4"
+				open={false}
+			/>
+		</div>);
 	}
 	
 	dismissDialog() {

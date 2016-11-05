@@ -1,14 +1,12 @@
-import '../gblconfig.js';
+import './gblconfig.js';
 import Home from './pages/home';
 import Status from './pages/status';
-import Page from './pages/page';
 import Channel from './pages/channels';
 import Channels from './pages/channels/index';
 import TV from './pages/tvshows';
 import TVs from './pages/tvshows/index';
 import Movies from './pages/movies';
 import Movie from './pages/movies/index';
-import Fetch from './pages/fetch';
 import { isObject } from 'lodash';
 import Debug from 'debug';
 import FourZeroFour from './pages/404.js';
@@ -20,12 +18,6 @@ let Routes = [];
 
 // add each page
 Routes.push({ path: 'status', component: Status });
-Routes.push({ path: 'page', component: Page });
-Routes.push({ path: 'fetch', component: Fetch });
-Routes.push({ path: 'json', component: Fetch });
-Routes.push({ path: 'markdown', component: Fetch });
-Routes.push({ path: 'status', component: Fetch });
-//Routes.push({ path: 'home', component: Home });
 Routes.push({ path: '404', component: FourZeroFour });
 
 // redirects
@@ -63,6 +55,7 @@ Routes.push({
     indexRoute: { component: TVs.Home },
     catchAll: { component: TVs.Home },
     childRoutes: [
+		{ path: 'episode/:show/:episode', component: TVs.Episode },
 		{ path: 'recent', component: TVs.Recent },
 		{ path: ':imdb', component: TVs.Show },
     ]

@@ -23,6 +23,7 @@ System.config({
     "bluebird": "npm:bluebird@3.4.3",
     "capaj/systemjs-hot-reloader": "github:capaj/systemjs-hot-reloader@0.6.0",
     "clappr": "npm:clappr@0.2.63",
+    "clappr-chromecast-plugin": "npm:clappr-chromecast-plugin@0.0.5",
     "classnames": "npm:classnames@2.2.5",
     "config": "gblconfig",
     "core-js": "npm:core-js@1.2.7",
@@ -376,6 +377,11 @@ System.config({
       "inherits": "npm:inherits@2.0.1",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
       "string_decoder": "github:jspm/nodelibs-string_decoder@0.1.0"
+    },
+    "npm:clappr-chromecast-plugin@0.0.5": {
+      "path": "github:jspm/nodelibs-path@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:clappr@0.2.63": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
