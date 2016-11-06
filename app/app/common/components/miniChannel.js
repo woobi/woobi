@@ -254,7 +254,7 @@ export default class miniChannel extends React.Component {
 		);
 	}
 	
-	buttons(c, buttons, powerButtons) {
+	buttons(c) {
 		const buttonStyle = {
 			margin: '30 0 0 12',
 			borderRadius: 0,
@@ -267,7 +267,7 @@ export default class miniChannel extends React.Component {
 			color: 'white',
 		};
 		// cycle through the commands first
-		buttons = c.commands.request.map((cc, i) => {
+		return c.commands.request.map((cc, i) => {
 			return (<FlatButton key={cc.name+i} label={cc.label} onClick={()=>{
 				Gab.emit('confirm open', {
 					html:"If you switch between HD and SD feeds the channel may need to be restarted for HLS feeds to continue. You can switch back to the original feed type and a restart is not required. ",
@@ -283,11 +283,26 @@ export default class miniChannel extends React.Component {
 			}} />)
 		});
 		
+		
+	}	
+		
+	powerButtons(c) {
+		let powerButtons = [];
 		let newC = { name: 'RebootChannel', label: 'REBOOT CHANNEL', link: '/alvin/restart/channel/' + c.channel , success: 'Channel ' + c.channel + ' restarting fresh. ', error: 'Could not restart ' + c.channel };
 		let newC2 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=no', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel };
 		let newC3 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=yes', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel, onSuccess: () => {} };
 		let newStop = { name: 'KILL', label: 'REMOVE CHANNEL', link: '/alvin/kill/channel/' + c.channel, success: 'Channel ' + c.channel + ' stopping. ', error: 'Could not stop ' + c.channel };
-		
+		const buttonStyle = {
+			margin: '30 0 0 12',
+			borderRadius: 0,
+			float: 'right',
+		};
+		const buttonStyleP = {
+			margin: '30 12 0 0',
+			borderRadius: 0,
+			float: 'left',
+			color: 'white',
+		};
 		powerButtons.unshift(<IconButton key={newStop.name} label={newStop.label} title={newStop.label} onClick={()=>{
 			Gab.emit('dialog open', {
 				title:"Remove Channel",
@@ -435,6 +450,8 @@ export default class miniChannel extends React.Component {
 		}}  >
 			<FontIcon style={{ }} className="material-icons"  color={Styles.Colors.amber500}  hoverColor={Styles.Colors.amber900} >settings_backup_restore</FontIcon>
 		</IconButton>)
+		
+		return powerButtons;
 	}
 	
 	render() { 
@@ -445,6 +462,8 @@ export default class miniChannel extends React.Component {
 		if(!c.commands) {
 			return (<Card><div>Loading Channel {c.channel}</div> </Card>);
 		}
+		let buttons = this.buttons(c);
+		let powerButtons = this.powerButtons(c);
 		
 		var links = [];
 				
@@ -468,10 +487,8 @@ export default class miniChannel extends React.Component {
 			});
 		}
 		
-		let buttons = [];
-		let powerButtons = [];
-		this.buttons(c, buttons, powerButtons);
 		
+		debug(buttons);
 		let art = '/images/fanart.gif';
 		let poster ='/images/fanart.gif';
 		let banner =  "url('/images/banner.jpg')no-repeat  center";

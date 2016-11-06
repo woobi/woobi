@@ -16,6 +16,7 @@ var filesize = require('file-size');
 
 var HLS = new keystone.List('HLS', {
 	track: true,
+	hidden: true
 });
 
 HLS.add({

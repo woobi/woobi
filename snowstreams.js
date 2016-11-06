@@ -94,7 +94,8 @@ var snowstreams = function() {
 			if(opts.proxy === true)  {
 				opts.proxy = {};
 			}
-			this.Stream.proxy(opts.proxy, (err, result) => {
+			// start the server
+			this.Stream.proxy.server(opts.proxy, (err, result) => {
 				if(err) console.log('ERROR', err);
 				finish.call(this);
 			});
@@ -151,7 +152,7 @@ snowstreams.prototype.addChannel = function(channel, opts) {
 	delete this.channels[channel];
 	return new Promise((resolve, reject) => { 
 		this.channels[channel] = new this.Channel(channel, opts, (err, c) => {
-			this.channels[channel] = c;
+			//this.channels[channel] = c;
 			if(err) return reject(err);
 			
 			Broadcast.notify('channels', Broadcast.socketListeners.channels());

@@ -16,6 +16,7 @@ var filesize = require('file-size');
 
 var Fluent = new keystone.List('Fluent', {
 	track: true,
+	hidden: true
 });
 
 Fluent.add({

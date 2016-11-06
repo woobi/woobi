@@ -31,8 +31,16 @@ File.add({
 	runtime: Types.Number ,
 	size: Types.Number ,
 	bitrate: Types.Number ,
-	
-	source: { type: Types.Relationship, ref: 'Source', required: true, initial:true, many: true}
+	options: {
+		input: Types.TextArray ,
+		output: Types.TextArray ,
+		format: Types.Text,
+		only: { type: Boolean, default: false },
+		onlyOptions: Types.TextArray,
+		passthrough: { type: Boolean, default: false },
+		hls: Types.TextArray,
+	},
+	source: { type: Types.Relationship, ref: 'Source',   many: true}
 });
 
 File.schema.pre('save', function(go) {
