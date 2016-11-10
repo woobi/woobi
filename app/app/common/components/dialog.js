@@ -24,7 +24,7 @@ export default class Dialog2 extends React.Component {
 	}
 	
 	shouldComponentUpdate(props) {
-		debug('shouldComponentUpdate', this.name, (props.open !== this.props.open), this._update)
+		//debug('shouldComponentUpdate', this.name, (props.open !== this.props.open), this._update)
 		if(this._update) {
 			this._update = false;
 			return true;
@@ -66,9 +66,10 @@ export default class Dialog2 extends React.Component {
 		return (
 			<div>
 				<Dialog
-					title={this.props.title}
+					title={this.props.title} 
 					actions={actions}
 					modal={false}
+					contentStyle={this.props.contentStyle}
 					bodyStyle={this.props.bodyStyle}
 					open={this.props.open}
 					onRequestClose={this.handleNo}
@@ -88,5 +89,6 @@ Dialog2.defaultProps = {
 	html: 'Placeholder Text',
 	title: 'Dialog',
 	autoScrollBodyContent: true,
-	bodyStyle: {}
+	bodyStyle: {},
+	contentStyle: {}
 };

@@ -32,13 +32,19 @@ File.add({
 	size: Types.Number ,
 	bitrate: Types.Number ,
 	options: {
-		input: Types.TextArray ,
-		output: Types.TextArray ,
-		format: Types.Text,
-		only: { type: Boolean, default: false },
-		onlyOptions: Types.TextArray,
-		passthrough: { type: Boolean, default: false },
-		hls: Types.TextArray,
+		inputFormat: { type: Types.Text,  initial: false,   },
+		inputOptions: { type: Types.TextArray,  initial: false, },
+		seek: { type: Types.Text,  initial: false,   },
+		outputOptions: { type: Types.TextArray,  initial: false,  },
+		videoFilters: { 
+			filter: { type: Types.Text,  initial: false,  },
+			options: { type: Types.TextArray,  initial: false,   },
+		},
+		format: { type: Types.Text,  initial: false,  },
+		encode:  { type: Types.Boolean, default: false, dependsOn: {'options.user': false, 'options.stream': false} },
+		stream:  { type: Types.Boolean, default: false, dependsOn: {'options.encode': false, 'options.user': false} },
+		user:  { note: 'check this and leave only options empty for a passthrough stream', type: Types.Boolean, default: false, dependsOn: { 'options.encode': false, 'options.stream': false } },
+		onlyOptions: { type: Types.TextArray,  initial: false, dependsOn: { 'options.user': true }  },
 	},
 	source: { type: Types.Relationship, ref: 'Source',   many: true}
 });
@@ -48,13 +54,15 @@ File.schema.pre('save', function(go) {
 	debug('File pre save');
 	if(doc.scan) {
 		File.schema.statics.addCodec(doc, go);
+	} else {
+		go();
 	}
 });
 
 File.schema.statics.addCodec = function addCodec(doc, finished) {
 	async.series([function(next) {
 		doc.scan = false;
-		doc.ext = _.trimLeft(path.extname(doc.file), '.');
+		doc.ext = _.trimStart(path.extname(doc.file), '.');
 		var file = escapeShell(doc.file);
 		
 		ffmpeg.ffprobe(doc.file, function(err, meta) {
@@ -99,14 +107,14 @@ File.schema.statics.addCodec = function addCodec(doc, finished) {
 					+ '<hr />'
 					+ '</div>';
 				
-				ss.talk('File-log', { message: msg });
+				ss.notify('File-log', { message: msg });
 			}
 			next();
 		});// end ffprobe
 		
 	}],function(err) {
 		//debug(doc);
-		ss.talk('File-log', { done: true });
+		ss.notify('File-log', { done: true });
 		if(_.isFunction(finished)) {
 			finished();
 		} else {

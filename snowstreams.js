@@ -4,10 +4,6 @@ var path = require('path');
 var async = require('async');
 var Adapter = require('./lib/core/adapter');
 var fs = require('fs-extra');
-var sanitize = require("sanitize-filename");
-
-// sockets
-//var sockets =  require('./lib/core/socket')();
 
 var moduleRoot = (function(_rootPath) {
 	var parts = _rootPath.split(path.sep);
@@ -34,7 +30,7 @@ var snowstreams = function() {
 	this.programs = {};
 	this.proxies = [];
 	this.streams = {};
-	this.lib = false;
+	this.libs = {};
 	
 	// source and stream libs
 	this.Source = this.import('lib/source');
@@ -63,7 +59,7 @@ var snowstreams = function() {
 	this.uri = this.host + ':' + this.port;
 	
 	this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
-	fs.emptyDir(path.join(this.mediaPath,'channels'), (err) => {
+	fs.ensureDir(path.join(this.mediaPath,'channels'), (err) => {
 		if(err) debug('Error emptuing / creating mediaPath dir for channels', err);
 	
 		this.fillers = [
@@ -115,16 +111,17 @@ var snowstreams = function() {
 		}
 		debug('adapters! ');
 		// set the correct library adapters
-		async.map(opts.adapters,
+		async.forEach(opts.adapters,
 			(v, next) => {
-				Adapter(this, v, (err, adapted) => {
-					debug(v.type, 'Adapter configured');
-					next(null, adapted);
-				});
+				if(v.name) {
+					this.libs[v.name] = Adapter(this, v, (err, adapted) => {
+						debug(v.name + ' Adapter configured');
+						next(null, adapted);
+					});
+				} else next();
 			},
-			(err, all) => {
+			(err) => {
 				debug('Init finished');
-				this.libs = all;
 				if(_.isFunction(callback)) {
 					callback();
 				}	

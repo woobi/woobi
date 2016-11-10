@@ -47,7 +47,7 @@ export default class miniChannel extends React.Component {
 	}
 	
 	componentWillReceiveProps(props) {
-		debug('## componentWillReceiveProps  ##  Channel ', props);
+		//debug('## componentWillReceiveProps  ##  Channel ', props);
 		if(props.channel) {
 			if(props.channel.playing.name !== this.state.channel.playing.name) {
 				this._update = true;
@@ -210,6 +210,9 @@ export default class miniChannel extends React.Component {
 			let poster= '/images/fanart.gif';
 			if(s.metadata.thumb) {
 					poster = s.metadata.thumb;
+			} else if (s.metadata.art) {
+				var asset = Find(s.metadata.art, { type: 'fanart' });
+				if(asset) poster =snowUI.artStringReplace(asset.url);
 			}
 			return (<TableRow key={iii}>
 				<TableRowColumn style={{ width: 40 }}>{s.position}</TableRowColumn>
@@ -487,8 +490,6 @@ export default class miniChannel extends React.Component {
 			});
 		}
 		
-		
-		debug(buttons);
 		let art = '/images/fanart.gif';
 		let poster ='/images/fanart.gif';
 		let banner =  "url('/images/banner.jpg')no-repeat  center";

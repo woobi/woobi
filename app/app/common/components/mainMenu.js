@@ -233,7 +233,7 @@ export default class mainMenu extends React.Component {
 								onClick={(e) => {
 									e.preventDefault(e);
 									this.props.goTo({
-										page: 'Recent TV',
+										page: 'Recent Movies',
 										path: '/library/movies/recent',
 									}, {}, () => { this.toggleDrawer(false, false) });
 								}}

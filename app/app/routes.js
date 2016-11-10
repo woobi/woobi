@@ -44,7 +44,7 @@ Routes.push({
     indexRoute: { component: Channels.Home },
     catchAll: { component: Channels.Home },
     childRoutes: [
-		{ path: 'add', component: Channels.Home },
+		{ path: ':action', component: Channels.Home },
 		{ path: 'view/:channel', component: Channels.Home },
     ]
 });

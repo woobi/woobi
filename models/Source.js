@@ -21,17 +21,25 @@ Source.add({
 	name: { type: Types.Text, required: true, initial:true, unique: true },
 	categories: { type: Types.Relationship, ref: 'SourceCategory', many: true },
 	pid: {type: Types.Number, index:true, initial:true, noedit: true  },
-	_default: { type: Types.Boolean, default: false },
+	_readonly: { type: Types.Boolean, default: false },
 	type: { type: Types.Select,  label:'type', initial:true,  options: 'file, stream, program, udp',},
 },	{ heading: "Stream", dependsOn: { type: 'stream' }, note: 'Can be any acceptable ffmpeg input for video or stream for audio'  }, {
 	input: { type: Types.Text, initial: true, dependsOn: { type:'stream' } },
 	streamOptions: {
-		input: { type: Types.TextArray,  initial: false, dependsOn: {type:'stream'}  },
-		output: { type: Types.TextArray,  initial: false, dependsOn: {type:'stream'}  },
-		format: { type: Types.Text,  initial: false, dependsOn: {type:'stream'}  },
-		only:  { type: Types.Boolean, default: false, dependsOn: {type:'stream'} },
-		onlyOptions: { type: Types.TextArray,  initial: false, dependsOn: {type:'stream'}  },
-		passthrough:  { type: Types.Boolean, default: false, dependsOn: {type:'stream'} },
+		inputFormat: { type: Types.Text,  initial: false, dependsOn: { type:'stream' }  },
+		inputOptions: { type: Types.TextArray,  initial: false, dependsOn: { type:'stream'  }  },
+		seek: { type: Types.Text,  initial: false, dependsOn: { type:'stream' }  },
+		outputOptions: { type: Types.TextArray,  initial: false, dependsOn: { type:'stream' }  },
+		videoFilters: { 
+			filter: { type: Types.Text,  initial: false, dependsOn: { type: 'stream' }  },
+			options: { type: Types.TextArray,  initial: false, dependsOn: { type: 'stream' }  },
+		},
+		format: { type: Types.Text,  initial: false, dependsOn: { type:'stream' } },
+		encode:  { type: Types.Boolean, default: false, dependsOn: {type:'stream', 'streamOptions.user': false, 'streamOptions.stream': false} },
+		stream:  { type: Types.Boolean, default: false, dependsOn: {type:'stream', 'streamOptions.encode': false, 'streamOptions.user': false} },
+		user:  { note: 'check this and leave only options empty for a passthrough stream', type: Types.Boolean, default: false, dependsOn: {type:'stream', 'streamOptions.encode': false, 'streamOptions.stream': false } },
+		onlyOptions: { type: Types.TextArray,  initial: false, dependsOn: { type:'stream', 'streamOptions.user': true }  },
+		
 	},
 },	{ heading: "UDP", dependsOn: { type: 'udp' } }, {
 	host: { type: Types.Text,  label:'host', initial: true, dependsOn: { type:'udp' } },
@@ -53,12 +61,19 @@ Source.add({
 	files: { hidden: true, type: Types.Relationship, ref: 'File', many: true , dependsOn: {type:'file'} },
 	scan: { type: Types.Boolean, default: false, dependsOn: {type:'file'} },
 	fileOptions: {
-		input: { type: Types.TextArray,  initial: false, dependsOn: {type:'file'}  },
-		output: { type: Types.TextArray,  initial: false, dependsOn: {type:'file'}  },
-		format: { type: Types.Text,  initial: false, dependsOn: {type:'file'}  },
-		only:  { type: Types.Boolean, default: false, dependsOn: {type:'file'} },
-		onlyOptions: { type: Types.TextArray,  initial: false, dependsOn: {type:'file'}  },
-		passthrough:  { type: Types.Boolean, default: false, dependsOn: {type:'file'} },
+		inputFormat: { type: Types.Text,  initial: false, dependsOn: { type: 'file' }  },
+		inputOptions: { type: Types.TextArray,  initial: false, dependsOn: { type: 'file'  }  },
+		seek: { type: Types.Text,  initial: false, dependsOn: { type: 'file' }  },
+		outputOptions: { type: Types.TextArray,  initial: false, dependsOn: { type: 'file' }  },
+		videoFilters: { 
+			filter: { type: Types.Text,  initial: false, dependsOn: { type: 'file' }  },
+			options: { type: Types.TextArray,  initial: false, dependsOn: { type: 'file' }  },
+		},
+		format: { type: Types.Text,  initial: false, dependsOn: { type: 'file' } },
+		encode:  { type: Types.Boolean, default: false, dependsOn: {type: 'file', 'fileOptions.user': false, 'fileOptions.stream': false} },
+		stream:  { type: Types.Boolean, default: false, dependsOn: {type: 'file', 'fileOptions.encode': false, 'fileOptions.user': false} },
+		user:  { note: 'check this and leave only options empty for a passthrough stream', type: Types.Boolean, default: false, dependsOn: {type: 'file', 'fileOptions.encode': false, 'fileOptions.stream': false } },
+		onlyOptions: { type: Types.TextArray,  initial: false, dependsOn: { type: 'file', 'fileOptions.user': true }  },
 	},
 }, 'Track', {	
 	streaming: { type: Types.Boolean, default: false, initial:true, noedit: true },
@@ -105,7 +120,7 @@ Source.schema.post('save', function() {
 			if(!doc.directory) {
 				debug('single file');
 				pushFile(doc,{ file: doc.file, options: doc.fileOptions }, next)
-				ss.talk('Source-log', { message: doc.file});
+				//ss.talk('Source-log', { message: doc.file});
 				next();
 			} else {
 				debug('multiple files');
@@ -127,12 +142,12 @@ Source.schema.post('save', function() {
 						on('match', function(file) {
 							matched++;
 							cargo.push(file, function (err) {
-								ss.talk('Source-log', { message: num++ + ' :: ' + file});
+								//ss.talk('Source-log', { message: num++ + ' :: ' + file});
 							});
 						}).
 						on('end', function(files) {
 							debug('end glob');
-							ss.talk('Source-log', { message: ' Total Files :: ' + files.length});
+							//ss.talk('Source-log', { message: ' Total Files :: ' + files.length});
 						});
 					next();
 					
@@ -165,8 +180,8 @@ function pushFile(doc, file, cb) {
 	var list = keystone.list('File');
 	list.model.findOneAndUpdate({ file: file.file  }, send, {upsert: true, safe: true}, function(err, newdoc){
 		if(err) {
-			ss.talk('log:error', { location: 'Model:Source:151', error: err});
-			ss.talk('Source-log', { location: 'Model:Source:152', error: err});			
+			//ss.talk('log:error', { location: 'Model:Source:151', error: err});
+			//ss.talk('Source-log', { location: 'Model:Source:152', error: err});			
 			return cb(err);
 		}
 		if(newdoc) {
@@ -174,7 +189,7 @@ function pushFile(doc, file, cb) {
 			list.model.addCodec(newdoc, true);
 			doc.update({"$addToSet": { files: newdoc._id } }, function(err,ret) {});
 		} else {
-			ss.talk('log:error', { location: 'Model:Source:89', error: 'Doc not created', doc: newdoc});
+			//ss.talk('log:error', { location: 'Model:Source:89', error: 'Doc not created', doc: newdoc});
 			debug('newdoc not created', newdoc);
 		}		
 	});

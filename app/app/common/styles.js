@@ -6,16 +6,16 @@ import { ColorMe } from './utils';
 
 export let NIGHT  = deep( {
 	palette: {
-		primary2Color: '#223E77',
-		textColor: colors.blue100,
-		alternateTextColor: colors.blueGrey900,
+		primary2Color: colors.blue300,
+		textColor: colors.blue50,
+		alternateTextColor: colors.blueGrey400,
 		primary1Color: 'initial',
 		canvasColor: '#001933',
 		bodyColor: 'initial',
 		contentColor: 'initial',
-		accent1Color: colors.blue500,
-		accent2Color: colors.blue700,
-		accent3Color: colors.blue900,
+		accent1Color: colors.lightBlue700,
+		accent2Color: colors.lightBlue800,
+		accent3Color: colors.lightBlue900,
 		disabledColor: colors.grey600,
 	},
 	snackbar: {
@@ -30,11 +30,11 @@ export let NIGHT  = deep( {
 	},
 	raisedButton: {
 		textColor: colors.lightBlue900,
+		secondaryTextColor: 'white',
 	},
 	appBar: {
-		buttonColor: colors.blue200	,
-		backgroundColor: colors.lightBlue900,
-		textColor: colors.lightBlue300,
+		buttonColor: colors.indigoA200,
+		textColor: colors.indigo100,
 	},
 	searchBar: {
 		large: 'initial',
@@ -54,7 +54,7 @@ export let NITELITE  = deep( {
 		accent1Color: colors.indigo700,
 		accent2Color: colors.indigo200,
 		accent3Color: colors.indigo900,
-		disabledColor: colors.grey600,
+		disabledColor: colors.grey300,
 	},
 	snackbar: {
 		textColor: '#222',

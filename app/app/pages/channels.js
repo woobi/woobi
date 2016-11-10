@@ -46,7 +46,7 @@ export default class Channel extends React.Component {
 	
 	shouldComponentUpdate(nextProps) {
 		debug('## shouldComponentUpdate ## Channel ', this._update);
-		if(this._update || this.props.currentTheme !== nextProps.currentTheme) {
+		if(this._update || this.props.currentTheme !== nextProps.currentTheme || this.props.params.action !== nextProps.params.action) {
 			this._update = false;
 			return true;
 		}
