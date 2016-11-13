@@ -159,7 +159,7 @@ export default class Status extends React.Component {
 								key="MaterialeDLigffhtTheme"
 								title={"Weird"}
 								onClick={e => this.props.switchTheme('blue')}
-								style={{backgroundColor: Style.Colors.indigo800, cursor: 'pointer'}}
+								style={{backgroundColor: Styles.Colors.indigo800, cursor: 'pointer'}}
 							/>
 							<GridTile 
 								key="MaterialL7ighytTheme"
