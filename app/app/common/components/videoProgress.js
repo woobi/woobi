@@ -1,7 +1,7 @@
 import React from 'react';
 import Debug from 'debug'
 
-let debug = Debug('lodge:app:common:components:videoProgress'); 
+let debug = Debug('woobi:app:common:components:videoProgress'); 
 	
 export default class videoProgress extends React.Component {
 	constructor(props) {

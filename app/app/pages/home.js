@@ -3,7 +3,7 @@ import Debug from 'debug'
 import Gab from '../common/gab'
 import { Styles } from '../common/styles';
 
-let debug = Debug('lodge:app:pages:home');
+let debug = Debug('woobi:app:pages:home');
 		
 export default class Home extends React.Component {
 	constructor(props) {

@@ -9,7 +9,7 @@ import VideoController from '../../common/components/videoController';
 import Video from '../../common/components/video5';
 import { StickyContainer, Sticky } from 'react-sticky';
 
-let debug = Debug('lodge:app:pages:movies:movies');
+let debug = Debug('woobi:app:pages:movies:movies');
 
 export default class Movies extends React.Component {
 	constructor(props) {
@@ -48,6 +48,8 @@ export default class Movies extends React.Component {
 		this._update = true;
 		
 		this.gotShows = this.gotShows.bind(this);
+		this.gotChannel = this.gotChannel.bind(this);
+
 	}
 	
 	componentDidMount() {
@@ -60,6 +62,9 @@ export default class Movies extends React.Component {
 	
 	componentWillUnmount() {
 		this.props.Sockets.io.removeListener('movies', this.gotShows);
+		if(this.state.channel) {
+			this.props.Sockets.io.on(this.state.channel.channel, this.gotChannel);
+		}
 	}
 	
 	componentWillReceiveProps(props) {
@@ -111,6 +116,8 @@ export default class Movies extends React.Component {
 		
 		if (chanel) {
 			play = chanel.link;
+			this.props.Sockets.io.removeListener(chanel.channel, this.gotChannel);
+			this.props.Sockets.io.on(chanel.channel, this.gotChannel);
 		}
 		this.setState({
 			shows: data.movies,
@@ -119,6 +126,16 @@ export default class Movies extends React.Component {
 			channel: chanel,
 			creating: false
 		});
+	}
+	
+	gotChannel(data) {
+		debug('Got Channel update', data);
+		if (typeof data === 'object') {
+			this._update = true;
+			this.setState({
+				channel: data.channel,
+			});
+		}
 	}
 	
 	createChannel() {

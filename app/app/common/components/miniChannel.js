@@ -13,7 +13,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { find as Find } from 'lodash';
 import VideoController from './videoController';
 
-let debug = Debug('lodge:app:common:components:miniChannel');
+let debug = Debug('woobi:app:common:components:miniChannel');
 
 export default class miniChannel extends React.Component {
 	constructor(props) {
@@ -492,7 +492,7 @@ export default class miniChannel extends React.Component {
 		}
 		
 		let art = '/images/fanart.gif';
-		let poster ='/images/fanart.gif';
+		let poster ='/images/fanart.jpg';
 		let banner =  "url('/images/banner.jpg')no-repeat  center";
 		let bgSize = 'cover';
 		if(c.playing.metadata.thumb) {
@@ -564,13 +564,9 @@ export default class miniChannel extends React.Component {
 									style={{
 										display: 'inline-block',
 									}}
-									kill={false}
+									kill={true}
 									onKill={() => {
-										this._update = true;
-										this.setState({
-											play: false,
-											channel: false
-										});
+										
 									}}
 								/>
 							</div>

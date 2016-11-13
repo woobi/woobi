@@ -3,7 +3,7 @@ import { isFunction, forEach } from 'lodash';
 import Debug from 'debug';
 import fetchPolyfill from 'fetch'
 
-let debug = Debug('lodge:app:common:gab');
+let debug = Debug('woobi:app:common:gab');
 
 class Gab extends EventEmitter {
 	constructor(props) {

@@ -11,7 +11,7 @@ import Debug from 'debug';
 import FourZeroFour from './pages/404.js';
 import App from './render.js';
 
-let debug = Debug('lodge:app:routes');
+let debug = Debug('woobi:app:routes');
 
 let Routes = [];
 

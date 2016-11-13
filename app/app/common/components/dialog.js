@@ -4,7 +4,7 @@ import { Styles } from '../styles';
 import Gab from '../gab';
 
 import debugging from 'debug';
-let	debug = debugging('lodge:app:common:components:dialog');
+let	debug = debugging('woobi:app:common:components:dialog');
 
 export default class Dialog2 extends React.Component {
 	constructor(props) {

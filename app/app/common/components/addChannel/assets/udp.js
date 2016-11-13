@@ -4,7 +4,7 @@ import { Checkbox, FlatButton, FloatingActionButton, FontIcon, IconButton, IconM
 import { Styles } from '../../../styles';
 import Gab from '../../../gab'; 
 
-let debug = Debug('lodge:app:common:components:addChannel:assets:udp'); 
+let debug = Debug('woobi:app:common:components:addChannel:assets:udp'); 
 	
 export default class addChannelAssetsUDP extends React.Component {
 	constructor(props) {

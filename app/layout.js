@@ -1,7 +1,7 @@
 import React from 'react';
 
 import debugging from 'debug';
-let	debug = debugging('lodge:app:layout');
+let	debug = debugging('woobi:app:layout');
 
 export default class Layout extends React.Component {
 	constructor(props) {

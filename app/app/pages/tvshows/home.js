@@ -6,7 +6,7 @@ import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 import { find as Find } from 'lodash';
 
-let debug = Debug('lodge:app:pages:tvshows:home');
+let debug = Debug('woobi:app:pages:tvshows:home');
 
 export default class TVShows extends React.Component {
 	constructor(props) {

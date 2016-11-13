@@ -5,7 +5,7 @@ import { Styles } from '../styles';
 import { ColorMe } from 'app/common/utils';
 import Gab from '../gab';
 
-let debug = Debug('lodge:app:common:components:video5'); 
+let debug = Debug('woobi:app:common:components:video5'); 
 	
 export default class Video5 extends React.Component {
 	constructor(props) {

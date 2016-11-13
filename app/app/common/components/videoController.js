@@ -5,7 +5,7 @@ import { Styles } from '../styles';
 import { ColorMe } from 'app/common/utils';
 import Gab from '../gab';
 
-let debug = Debug('lodge:app:common:components:videoController'); 
+let debug = Debug('woobi:app:common:components:videoController'); 
 	
 export default class VideoController extends React.Component {
 	constructor(props) {
@@ -466,8 +466,6 @@ export default class VideoController extends React.Component {
 }
 
 VideoController.defaultProps = {
-	width: 288,
-	height: 162,
 	channel: {
 		prev: {},
 		next: {},

@@ -7,7 +7,7 @@ import { ColorMe, Random } from '../../common/utils';
 import { map } from 'lodash';
 import { find as Find } from 'lodash';
 
-let debug = Debug('lodge:app:pages:tvshows:episode');
+let debug = Debug('woobi:app:pages:tvshows:episode');
 
 export default class Episode extends React.Component {
 	constructor(props) {

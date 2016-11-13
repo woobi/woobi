@@ -13,7 +13,7 @@ import { AppBar, Card, CardText, Divider, FlatButton, FontIcon, IconButton, Icon
 import { Styles } from './common/styles';
 import { defaultsDeep as deep, every as Every, isFunction } from 'lodash';
 
-let debug = Debug('lodge:app:render');
+let debug = Debug('woobi:app:render');
 
 let merge = Object.assign;
 

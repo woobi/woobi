@@ -7,7 +7,7 @@ import Sockets from './lib/sockets';
 import Path from 'path';
 import { withRouter } from 'react-router';
 
-let debug = Debug('lodge:app:listen');
+let debug = Debug('woobi:app:listen');
 
 export default (Component) => {
 	@withRouter

@@ -3,7 +3,7 @@ import Debug from 'debug'
 import Gab from '../common/gab'
 import { Styles } from '../common/styles';
 
-let debug = Debug('lodge:app:pages:channel');
+let debug = Debug('woobi:app:pages:channel');
 		
 export default class Channel extends React.Component {
 	constructor(props) {

@@ -8,7 +8,7 @@ import { Card, CardActions, CardHeader , FlatButton, FontIcon} from 'material-ui
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 
-let debug = Debug('lodge:app:pages:channels:home');
+let debug = Debug('woobi:app:pages:channels:home');
 
 export default class Home extends React.Component {
 	constructor(props) {

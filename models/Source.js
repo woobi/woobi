@@ -1,10 +1,10 @@
-var debug = require('debug')('snowstreams:model:source');
+var debug = require('debug')('woobi:model:source');
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
 var async = require('async');
 var _ = require('lodash');
 var glob = require("glob");
-var ss = require('../snowstreams');
+var ss = require('../woobi');
 
 /**
  * Source Model

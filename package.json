@@ -1,23 +1,23 @@
 {
-  "name": "snowstreams",
-  "version": "1.0.2",
-  "description": "home broadcasts",
-  "main": "snowstreams.js",
+  "name": "woobi",
+  "version": "1.0.1",
+  "description": "stream media across a lan",
+  "main": "woobi.js",
   "scripts": {
     "test": "mocha",
-    "start": "DEBUG=keystone-live:*,lodge:*,snowstreams:* node test.js",
+    "start": "DEBUG=woobi:* node test.js",
     "install": "jspm i"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snowkeeper/snowstreams.git"
+    "url": "git+https://github.com/woobi/woobi.git"
   },
   "author": "snowkeeper",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/snowkeeper/snowstreams/issues"
+    "url": "https://github.com/woobi/woobi/issues"
   },
-  "homepage": "https://github.com/snowkeeper/snowstreams#readme",
+  "homepage": "https://github.com/woobi/woobi#readme",
   "jspm": {
     "directories": {
       "baseURL": "app"
@@ -59,8 +59,7 @@
       "superagent": "npm:superagent",
       "tinycolor": "github:bgrins/TinyColor",
       "url": "npm:url",
-      "util": "github:jspm/nodelibs-util",
-      "xml2js-es6-promise": "npm:xml2js-es6-promise@^1.1.1"
+      "util": "github:jspm/nodelibs-util"
     },
     "devDependencies": {
       "babel": "npm:babel-core",

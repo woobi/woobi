@@ -4,7 +4,7 @@ import Gab from '../common/gab';
 import { Styles } from '../common/styles';
 import { GridList, GridTile, Divider, FontIcon, CardText, Card, CardActions, CardHeader, CardMedia, CardTitle } from 'material-ui';
 
-let debug = Debug('lodge:app:pages:status');
+let debug = Debug('woobi:app:pages:status');
 		
 export default class Status extends React.Component {
 	constructor(props) {
@@ -84,7 +84,7 @@ export default class Status extends React.Component {
 				<Card>
 					<CardHeader 
 						title={"Status"}
-						subtitle={"snowstreams server information"}
+						subtitle={"woobi app state"}
 						avatar={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >info_outline</FontIcon>}
 
 						actAsExpander={false}

@@ -5,7 +5,7 @@ import { Styles } from '../../styles';
 import Gab from '../../gab';
 import { map } from 'lodash';
 
-let debug = Debug('lodge:app:common:components:addChannel:name'); 
+let debug = Debug('woobi:app:common:components:addChannel:name'); 
 	
 export default class addChannelName extends React.Component {
 	constructor(props) {

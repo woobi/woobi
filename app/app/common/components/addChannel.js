@@ -8,7 +8,7 @@ import { IconMenu, MenuItem, RaisedButton, FlatButton, Step, StepLabel, Stepper 
 import { Styles } from '../styles';
 import Gab from '../gab';
 
-let debug = Debug('lodge:app:common:components:addChannel'); 
+let debug = Debug('woobi:app:common:components:addChannel'); 
 let SCREENS = [ Name, Assets, HLS, Review ];
 export default class addChannel extends React.Component {
 	constructor(props) {

@@ -3,9 +3,9 @@ var Types = keystone.Field.Types;
 var ffmpeg = require('fluent-ffmpeg');
 var path = require('path');
 var _ = require('lodash');
-var debug = require('debug')('snowstreams:model:Fluent');
+var debug = require('debug')('woobi:model:Fluent');
 var async = require('async');
-var Broadcast = require('../snowstreams');
+var Broadcast = require('../woobi');
 var moment = require('moment');
 var filesize = require('file-size');
  

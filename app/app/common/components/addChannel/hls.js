@@ -4,7 +4,7 @@ import { Checkbox, FlatButton, FloatingActionButton, FontIcon, IconButton, IconM
 import { Styles } from '../../styles';
 import Gab from '../../gab';
 
-let debug = Debug('lodge:app:common:components:addChannel:hls'); 
+let debug = Debug('woobi:app:common:components:addChannel:hls'); 
 	
 export default class addChannelHLS extends React.Component {
 	constructor(props) {

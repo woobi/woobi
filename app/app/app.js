@@ -4,7 +4,7 @@ import Debug from 'debug';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Router, match, browserHistory as history } from 'react-router'
 import { routeConfig as routes } from './routes';
-let debug = Debug('lodge:app');
+let debug = Debug('woobi:app');
 
 if(!snowUI.__injected) {
 	injectTapEventPlugin();

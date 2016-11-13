@@ -9,7 +9,7 @@ import virtualize from 'react-swipeable-views/lib/virtualize';
 import SwipeableViews from 'react-swipeable-views';
 const VirtualizeSwipeableViews = virtualize(SwipeableViews);
 
-let debug = Debug('lodge:app:pages:movies:movies');
+let debug = Debug('woobi:app:pages:movies:movies');
 
 export default class Movies extends React.Component {
 	constructor(props) {

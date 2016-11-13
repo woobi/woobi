@@ -10,7 +10,7 @@ import Video from '../../common/components/video5';
 import stringify from 'stringify-object';
 import { StickyContainer, Sticky } from 'react-sticky';
 
-let debug = Debug('lodge:app:pages:tvshows:show');
+let debug = Debug('woobi:app:pages:tvshows:show');
 
 export default class Show extends React.Component {
 	constructor(props) {
@@ -36,6 +36,7 @@ export default class Show extends React.Component {
 		let play = false;
 		if (chanel) {
 			play = chanel.link;
+			
 		}
 		this.state = {
 			loading: true,

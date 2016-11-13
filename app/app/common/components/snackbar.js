@@ -5,7 +5,7 @@ import Gab from '../gab';
 import { Styles } from '../styles';
 import { ColorMe, naturalSort } from '../utils';
 
-let	debug = debugging('lodge:app:common:components:snackbar');
+let	debug = debugging('woobi:app:common:components:snackbar');
 
 class SnackbarExampleSimple extends React.Component {
 

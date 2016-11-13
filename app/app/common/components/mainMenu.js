@@ -4,7 +4,7 @@ import { Divider, Drawer, IconButton, IconMenu, FontIcon, MenuItem } from 'mater
 import { Styles } from '../styles';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 
-let debug = Debug('lodge:app:common:components:mainMenu'); 
+let debug = Debug('woobi:app:common:components:mainMenu'); 
 
 		
 export default class mainMenu extends React.Component {

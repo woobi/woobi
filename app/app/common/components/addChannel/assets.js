@@ -8,7 +8,7 @@ import File from './assets/file';
 import UDP from './assets/udp';
 import { pullAt } from 'lodash';
 
-let debug = Debug('lodge:app:common:components:addChannel:assets'); 
+let debug = Debug('woobi:app:common:components:addChannel:assets'); 
 	
 export default class addChannelAssets extends React.Component {
 	constructor(props) {

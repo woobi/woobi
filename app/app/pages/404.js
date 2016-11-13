@@ -4,7 +4,7 @@ import Gab from '../common/gab'
 import { Divider, FontIcon, CardText, Card, CardActions, CardHeader, CardMedia, CardTitle } from 'material-ui';
 import { Styles } from '../common/styles';
 
-let debug = Debug('lodge:app:pages:disconnect');
+let debug = Debug('woobi:app:pages:disconnect');
 		
 export default class Disconnect extends React.Component {
 	constructor(props) {

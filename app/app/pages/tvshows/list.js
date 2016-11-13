@@ -5,7 +5,7 @@ import { Card, CardActions, CardHeader , FontIcon} from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 
-let debug = Debug('lodge:app:pages:tvshows:home');
+let debug = Debug('woobi:app:pages:tvshows:home');
 
 export default class Recent extends React.Component {
 	constructor(props) {

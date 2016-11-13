@@ -6,7 +6,7 @@ import naturalSorter from 'javascript-natural-sort';
 import sanitize from 'sanitize-filename';
 
 import debugging from 'debug';
-let	debug = debugging('lodge:app:common:utils');
+let	debug = debugging('woobi:app:common:utils');
 
 export let cleanFileName = function (file) {
 	return sanitize(file);

@@ -1,6 +1,6 @@
 import Gab from '../common/gab';
 import debugging from 'debug';
-let	debug = debugging('lodge:app:lib:socketFunctions');
+let	debug = debugging('woobi:app:lib:socketFunctions');
 
 let randomNumber = Math.random;
 

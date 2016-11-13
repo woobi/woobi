@@ -4,7 +4,7 @@ import { Checkbox, FlatButton, FontIcon, RaisedButton } from 'material-ui';
 import { Styles } from '../../styles';
 import Gab from '../../gab';
 
-let debug = Debug('lodge:app:common:components:addChannel:review'); 
+let debug = Debug('woobi:app:common:components:addChannel:review'); 
 	
 export default class addChannelReview extends React.Component {
 	constructor(props) {

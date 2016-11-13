@@ -3,7 +3,7 @@ import Debug from 'debug'
 import { Drawer, IconButton, IconMenu, FontIcon, MenuItem } from 'material-ui';
 import { Styles } from '../styles';
 
-let debug = Debug('lodge:app:common:components:menu'); 
+let debug = Debug('woobi:app:common:components:menu'); 
 
 		
 export default class Menu extends React.Component {

@@ -3,7 +3,7 @@ import Debug from 'debug'
 import Gab from '../common/gab'
 import { Styles } from '../common/styles';
 
-let debug = Debug('lodge:app:pages:movies');
+let debug = Debug('woobi:app:pages:movies');
 		
 export default class Movies extends React.Component {
 	constructor(props) {

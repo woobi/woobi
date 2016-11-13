@@ -11,7 +11,7 @@ import Video from '../../common/components/video5';
 import stringify from 'stringify-object';
 import { StickyContainer, Sticky } from 'react-sticky';
 
-let debug = Debug('lodge:app:pages:movies:movie');
+let debug = Debug('woobi:app:pages:movies:movie');
 
 export default class Show extends React.Component {
 	constructor(props) {

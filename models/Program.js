@@ -1,6 +1,6 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
-var debug = require('debug')('snowstreams:model:Program');
+var debug = require('debug')('woobi:model:Program');
 var async= require('async');
 var _ = require('lodash');
 

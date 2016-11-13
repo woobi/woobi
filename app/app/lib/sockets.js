@@ -4,7 +4,7 @@ import SF from  './socketFunctions';
 import io from 'socket.io-client';
 import Gab from '../common/gab';
 
-let	debug = debugging('lodge:app:lib:sockets');
+let	debug = debugging('woobi:app:lib:sockets');
 
 let Sockets = function() {
 	
