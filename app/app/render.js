@@ -18,9 +18,9 @@ let debug = Debug('woobi:app:render');
 let merge = Object.assign;
 
 let styles = {
-	'night': Styles.getMuiTheme(deep(Styles.NIGHT, snowUI.materialStyle.serverRendered)),
+	'woobi': Styles.getMuiTheme(deep(Styles.WOOBI, snowUI.materialStyle.serverRendered)),
 	'nitelite3': Styles.getMuiTheme(deep(Styles.NITELITE, snowUI.materialStyle.serverRendered)),
-	'rommie': Styles.getMuiTheme(deep(Styles.ROMS,  snowUI.materialStyle.serverRendered)),
+	'night': Styles.getMuiTheme(deep(Styles.NIGHT,  snowUI.materialStyle.serverRendered)),
 	'light': Styles.getMuiTheme(deep(Styles.LIGHT,  snowUI.materialStyle.serverRendered)),
 	'cream': Styles.getMuiTheme(deep(Styles.CREAM,  snowUI.materialStyle.serverRendered)),
 	'alternate blue': Styles.getMuiTheme(deep(Styles.ALTERNATEBLUE,  snowUI.materialStyle.serverRendered)),
@@ -153,11 +153,11 @@ class Render extends Component {
 		} else if( theme == 'blue' ) {
 			snowUI.setTheme('light-theme blue');
 			snowUI.shortenTitle = false; 
-		} else if( theme == 'night' ) {
+		} else if( theme == 'woobi' ) {
 			snowUI.setTheme('night default');
 			snowUI.shortenTitle = false; 
 		} else {
-			/** theme == 'roms' || theme == 'night' || reset **/
+			/** theme == 'night' || reset **/
 			snowUI.setTheme('dark-theme default');
 			snowUI.shortenTitle = false;
 		}

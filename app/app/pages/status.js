@@ -81,20 +81,7 @@ export default class Status extends React.Component {
 		return (<div className="col-xs-12" style={{paddingRight:0, paddingLeft:0}}  >
 			<Card style={{paddingRight:0, paddingLeft:0}} >
 				{status}				
-				<Card>
-					<CardHeader 
-						title={"Status"}
-						subtitle={"woobi app state"}
-						avatar={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >info_outline</FontIcon>}
-
-						actAsExpander={false}
-						showExpandableButton={false}
-					/>
-					<CardText >
-						<div className="clearfix" style={{marginLeft:40}}>{statusCheck}</div>		
-						<div className="clearfix" />				
-					</CardText>
-				</Card>
+				
 				<Card>
 					<CardHeader 
 						title={"Theme"}
@@ -109,85 +96,85 @@ export default class Status extends React.Component {
 						<GridList
 							cellHeight={100}
 							style={{width:'100%'}}
-							cols={7}
+							cols={5}
 							padding={0}
 							
 						>
 							<GridTile 
 								key="Materiallreste"
-								title={"Default"}
+								title={"Light"}
 								onClick={e => this.props.switchTheme('reset')}
-								style={{backgroundColor: 'initial', cursor: 'pointer'}}
+								style={{backgroundColor: 'white', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialDLfdasightTheme"
-								title={"Rommie"}
-								onClick={e => this.props.switchTheme('roms')}
+								key="MateraialDarkTheme"
+								title={"Woobi"}
+								onClick={e => this.props.switchTheme('woobi')}
+								style={{backgroundColor: '#223E77', cursor: 'pointer'}}
+							/>
+							<GridTile 
+								key="MateriaglDLfdasightTheme"
+								title={"Night"}
+								onClick={e => this.props.switchTheme('night')}
 								style={{backgroundColor: '#303234', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialDLightTheme"
-								title={"Alt Blue"}
-								onClick={e => this.props.switchTheme('alternate blue')}
-								style={{backgroundColor: '#0C87C1', cursor: 'pointer'}}
-							/>
-							
-							<GridTile 
-								key="MaterialDLissghtTheme"
+								key="MateraihalDLissghtTheme"
 								title={"Blue"}
-								onClick={e => this.props.switchTheme('blue')}
+								onClick={e => this.props.switchTheme('nitelite3')}
 								style={{backgroundColor: '#283593', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialTheme"
+								key="MateriawlDsarknn2Theme"
+								title={"Orange"}
+								onClick={e => this.props.switchTheme('nitelite2')}
+								style={{backgroundColor: '#F57C00', cursor: 'pointer'}}
+							/>
+							
+							<GridTile 
+								key="MateriarlTheme"
 								title={"Graphite"}
 								onClick={e => this.props.switchTheme('graphite')}
 								style={{backgroundColor: '#303030', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialDarkTheme"
-								title={"Night"}
-								onClick={e => this.props.switchTheme('night')}
-								style={{backgroundColor: '#223E77', cursor: 'pointer'}}
+								key="MaterialDarknn2Theme"
+								title={"Other"}
+								onClick={e => this.props.switchTheme('nitelite4')}
+								style={{backgroundColor: '#2E41D0', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialDarknnTheme"
-								title={"Nite Lite"}
+								key="MateritalDarknndTheme"
+								title={"Nitelite"}
 								onClick={e => this.props.switchTheme('nitelite')}
 								style={{backgroundColor: 'rgb(40, 53, 147)', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialDarknn2Theme"
-								title={"Nite Lite 2"}
-								onClick={e => this.props.switchTheme('nitelite2')}
-								style={{backgroundColor: '#F57C00', cursor: 'pointer'}}
+								key="MaterialDLightTheme"
+								title={"Alternate"}
+								onClick={e => this.props.switchTheme('alternate blue')}
+								style={{backgroundColor: '#0C87C1', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialDarknn3Theme"
-								title={"Nite Lite 3"}
-								onClick={e => this.props.switchTheme('nitelite3')}
-								style={{backgroundColor: '#1A237E', cursor: 'pointer'}}
+								key="MaterialeDLigffhtTheme"
+								title={"Weird"}
+								onClick={e => this.props.switchTheme('blue')}
+								style={{backgroundColor: Style.Colors.indigo800, cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialL7ightTheme"
+								key="MaterialL7ighytTheme"
 								title={"Cream"}
 								onClick={e => this.props.switchTheme('cream')}
 								style={{backgroundColor: '#FFFCEF', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MaterialLightTheme"
-								title={"Light"}
-								onClick={e => this.props.switchTheme('light')}
-								style={{backgroundColor: '#eeeeee', cursor: 'pointer'}}
-							/> 
-							<GridTile 
-								key="MateriallDDarkTheme"
+								key="MateriallDDharkTheme"
 								title={"MUI Dark"}
 								onClick={e => this.props.switchTheme('dark')}
 								style={{backgroundColor: '#0097A7', cursor: 'pointer'}}
 							/>
 							<GridTile 
-								key="MateriallDdefTheme"
+								key="MateriasllDdefTheme"
 								title={"MUI Light"}
 								onClick={e => this.props.switchTheme('default')}
 								style={{backgroundColor: '#fff', cursor: 'pointer'}}
@@ -195,6 +182,20 @@ export default class Status extends React.Component {
 						</GridList>
 			
 					</CardText >
+				</Card>
+				<Card>
+					<CardHeader 
+						title={"Status"}
+						subtitle={"woobi app state"}
+						avatar={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >info_outline</FontIcon>}
+
+						actAsExpander={false}
+						showExpandableButton={false}
+					/>
+					<CardText >
+						<div className="clearfix" style={{marginLeft:40}}>{statusCheck}</div>		
+						<div className="clearfix" />				
+					</CardText>
 				</Card>
 			</Card>
 		</div>);	

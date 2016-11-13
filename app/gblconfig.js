@@ -11,7 +11,7 @@ Number.prototype.clip = function(numbers) {
 	return Math.round(this * number) / number;
 }; 
 var snowUI = {
-	name: 'The Lodge',
+	name: 'Woobi Lodge',
 	materialStyle: {},
 	defaultTheme: 'light',
 	__currentTheme: 'light',

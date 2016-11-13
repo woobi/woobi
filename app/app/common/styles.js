@@ -4,7 +4,7 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import { defaultsDeep as deep } from 'lodash';
 import { ColorMe } from './utils';
 
-export let NIGHT  = deep( {
+export let WOOBI  = deep( {
 	palette: {
 		primary2Color: colors.blue300,
 		textColor: colors.blue50,
@@ -188,7 +188,7 @@ export let GRAPHITE  = deep( {
 	}
 }, darkBaseTheme);
 
-export let ROMS  = deep( {
+export let NIGHT  = deep( {
 	palette: {
 		bodyColor: 'initial',
 		contentColor: 'initial',
@@ -346,7 +346,7 @@ export let Styles = {
 	NIGHT,
 	CREAM,
 	ALTERNATEBLUE,
-	ROMS,
+	WOOBI,
 	NITELITE,
 	NITELITE2
 }

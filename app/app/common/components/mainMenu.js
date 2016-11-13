@@ -116,12 +116,12 @@ export default class mainMenu extends React.Component {
 						>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Default" value="reset" />
 						  <MenuItem style={{lineHeight: 2}} primaryText="Light" value="light" />
-						  <MenuItem style={{lineHeight: 2}} primaryText="Night" value="night"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Woobi" value="woobi"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Blue" value="nitelite3"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Rommie" value="rommie"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Night" value="night"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Graphite" value="graphite"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Nitelite" value="nitelite"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Nitelites" value="nitelite2"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Orange" value="nitelite2"/>
 						   <MenuItem style={{lineHeight: 2}} primaryText="Other" value="nitelite4"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Weird" value="blue"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Alternate" value="alternate blue"/>
