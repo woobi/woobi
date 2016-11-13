@@ -91,12 +91,13 @@ export default class addChannelAssets extends React.Component {
 		});
 		let page = (<div className="clearfix">
 			<div style={{ height: 15 }} />
-			<p>Files will be played in order</p>
-			{files}
-			<div style={{ height: 15 }} />
 			<p>Sources will be setup in order</p>
 			{pages}
 			<div style={{ height: 15 }} />
+			<p>Files will be played in order</p>
+			{files}
+			<div style={{ height: 15 }} />
+			
 		</div>);
 		if (this.state.add === 'File' || this.state.add === 'Input' || this.state.add === 'URL') {
 			page = <File { ...this.props } { ...this.state } setValue={this.setValue} assetsState={this.setState.bind(this)}  addSource={this.addSource} />;
@@ -141,15 +142,7 @@ export default class addChannelAssets extends React.Component {
 				</IconMenu> 
 				
 			</div>
-			<div style={{ display: !this.state.add ? 'block' : 'none'}}>
-				
-			</div>
-			
-			<div style={{}}>
-				{page}
-			</div>
-			<br />
-			<br />
+			<div style={{ height: 15 }} />
 			<RaisedButton
 				label="Back (Name)"
 				primary={true}
@@ -162,6 +155,14 @@ export default class addChannelAssets extends React.Component {
 				onTouchTap={() => (this.props.changeScreen(2))} 
 				style={{float: 'left',  }} 
 			/>
+			<br />
+			<br />
+			
+			<div style={{}}>
+				{page}
+			</div>
+			
+			
 		</div>);
 	}
 }

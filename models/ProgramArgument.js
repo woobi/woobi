@@ -12,7 +12,8 @@ var _ = require('lodash');
 var ProgramArgument = new keystone.List('ProgramArgument', {
 	map: { 'name': 'anchor'},
 	autokey: { path: 'slug', from: '_id', unique: true },
-	drilldown: 'program'
+	drilldown: 'program',
+	hidden: true
 });
 
 ProgramArgument.add({

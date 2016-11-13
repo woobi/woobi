@@ -18,8 +18,7 @@ export default class Video5 extends React.Component {
 		this.run = this.run.bind(this);
 		this.doSomething = this.doSomething.bind(this);
 		this.curtain = null;
-		Gab.on(props.source, this.doSomething);
-		
+				
 		this.buttonStyle = { margin: '0 auto',  width: 36, height: 36, padding: 0};
 	}
 	
@@ -32,12 +31,12 @@ export default class Video5 extends React.Component {
 			this.change(nextProps.source);
 			return true;
 		}
-		debug('video5 should NOT update');
+		//debug('video5 should NOT update');
 		return false;
 	}
 
 	componentDidMount() {
-		debug('video5 didMount');
+		//debug('video5 didMount');
 		this.change(this.props.source);
 		this._update = true;
 		
@@ -49,7 +48,10 @@ export default class Video5 extends React.Component {
 	}
 	
 	doSomething(data) {
-		
+		debug('## doSomething ##', data);
+		if (data.action) {
+			 this.run(data.action);
+		}
 	}
 	
 	destroyPlayer() {
@@ -69,6 +71,9 @@ export default class Video5 extends React.Component {
 		if (this.player) {
 			this.destroyPlayer();
 		}
+		Gab.removeListener(source, this.doSomething);
+		debug('listen on', source);
+		Gab.on(source, this.doSomething);
 		this.player = new Clappr.Player({
 			parent: this.refs.player,
 			source: source,
@@ -90,19 +95,35 @@ export default class Video5 extends React.Component {
 				onReady: () => { }, //Fired when the player is ready on startup
 				onResize: () => {  },//Fired when player resizes
 				onPlay: () => { 
+					if (typeof this.props.onPlay === 'function') {
+						//debug('onplay prop');
+						this.props.onPlay()
+					}
 					this.curtain.style.backgroundColor = 'black';
 				},//Fired when player starts to play
 				onPause:  () => {  
+					if (typeof this.props.onPause === 'function') {
+						this.props.onPause()
+					}
 					this.curtain.style.backgroundColor = 'initial';
 				},//Fired when player pauses
 				onStop: () => {  
+					if (typeof this.props.onStop === 'function') {
+						this.props.onStop()
+					}
 					this.curtain.style.backgroundColor = 'initial';
 				},//Fired when player stops
 				onEnded:  () => {  
+					if (typeof this.props.onEnded === 'function') {
+						this.props.onEnded()
+					}
 					this.curtain.style.backgroundColor = 'initial';
 				},//Fired when player ends the video
 				onSeek: () => {  },//Fired when player seeks the video
 				onError: (err) => { 
+					if (typeof this.props.onError === 'function') {
+						this.props.onError()
+					}
 					if(err.error) debug(err, 'Error playing video: ' + err.error);
 				},//Fired when player receives an error
 				onTimeUpdate: (time) => {  
@@ -115,7 +136,7 @@ export default class Video5 extends React.Component {
 	
 	run(action) {
 		if (this.player) {
-			if (this.player[action]) {
+			if (typeof this.player[action] === 'function') {
 				this.player[action]();
 			}
 		}

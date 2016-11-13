@@ -18,18 +18,18 @@ let debug = Debug('lodge:app:render');
 let merge = Object.assign;
 
 let styles = {
+	'night': Styles.getMuiTheme(deep(Styles.NIGHT, snowUI.materialStyle.serverRendered)),
+	'nitelite3': Styles.getMuiTheme(deep(Styles.NITELITE, snowUI.materialStyle.serverRendered)),
+	'rommie': Styles.getMuiTheme(deep(Styles.ROMS,  snowUI.materialStyle.serverRendered)),
+	'light': Styles.getMuiTheme(deep(Styles.LIGHT,  snowUI.materialStyle.serverRendered)),
 	'cream': Styles.getMuiTheme(deep(Styles.CREAM,  snowUI.materialStyle.serverRendered)),
 	'alternate blue': Styles.getMuiTheme(deep(Styles.ALTERNATEBLUE,  snowUI.materialStyle.serverRendered)),
-	'rommie': Styles.getMuiTheme(deep(Styles.ROMS,  snowUI.materialStyle.serverRendered)),
 	'blue': Styles.getMuiTheme(deep(Styles.BLUE,  snowUI.materialStyle.serverRendered)),
 	'dark': Styles.getMuiTheme(deep(Styles.DARK, snowUI.materialStyle.serverRendered)),
 	'default': Styles.getMuiTheme(deep(Styles.DEFAULT, snowUI.materialStyle.serverRendered )),
 	'graphite': Styles.getMuiTheme(deep(Styles.GRAPHITE,  snowUI.materialStyle.serverRendered)),
-	'light': Styles.getMuiTheme(deep(Styles.LIGHT,  snowUI.materialStyle.serverRendered)),
-	'night': Styles.getMuiTheme(deep(Styles.NIGHT, snowUI.materialStyle.serverRendered)),
 	'nitelite': Styles.getMuiTheme(deep(Styles.NITELITE, snowUI.materialStyle.serverRendered)),
 	'nitelite2': Styles.getMuiTheme(deep(Styles.NITELITE2, snowUI.materialStyle.serverRendered)),
-	'nitelite3': Styles.getMuiTheme(deep(Styles.NITELITE, snowUI.materialStyle.serverRendered)),
 	'nitelite4': Styles.getMuiTheme(deep(Styles.ROMS, snowUI.materialStyle.serverRendered)),
 }
 
@@ -137,8 +137,9 @@ class Render extends Component {
 		} else if( theme == 'cream'  ) {
 			snowUI.setTheme('light-theme');
 			snowUI.shortenTitle = true;
-		} else if( theme == 'light' ) {
+		} else if( theme == 'light'  || theme == 'reset' ) {
 			snowUI.setTheme('light-theme theme-light ');
+			style = this.state.styles.light;
 			snowUI.shortenTitle = true;
 		} else if( theme == 'nitelite' || theme == 'nitelite2' ) {
 			snowUI.setTheme('dark-theme default');
@@ -161,43 +162,31 @@ class Render extends Component {
 			snowUI.shortenTitle = false;
 		}
 		
-		debug('## switchTheme ## Always set shortenTitle false');
-		snowUI.shortenTitle = false;
+		debug('## switchTheme ##');
+		if (!snowUI.serverRendered) {
+			document.body.style.background = null;
+		}
 		snowUI.__lastTheme = { ...snowUI }.__currentTheme;
 		snowUI.__currentTheme = theme != 'reset' ? theme : snowUI.defaultTheme;
-		
+		let appstate = {
+			theme: style,
+			currentTheme: theme,
+			forceUpdate: true,
+			firstrun: false
+		};
+		if(userSelect) {
+			appstate.__userTheme = theme != 'reset' ? theme : false;
+			snowUI.__userTheme = theme != 'reset' ? theme : false;
+		}
 		if(update !== false) {
-			
-			let appstate = {
-				theme: style,
-				currentTheme: theme,
-				forceUpdate: true,
-				firstrun: false
-			};
-			if(userSelect) {
-				appstate.__userTheme = theme != 'reset' ? theme : false;
-				snowUI.__userTheme = theme != 'reset' ? theme : false;
-			}
 			this.appState(appstate, function() {
 				debug('#### SWITCHED THEME ####', theme);
 				if(typeof callback === 'function') {
 					callback();
 				}
 			});
-		} else {
-			let appstate = {
-				theme: style,
-				currentTheme: theme,
-				forceUpdate: true,
-				firstrun: false
-			};
-			if(userSelect) {
-				appstate.__userTheme = theme != 'reset' ? theme : false;
-				snowUI.__userTheme = theme != 'reset' ? theme : false;
-			}
-			
-			return appstate;
 		}
+		return appstate;
 	}
 	
 	handleLeftNav(e , stated) {

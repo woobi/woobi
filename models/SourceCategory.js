@@ -7,7 +7,8 @@ var Types = keystone.Field.Types;
  */
 
 var SourceCategory = new keystone.List('SourceCategory', {
-	autokey: { from: 'name', path: 'slug', unique: true }
+	autokey: { from: 'name', path: 'slug', unique: true },
+	hidden: true
 });
 
 SourceCategory.add({

@@ -16,6 +16,10 @@ export default (Component) => {
 			super(props);
 			this.displayName = 'Listeners';
 			
+			if(!snowUI || props.snowUI) {
+				snowUI = props.snowUI;
+			}
+			
 			var _props = { ...props }
 			
 			let loc = _props.location;
@@ -72,8 +76,9 @@ export default (Component) => {
 				Sockets,
 				window: { width: x, height: y },	
 				movieImages: false,
-				tvImages: false,
+				tvImages: true,
 				tvBanners: true,
+				tvPosters: false,
 				moviePosters: true,
 			}, _props);
 			

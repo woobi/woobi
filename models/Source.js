@@ -14,7 +14,8 @@ var ss = require('../snowstreams');
 var Source = new keystone.List('Source', {
 	autokey: { path: 'slug', from: 'name', unique: true },
 	track: true,
-	drilldown: 'source program argument'
+	drilldown: 'source program argument',
+	hidden: true
 });
 
 Source.add({

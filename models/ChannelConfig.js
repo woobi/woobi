@@ -13,7 +13,7 @@ var ChannelConfig = new keystone.List('ChannelConfig', {
 
 ChannelConfig.add({
 	name: { type: Types.Text, required: true, initial: true },
-	config: { type: Types.Text, required: true, initial: true, unique: true },
+	config: { type: Types.Text, required: true, initial: true },
 	autostart: { type: Types.Boolean, required: true, initial: true, default: false },
 	preset: { type: Types.Boolean,  default: false },
 });

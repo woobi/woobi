@@ -16,6 +16,7 @@ var filesize = require('file-size');
 
 var File = new keystone.List('File', {
 	track: true,
+	hidden: true
 });
 
 File.add({

@@ -18,11 +18,14 @@ export default class addChannelReview extends React.Component {
 		let channel2 = { ...this.props };
 		let channel = {
 			name: channel2.name,
+			out: channel2.output ? channel2.out : false,
 			loop: channel2.loop,
 			noTransition: channel2.noTransition,
 			assets: channel2.assets,
 			files: channel2.files,
 			hls: channel2.hls.hls ? channel2.hls : false,
+			requestCommands: channel2.requestCommands,
+			socketCommands: channel2.socketCommands
 		}
 		let channels = JSON.stringify(channel, null, 4)
 		return (<div>
@@ -33,14 +36,22 @@ export default class addChannelReview extends React.Component {
 				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="save" />}
 				label="Save this config"
 				checked={this.props.keep}
-				onCheck={(el, value) => { this.props.setValue({ 'keep': value }); }}
+				onCheck={(el, value) => { this.props.setValue({ 'keep': value, 'start': value === false ? true : this.props.start, 'start': value === false ? true : this.props.start }); }}
 			/>
-			<Checkbox
-				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="queue_play_next" />}
-				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="queue_play_next" />}
+			{this.props.keep ? <Checkbox
+				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="android" />}
+				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="android" />}
 				label="Start on boot"
 				checked={this.props.autostart}
 				onCheck={(el, value) => { this.props.setValue({ 'autostart': value }); }}
+			/> : <span />}
+			<Checkbox
+				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="play_circle_filled" />}
+				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="play_circle_filled" />}
+				label="Start Now"
+				disabled={!this.props.keep}
+				checked={this.props.start}
+				onCheck={(el, value) => { this.props.setValue({ 'start': this.props.keep ? value : true }); }}
 			/>
 			<div style={{ height: 15 }} />
 			<RaisedButton
@@ -50,9 +61,9 @@ export default class addChannelReview extends React.Component {
 				style={{float: 'left', }}
 			/>
 			<RaisedButton
-				label="Add Channel"
+				label={this.props.saved._id && this.props.keep ? "Update Channel" : "Play Channel"}
 				secondary={true}
-				onTouchTap={() => (this.props.addChannel(channel))} 
+				onTouchTap={() => (this.props.saved._id && this.props.keep ? this.props.updateChannel(channel) : this.props.addChannel(channel))} 
 				style={{float: 'left', }} 
 			/>
 			<div className="clearfix" style={{ height: 15 }} />
@@ -63,5 +74,6 @@ export default class addChannelReview extends React.Component {
 
 addChannelReview.defaultProps = {
 	name: {},
-	assets: []
+	assets: [],
+	saved: {}
 }

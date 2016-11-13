@@ -68,7 +68,8 @@ export default class mainMenu extends React.Component {
 				zDepth={5}
 				docked={this.props.docked}
 				open={this.state.leftNav}
-				
+				style={{ zIndex: 1200 }}
+				containerStyle={{ zIndex: 1200 }}
 				openSecondary={this.props.secondary}
 				width={255}
 				onRequestChange={open => {
@@ -114,17 +115,17 @@ export default class mainMenu extends React.Component {
 							menuStyle={{}}
 						>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Default" value="reset" />
+						  <MenuItem style={{lineHeight: 2}} primaryText="Light" value="light" />
+						  <MenuItem style={{lineHeight: 2}} primaryText="Night" value="night"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Blue" value="nitelite3"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Rommie" value="rommie"/>
 						  <MenuItem style={{lineHeight: 2}} primaryText="Graphite" value="graphite"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Night" value="night"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Nite Lite" value="nitelite"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Nite Lite 2" value="nitelite2"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Nite Blue" value="nitelite3"/>
-						   <MenuItem style={{lineHeight: 2}} primaryText="Nite Blue 2" value="nitelite4"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Wacky Blue" value="blue"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="Alternate Blue" value="alternate blue"/>
-						  <MenuItem style={{lineHeight: 2}} primaryText="White" value="light" />
-						  <MenuItem style={{lineHeight: 2}} primaryText="Light" value="cream" />
+						  <MenuItem style={{lineHeight: 2}} primaryText="Nitelite" value="nitelite"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Nitelites" value="nitelite2"/>
+						   <MenuItem style={{lineHeight: 2}} primaryText="Other" value="nitelite4"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Weird" value="blue"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Alternate" value="alternate blue"/>
+						  <MenuItem style={{lineHeight: 2}} primaryText="Cream" value="cream" />
 						  <MenuItem style={{lineHeight: 2}} primaryText="MUI Dark" value="dark" />
 						  <MenuItem style={{lineHeight: 2}} primaryText="MUI Light" value="default" />
 						</IconMenu>

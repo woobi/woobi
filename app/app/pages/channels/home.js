@@ -45,14 +45,17 @@ export default class Home extends React.Component {
 	
 	listenForPresets(presets) {
 		debug('Got listenForPresets', presets);
-		this.setState({ ...presets });
+		if (typeof presets === 'object') {
+			this.setState({ ...presets });
+		}
 	}
 	
-	
 	gotChannels(data) {
-		this.setState({
-			channels: data.channels,
-		});
+		if (typeof data === 'object') {
+			this.setState({
+				channels: data.channels,
+			});
+		}
 	}
 	
 	componentWillUnmount() {
@@ -63,6 +66,8 @@ export default class Home extends React.Component {
 	componentWillReceiveProps(props) {
 		debug('## componentWillReceiveProps  ##  Channels Home got props', props);
 		this.getChannels();
+		this.props.Sockets.io.emit('presets');
+		this.setState({ current: false });
 	}	
 	
 	getChannels() {
@@ -81,11 +86,52 @@ export default class Home extends React.Component {
 	}
 	
 	addChannel() {
-		return (<AddChannel { ...this.state } theme={this.props.theme} goTo={this.props.goTo} />);
+		let current = false
+		if(this.props.params.action === 'update') {
+			current = this.state.saved[this.props.params.id];
+		}
+		return (<div style={{ padding: '20px ' }}>
+			<AddChannel { ...this.state } current={current} theme={this.props.theme} goTo={this.props.goTo} />
+		</div>);
+	}
+	
+	removeSavedConfig(c) {
+		Gab.emit('snackbar', {
+			style: 'warning',
+			html: 'Removing channel ' + c.name,
+			open: true,
+			onRequestClose: () => {}
+		});
+		Gab.rawRequest('/alvin/remove/channel/' + c._id, false)
+		.then(data => {
+			if(data.success) {
+				Gab.emit('snackbar', {
+					style: 'success',
+					html: data.message,
+					open: true,
+					onRequestClose: () => {}
+				});
+			} else {
+				Gab.emit('snackbar', {
+					style: 'danger',
+					html: data.error,
+					open: true,
+					onRequestClose: () => {}
+				});
+			}
+		})
+		.catch(e => {
+			Gab.emit('snackbar', {
+				style: 'danger',
+				html: data.error,
+				open: true,
+				onRequestClose: () => {}
+			});
+		});
 	}
 	
 	manageChannel() {
-		return (<div>
+		return (<div style={{ padding: '10px ' }}>
 			<FlatButton  label={"Add Channel"} onClick={()=>{
 				this.props.goTo({
 					path: '/channels/add',
@@ -94,16 +140,19 @@ export default class Home extends React.Component {
 			}} />
 			{this.state.saved.map((r, i) => {
 				return (<div className="clearfix" style={{ background: ColorMe((i%2 === 0 ? 10: 20), this.props.theme.palette.canvasColor).bgcolor, color: ColorMe((i%2 === 0 ? 10: 20), this.props.theme.palette.canvasColor).color}}>
-					<div style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children={<FontIcon className="material-icons" children="edit" />} onClick={() => {
-						this.setState({ update: i, add: r.type, current: r });
+					<div title="Edit" style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children={<FontIcon className="material-icons" children="edit" color={this.props.theme.palette.alternateTextColor} />} onClick={() => {
+						this.props.goTo({
+							path: '/channels/update/' + i,
+							page: 'Update Channel'
+						});
 					}}/>
-					<div style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children=<FontIcon className="material-icons" children="delete_forever" /> onClick={() => {
+					<div title="Delete" style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children=<FontIcon className="material-icons" children="delete_forever" color={Styles.Colors.orangeA400} /> onClick={() => {
 						Gab.emit('confirm open', {
 							html: 'Remove Saved Config ' + r.name + '?',
 							answer:(yesno) => { 
 								Gab.emit('confirm open', { open: false });
 								if(yesno) {
-									//this.props.removeSource(i);
+									this.removeSavedConfig(r);
 								}
 							},
 							open: true,
@@ -112,8 +161,9 @@ export default class Home extends React.Component {
 						})
 							
 					}}/>
-					<div style={{ float: 'left', margin: 5, padding: 5  }} children={!r.autostart ? <FontIcon className="material-icons" color={this.props.theme.palette.disabledColor} children="queue_play_next" /> : <FontIcon className="material-icons" children="queue_play_next" color={Styles.Colors.lightGreenA400} />} />
-					<div style={{ float: 'left', margin: 5, padding: 5  }} children={r.name} />
+					<div title="Start" style={{ cursor: 'pointer', float: 'left', margin: 5, padding: 5  }} children={<FontIcon className="material-icons" color={this.props.theme.palette.alternateTextColor} children="play_circle_filled" /> } />
+					<div title="Auto Start" style={{ float: 'left', margin: 5, padding: 5  }} children={!r.autostart ? <FontIcon className="material-icons" color={this.props.theme.palette.disabledColor} children="queue_play_next" /> : <FontIcon className="material-icons" children="queue_play_next" color={Styles.Colors.lightGreenA400} />} />
+					<div style={{ float: 'left', margin: 5, padding: 5  }} children={r.name} title={r.config} />
 				</div>);
 		})}
 		</div>);
@@ -143,9 +193,9 @@ export default class Home extends React.Component {
 			});
 		}
 		//return <div>{ret}</div>;
-		return (<div style={{ padding: '0 10px' }}>
-			<div style={{ padding: '10px 0px' }}>
-				<Card   zDepth={1}>
+		return (<div style={{ padding: '0 0px' }}>
+			<div style={{ padding: '0px 0px' }}>
+				<Card   zDepth={0}>
 					<CardHeader
 						style={{ overflow: 'hidden' }}
 						//title={(this.state.channels.length > 0) ? <span>Channels</span> : <span >Loading Channels</span>}
@@ -154,7 +204,7 @@ export default class Home extends React.Component {
 					/>
 				</Card>
 			</div>
-			{this.props.params.action === 'manage' ? this.manageChannel() : this.props.params.action === 'add' ? this.addChannel() : this.renderChannelList(ret)}
+			{this.props.params.action === 'add' || this.props.params.action === 'update' ? this.addChannel() : this.props.params.action === 'manage' ? this.manageChannel() : this.renderChannelList(ret)}
 		</div>);
 	}
 	
@@ -170,8 +220,8 @@ export default class Home extends React.Component {
 				}
 			});
 			return (<div>
-				<div style={{ padding: '10px 10px 10px 0' }} className="col-sm-6" children={list} />
-				<div style={{ padding: '10px 0px 10px 10px' }} className="col-sm-6" children={list2}  />
+				<div style={{ padding: '10px ' }} className="col-sm-6" children={list} />
+				<div style={{ padding: '10px ' }} className="col-sm-6" children={list2}  />
 			</div>);
 			
 		} else {

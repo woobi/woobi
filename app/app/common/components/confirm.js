@@ -3,18 +3,12 @@ import { RaisedButton, FlatButton, Dialog } from 'material-ui';
 import { Styles } from '../styles';
 import Gab from '../gab';
 
-let myStyles = {
-	//textColor: Styles.Colors.blue600,
-	//alternateTextColor: Styles.Colors.amber400,
-	//accent1Color: "#FF6040",
-	//accent2Color: "#F5001E",
-	//accent3Color: "#FA905C"
-}
-
-export default class Modal extends React.Component {
+export default class Confirm extends React.Component {
 	constructor(props) {
 		super(props);
-				
+		
+		this.state = props;
+		
 		this.handleYes = this.handleYes.bind(this);
 		this.handleNo = this.handleNo.bind(this);
 		
@@ -31,8 +25,12 @@ export default class Modal extends React.Component {
 	}
 	
 	setProps(data) {
-		this.props = Object.assign(this.props, data);
-		this.forceUpdate();
+		let props = { ...Confirm.defaultProps };
+		Object.assign(props, data);
+		if (!props.component) {
+			props.component = false;
+		}
+		this.setState(props);
 	}
 	
 	componentWillUnmount() {
@@ -40,51 +38,50 @@ export default class Modal extends React.Component {
 	}
 	
 	handleYes() {
-		if(typeof this.props.answer == 'function') {
-			this.props.answer(true);
+		if(typeof this.state.answer == 'function') {
+			this.state.answer(true);
 		}
 	}
 	
 	handleNo() {
-		if(typeof this.props.answer == 'function') {
-			this.props.answer(false);
+		if(typeof this.state.answer == 'function') {
+			this.state.answer(false);
 		}
 	}
 	
 	renderHTML() {
-		if(this.props.component) {
-			return (<div children={this.props.component} />);
+		if(this.state.component) {
+			return (<div children={this.state.component} />);
 		} else {
-			return <div dangerouslySetInnerHTML={{__html:this.props.html}} />
+			return <div dangerouslySetInnerHTML={{__html:this.state.html}} />
 		}
 	}
 	
 	render() {
 		const actions = [
 			<RaisedButton
-				label={this.props.noText}
+				label={this.state.noText}
 				primary={true}
 				onTouchTap={this.handleNo}
 				
 			/>,
 			<RaisedButton
-				label={this.props.yesText}
+				label={this.state.yesText}
 				primary={false}
 				onTouchTap={this.handleYes} 
 				style={{float: 'left', color: this.props.theme.baseTheme.palette.alternateTextColor }} 
 			/>,
 			
 		];
-
 		return (
 			<div>
 				
 				<Dialog
-					title={this.props.title}
+					title={this.state.title}
 					actions={actions}
 					modal={true}
-					open={this.props.open}
-					className={this.props.class}
+					open={this.state.open}
+					className={this.state.class}
 				>
 					{this.renderHTML()}
 				</Dialog>
@@ -93,17 +90,18 @@ export default class Modal extends React.Component {
 	}
 }
 
-Modal.defaultProps = {
+Confirm.defaultProps = {
 	yesText: 'Delete',
 	noText: 'Cancel',
 	open: false,
+	component: false,
 	html: 'Placeholder Text',
 	title: 'Confirm',
 	style: {
 		body: {}
 	},
-	class: 'epg__confirm epg__amber'
+	class: ''
 };
-Modal.childContextTypes = {
+Confirm.childContextTypes = {
     muiTheme: React.PropTypes.object
 };

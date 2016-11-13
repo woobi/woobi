@@ -9,7 +9,8 @@ var Types = keystone.Field.Types;
 var Stream = new keystone.List('Stream', {
 	map: { name: 'name' },
 	autokey: { path: 'slug', from: 'name', unique: true },
-	track: true
+	track: true,
+	hidden: true
 });
 
 Stream.add({

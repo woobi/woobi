@@ -1,7 +1,7 @@
 import React from 'react';
 import Debug from 'debug';
 import Gab from '../../common/gab';
-import { Card, CardActions, CardHeader , FontIcon} from 'material-ui';
+import { Card, CardActions, CardHeader , FontIcon, IconButton} from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 import { find as Find } from 'lodash';
@@ -22,7 +22,10 @@ export default class TVShows extends React.Component {
 		this.state = {
 			loading: true,
 			shows,
+			tvImages: props.tvImages
 		};
+		
+		this.buttonStyle = { margin: '0 auto', width: false, height: false, padding: 0};
 		
 		this._update = true;
 		
@@ -44,6 +47,12 @@ export default class TVShows extends React.Component {
 	componentWillReceiveProps(props) {
 		debug('## componentWillReceiveProps  ## TVShows got props', props);
 		//this.getChannels();
+		if (props.tvImages !== this.state.tvImages) {
+			this._update = true;
+			this.setState({
+				tvImages: props.tvImages
+			});
+		}
 	}	
 	
 	shouldComponentUpdate() {
@@ -71,44 +80,60 @@ export default class TVShows extends React.Component {
 		});
 	}
 	
+	fanartButton() {
+		return (<IconButton title="Fanart View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 10 }} key="fanart"  secondary={true} onClick={(e) => { this.props.appState({ tvImages: true }) }} >
+			<FontIcon style={{ }} className="material-icons" color={this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_module</FontIcon>
+		</IconButton>);
+	}
+	
+	posterButton() {
+		return (<IconButton title="Poster View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 40 }} key="view"  secondary={true} onClick={(e) => { this.props.appState({ tvImages: false }) }} >
+			<FontIcon style={{ }} className="material-icons" color={!this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_column</FontIcon>
+		</IconButton>);
+	}
+	
 	render() { 
 		debug('## render  ##  TV Shows Home render', this.props, this.state);
 		let ret = <span >Loading TVShows</span>;
 		if (this.state.shows.length > -1) {
 			ret =  this.state.shows.map((c, i) => {
-				let art = 'initial';
+				let art = 'transparent';
 				let banner = 'initial';
 				let bgSize = 'cover';
 				if(c.art) {
 					var asset = Find(c.art, { type: 'fanart' });
-					if(asset && this.props.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')no-repeat left top";
-					var asset2 = Find(c.art, { type: 'banner' });
-					if(asset2 && this.props.tvBanners) banner = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "')no-repeat left top";
+					if(asset && this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')left top / 100% no-repeat fixed";
+					var asset2 = Find(c.art, { type: 'poster' });
+					if(asset2 && !this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "')  no-repeat right top";
 				}
-				return (<div  className="col-xs-12 col-sm-6 col-md-4" style={{ padding: 10, cursor: 'pointer', height: 150, background: art, backgroundSize: 'cover'}}  onClick={(e) => {
+				return (<div  className={this.state.tvImages ? "col-xs-12 col-sm-6 col-md-4" : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
+					<div style={{ margin: 0, cursor: 'pointer', height: !this.state.tvImages ? 285 : 200, background: art, backgroundSize: 'cover'}}  onClick={(e) => {
 						e.preventDefault();
 						this.props.goTo({
 							page: c.name,
 							path: '/library/tv/' + c.imdb
 						});
 					}} > 
-					<Card zDepth={1}  style={{ opacity: '.85' }}>
-						<CardHeader
-							title={banner === 'initial' ? c.name : ''}
-							avatar7={<FontIcon style={{fontSize:'42px'}} className="material-icons" color={ColorMe(5, this.props.theme.baseTheme.palette.accent1Color).color}  >live_tv</FontIcon>}
-							style={{ height: 60, background: banner, backgroundSize: bgSize }}
-						/>
-					</Card>
+						<Card zDepth={1}  style={{ opacity: this.state.tvImages ? '.75' : '0' }}>
+							<CardHeader
+								title={this.state.tvImages ? c.name : ''}
+								style={{ height: 40 }}
+							/>
+						</Card>
+					</div>
 				</div>)
 			});
 		}
-		//return <div>{ret}</div>;
-		return (<div style={{ padding: '0 10px' }}>
-			<div style={{ padding: '10px 0px' }}>
-				<Card   zDepth={1}>
+		let sub = (<div>
+			{this.fanartButton()}
+			{this.posterButton()}
+		</div>);
+		return (<div style={{ padding: '0 0px' }}>
+			<div style={{ padding: '0px 0px' }}>
+				<Card   zDepth={2}>
 					<CardHeader
-						style={{ overflow: 'hidden' }}
-						title={<span>TV Shows</span>}
+						style={{ overflow: 'hidden', position: 'relative' }}
+						title={sub}
 						avatar={<FontIcon style={{fontSize:'42px'}} className="material-icons" color={ColorMe(5, this.props.theme.baseTheme.palette.accent1Color).color}  >live_tv</FontIcon>}
 					/>
 				</Card>

@@ -31,21 +31,39 @@ export default class addChannelHLS extends React.Component {
 			<p>An HLS stream requires sufficient hard drive space.  Three hours of recordings are saved. </p>
 			<div style={{ height: 15 }} />
 			<Checkbox
-				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="loop" />}
-				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="loop" />}
+				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="airplay" />}
+				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="airplay" />}
 				label="Create HLS Stream"
 				checked={this.props.hls.hls}
 				onCheck={(el, value) => { this.setValue({ 'hls': value }); }}
 			/>
 			<Checkbox
-				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="queue_play_next" />}
-				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="queue_play_next" />}
+				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="tune" />}
+				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="tune" />}
 				label="Change stream options"
 				checked={this.state.options}
 				onCheck={(el, value) => { this.setState({ 'options': value }); }}
 			/>
 			<div style={{ height: 15 }} />
 			<div style={{ display: this.state.options ? 'block' : 'none' }}>
+				<Checkbox
+					checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="developer_board" />}
+					uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="developer_board" />}
+					label="Progress Reports"
+					checked={this.props.hls.progress}
+					onCheck={(el, value) => { this.setValue({ 'progress': value }); }}
+				/>
+				
+				<TextField
+					id="text-field-controlled"
+					value={this.props.hls.useSource}
+					onChange={(el) => { this.setValue({ 'useSource': el.target.value }); }}
+					floatingLabelFixed={true}
+					floatingLabelText="useSource"
+					fullWidth={false}
+					//hintText="unique value"
+				/>
+				<div style={{ height: 15 }} />
 				<TextField
 					id="text-field-controlled"
 					value={this.props.hls.inputFormat}
@@ -59,7 +77,7 @@ export default class addChannelHLS extends React.Component {
 					id="text-field-controlled"
 					value={this.props.hls.hlsOptions}
 					onChange={(el) => { this.setValue({ 'hlsOptions': el.target.value }); }}
-					hintText="-hls_list_size 0 -hls_time 5 "
+					hintText="-hls_list_size 6 -hls_time 5 -hls_wrap 30 "
 					floatingLabelFixed={true}
 					floatingLabelText="This will replace default hls options"
 					fullWidth={true}

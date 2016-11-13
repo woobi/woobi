@@ -12,7 +12,8 @@ var _ = require('lodash');
 var Program = new keystone.List('Program', {
 	map: { name: 'name' },
 	autokey: { path: 'slug', from: 'name', unique: true },
-	track: true
+	track: true,
+	hidden: true
 }); 
  
 Program.add({

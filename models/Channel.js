@@ -9,7 +9,8 @@ var Types = keystone.Field.Types;
 var Channel = new keystone.List('Channel', {
 	map: { name: 'name' },
 	autokey: { path: 'slug', from: 'name', unique: true },
-	track: true
+	track: true,
+	hidden: true
 });
 
 Channel.add({

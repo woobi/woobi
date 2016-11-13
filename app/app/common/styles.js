@@ -8,7 +8,7 @@ export let NIGHT  = deep( {
 	palette: {
 		primary2Color: colors.blue300,
 		textColor: colors.blue50,
-		alternateTextColor: colors.blueGrey400,
+		alternateTextColor: colors.lightBlue500,
 		primary1Color: 'initial',
 		canvasColor: '#001933',
 		bodyColor: 'initial',
@@ -29,7 +29,7 @@ export let NIGHT  = deep( {
 		selectedTextColor: colors.lightBlue50,
 	},
 	raisedButton: {
-		textColor: colors.lightBlue900,
+		textColor: '#001933',
 		secondaryTextColor: 'white',
 	},
 	appBar: {
@@ -59,6 +59,9 @@ export let NITELITE  = deep( {
 	snackbar: {
 		textColor: '#222',
 		
+	},
+	raisedButton: {
+		textColor: colors.indigo400,
 	},
 	appBar: {
 		buttonColor: colors.blue200
@@ -109,7 +112,7 @@ export let LIGHT  = deep( {
 		contentColor: 'initial',
 		primary1Color: '#FFFFFF',
 		textColor: colors.indigo900,
-		alternateTextColor: colors.blueGrey700,
+		alternateTextColor: colors.indigoA700,
 		primary2Color: "#E040FB",
 		canvasColor: '#FFFFFF',
 		accent1Color: colors.indigoA200,
@@ -120,6 +123,14 @@ export let LIGHT  = deep( {
 	snackbar: {
 		textColor: '#222',
 		
+	},
+	raisedButton: {
+		textColor: '#FFFFFF',
+		secondaryTextColor: 'white',
+	},
+	appBar: {
+		buttonColor: colors.indigoA200,
+		//textColor: colors.indigo100,
 	},
 	searchBar: {
 		large: 'initial',

@@ -11,6 +11,7 @@ import { each as Each, map as Map, sortBy, isObject, find } from 'lodash';
 import SwipeableViews from 'react-swipeable-views';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { find as Find } from 'lodash';
+import VideoController from './videoController';
 
 let debug = Debug('lodge:app:common:components:miniChannel');
 
@@ -122,7 +123,7 @@ export default class miniChannel extends React.Component {
 		});
 	}
 	
-	dialog(row, col, source) {
+	dialog(row, col, source, history) {
 		let c = this.state.channel;
 		let s = source[row];
 		debug(s);
@@ -149,9 +150,9 @@ export default class miniChannel extends React.Component {
 							Gab.emit('confirm open', { open: false });
 							if(yesno) {
 								this.doRequestCommand({
-									success: 'Program ' + s.name + ' pushed to front.',
+									success: 'Program ' + s.name + ' cycled to front.',
 									error: 'Failed to push program ' + s.name + '.',
-									link: '/alvin/unshift/' + c.channel + '/index/' +  row	
+									link: history ?  '/alvin/unshift/' + c.channel + '/file/' +  encodeURIComponent(JSON.stringify({ name: s.name, progress: true, file: s.metadata.file, metadata: s.metadata })) : '/alvin/jump/' + c.channel + '/' +  row	
 								}); 
 							}
 							//Gab.emit('dialog open', { open: true });
@@ -203,11 +204,11 @@ export default class miniChannel extends React.Component {
 		});
 	}
 	
-	list(list) {
+	list(list, history) {
 		let c = this.state.channel;
 		
 		let sourceMap = list.map((s, iii) => {
-			let poster= '/images/fanart.gif';
+			let poster= '/images/fanart.jpg';
 			if(s.metadata.thumb) {
 					poster = s.metadata.thumb;
 			} else if (s.metadata.art) {
@@ -230,7 +231,7 @@ export default class miniChannel extends React.Component {
 					selectable={false}
 					multiSelectable={true}
 					onCellClick={(a, b) => {
-						this.dialog.call(this, a, b, list);
+						this.dialog.call(this, a, b, list, history);
 					}}
 				>
 					<TableHeader
@@ -340,7 +341,7 @@ export default class miniChannel extends React.Component {
 				</div>)
 			});
 		}} >
-			<FontIcon style={{ }} className="material-icons"  hoverColor={Styles.Colors.red900} color={Styles.Colors.deepOrange900} >visibility_off</FontIcon>
+			<FontIcon style={{ }} className="material-icons"  hoverColor={Styles.Colors.red900} color={Styles.Colors.deepOrange900} >                             visibility_off</FontIcon>
 		</IconButton>);
 		powerButtons.unshift(<IconButton key={newC.name} label={newC.label}  title={newC.label}  onClick={()=>{
 			Gab.emit('dialog open', {
@@ -543,7 +544,7 @@ export default class miniChannel extends React.Component {
 		
 		return (<div   style={{paddingRight:0, paddingLeft:0, marginBottom: 15 }}>
 				
-			<Card zDepth={1} containerStyle={{ paddingBottom: 0 }} style={{ background: "url('" + art + "')no-repeat", backgroundPosition: '50%  top', backgroundSize: '100% auto' }}>
+			<Card zDepth={1} containerStyle={{ paddingBottom: 0 }} style={{ background: "url('" + art + "')no-repeat", backgroundPosition: '50%  75', backgroundSize: '100% auto' }}>
 				
 				<CardHeader
 					style={{ overflow: 'hidden', background: this.props.theme.palette.canvasColor, opacity: '.90' }}
@@ -556,7 +557,23 @@ export default class miniChannel extends React.Component {
 				<CardText expandable={true} style={{padding: 0}} >	
 					<CardMedia style={{ overflow: 'hidden', background: 'transparent' }}>
 						<div id="vid-box" style={{ position: 'relative', width: '100%' }} >
-							<Video source={c.links.hls || c.link} style={{ margin: 'auto'  }} poster={false}  mute={false} channel={c} doRequestCommand={this.doRequestCommand} controls={true} />
+							<Video source={c.links.hls || c.link} style={{ margin: 'auto'  }} poster={false}  mute={false} channel={c} doRequestCommand={this.doRequestCommand} controls={false} />
+							<div style={{ textAlign: 'center', width: '100%', background: this.props.theme.palette.canvasColor, opacity: '.875' }} >
+								<VideoController 
+									channel={this.state.channel} 
+									style={{
+										display: 'inline-block',
+									}}
+									kill={false}
+									onKill={() => {
+										this._update = true;
+										this.setState({
+											play: false,
+											channel: false
+										});
+									}}
+								/>
+							</div>
 						</div>
 					</CardMedia>	
 					 <Tabs

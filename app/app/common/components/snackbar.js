@@ -117,7 +117,7 @@ class SnackbarExampleSimple extends React.Component {
 				color: colors[this.props.style] ? colors[this.props.style].color : colors.info.color
 			};
 		}
-		
+		//debug('props', this.props, bodyStyle)
 		let message = this.renderHTML(bodyStyle);
 		return (<div>
 				<Snackbar

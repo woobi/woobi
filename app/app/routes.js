@@ -1,4 +1,3 @@
-import './gblconfig.js';
 import Home from './pages/home';
 import Status from './pages/status';
 import Channel from './pages/channels';
@@ -45,6 +44,7 @@ Routes.push({
     catchAll: { component: Channels.Home },
     childRoutes: [
 		{ path: ':action', component: Channels.Home },
+		{ path: ':action/:id', component: Channels.Home },
 		{ path: 'view/:channel', component: Channels.Home },
     ]
 });
@@ -68,8 +68,8 @@ Routes.push({
     indexRoute: { component: Movie.Home },
     catchAll: { component: Movie.Home },
     childRoutes: [
-		{ path: 'recent', component: Movie.Home },
-		{ path: ':imdb', component: Movie.Show },
+		{ path: 'movie/:imdb', component: Movie.Show },
+		{ path: ':recent', component: Movie.Home },
     ]
 });
 

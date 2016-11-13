@@ -12,15 +12,18 @@ export default class Dialog2 extends React.Component {
 		
 		this.setProps = this.setProps.bind(this);
 		
-		this.name = 'dialog' + (props.name || '') + ' open';
+		this.name = 'dialog' + (props.name || '');
+		this.name2 = 'dialog' + (props.name || '') + ' open';
 		debug('Dialog receive commands on: ' + this.name);
 		Gab.on(this.name, this.setProps);
+		Gab.on(this.name2, this.setProps);
 		
 		this.handleNo = this.handleNo.bind(this);
 	}
 	
 	componentWillUnmount() {
 		Gab.removeListener(this.name, this.setProps);
+		Gab.removeListener(this.name2, this.setProps);
 	}
 	
 	shouldComponentUpdate(props) {
@@ -34,7 +37,12 @@ export default class Dialog2 extends React.Component {
 	
 	setProps(data) {
 		this._update = true;
-		this.props = Object.assign(this.props, data);
+		
+		if (data.html && !data.component) {
+			data.component = false;
+		}
+		debug('new props', data);
+		Object.assign(this.props, data);
 		this.forceUpdate();
 	}
 	
@@ -67,7 +75,7 @@ export default class Dialog2 extends React.Component {
 			<div>
 				<Dialog
 					title={this.props.title} 
-					actions={actions}
+					actions={this.props.closeText !== false ? actions : false}
 					modal={false}
 					contentStyle={this.props.contentStyle}
 					bodyStyle={this.props.bodyStyle}
@@ -77,6 +85,8 @@ export default class Dialog2 extends React.Component {
 					autoScrollBodyContent={this.props.autoScrollBodyContent}
 					actionsContainerClassName={"dialog-footer"}
 					titleClassName={'dialog-header'}
+					style={{ zIndex: 10001 }}
+					containerStyle={{ zIndex: 10001 }}
 				/>
 			</div>
 		);
@@ -90,5 +100,6 @@ Dialog2.defaultProps = {
 	title: 'Dialog',
 	autoScrollBodyContent: true,
 	bodyStyle: {},
-	contentStyle: {}
+	contentStyle: {},
+	component: false
 };

@@ -13,16 +13,14 @@ Number.prototype.clip = function(numbers) {
 var snowUI = {
 	name: 'The Lodge',
 	materialStyle: {},
-	defaultTheme: 'night',
-	__currentTheme: 'night',
+	defaultTheme: 'light',
+	__currentTheme: 'light',
 	__lastTheme: false,
 	__userTheme: false,
 	__state: {},
 	namespace: '/lodge',
 	shortenTitle: false,
 	usesockets: true,
-	port: 7001,
-	host: 'studio',
 	homepage: '/',
 	breaks: {
 		xs: {

@@ -4,6 +4,7 @@ var path = require('path');
 var async = require('async');
 var Adapter = require('./lib/core/adapter');
 var fs = require('fs-extra');
+var sanitize = require('sanitize-filename');
 
 var moduleRoot = (function(_rootPath) {
 	var parts = _rootPath.split(path.sep);
@@ -59,7 +60,7 @@ var snowstreams = function() {
 	this.uri = this.host + ':' + this.port;
 	
 	this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
-	fs.ensureDir(path.join(this.mediaPath,'channels'), (err) => {
+	fs.emptyDir(path.join(this.mediaPath,'channels'), (err) => {
 		if(err) debug('Error emptuing / creating mediaPath dir for channels', err);
 	
 		this.fillers = [
@@ -122,10 +123,26 @@ var snowstreams = function() {
 			},
 			(err) => {
 				debug('Init finished');
-				if(_.isFunction(callback)) {
+				if (opts.loadSaved === true) {
+					this.libs._mongo.ChannelConfig.model.find({ autostart: true }).lean().exec((err, docs) => {
+						debug('start saved channels', err);
+						if (docs) {
+							docs.forEach(c => {
+								let channel = JSON.parse(c.config);
+								this.addChannel(c.name, channel)
+								.catch(e => {
+									debug('error starting', e);
+								});
+							});
+						} 
+						if(_.isFunction(callback)) {
+							callback();
+						}
+					});
+				} else if(_.isFunction(callback)) {
 					callback();
-				}	
-			}
+				}
+			} 
 		);
 	};
 	
@@ -146,8 +163,11 @@ _.extend(snowstreams.prototype, require('./lib/core/createServer')());
 _.extend(snowstreams.prototype, require('./lib/core/keystone')());
 
 snowstreams.prototype.addChannel = function(channel, opts) {
-	delete this.channels[channel];
+		
 	return new Promise((resolve, reject) => { 
+		if (this.channels[channel]) {
+			return reject('Channel exists');
+		}
 		this.channels[channel] = new this.Channel(channel, opts, (err, c) => {
 			//this.channels[channel] = c;
 			if(err) return reject(err);
