@@ -295,17 +295,17 @@ let updStream = new Woobi.Streams.UDP({
 | **port** | _Number_ |  |
 
 
-## Woobi.Channel
+## Woobi.Channel  
+Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.  This gives a directory of channels for iptv.  
+
 ```javascript
-Broadcast.libs.mysql.movies()
-.then((movie) => {
-    movie = movie.filter((r,i) => {
-	return true;//i>3;
-    }).map(r => {
+Woobi.libs.mysql.movies()
+.then((movies) => {
+    movies = movies.map(r => {
 	return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
     });
-    return Broadcast.addChannel('recentMovies', {
-	files: movie,
+    return Woobi.addChannel('recentMovies', {
+	files: movies,
 	loop: true,
 	noTransition: true,
 	hls: {
@@ -318,6 +318,8 @@ Broadcast.libs.mysql.movies()
 .catch((err) => {
     if(err) debug('##ERROR##',err);
 });
+
+// channel is now available at Woobi.channels['movieChannel']
 ```
 ### Options
 ### Adding Assets
