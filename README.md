@@ -296,6 +296,29 @@ let updStream = new Woobi.Streams.UDP({
 
 
 ## Woobi.Channel
+```javascript
+Broadcast.libs.mysql.movies()
+.then((movie) => {
+    movie = movie.filter((r,i) => {
+	return true;//i>3;
+    }).map(r => {
+	return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
+    });
+    return Broadcast.addChannel('recentMovies', {
+	files: movie,
+	loop: true,
+	noTransition: true,
+	hls: {
+	    type: 'hls',
+	    name: 'movieChannel',
+	    passthrough: true, // uses the stream as is / no transcoding
+	}
+    });
+})
+.catch((err) => {
+    if(err) debug('##ERROR##',err);
+});
+```
 ### Options
 ### Adding Assets
 ### Properties
