@@ -304,7 +304,6 @@ Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly wi
  **/
 Woobi.addChannel('TV', {
 	loop: true,
-	// grab the tv stream sent frm another machine to our ip
 	assets: [
 		{
 			type: 'program',
