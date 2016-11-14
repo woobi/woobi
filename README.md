@@ -24,7 +24,7 @@ LAN media server, IPTV broadcaster, and media converter.
   - [.MpegTS](#mpegts)
   - [.throttle](#throttle)
   - [.transform](#transform)
-  - [.UDP](#udp-1)
+  - [.UDP](#udp)
 
 [Woobi.Channel](#woobichannel)
   - [Options](#options)
@@ -82,8 +82,8 @@ Woobi UI -  http://localhost:7001
 #### Woobi.init(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**
-
+> return **Promise**  
+>  
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **host** | _String_ | Host to use to access Woobi UI and api routes.  |
@@ -96,10 +96,8 @@ Woobi UI -  http://localhost:7001
 | **media passthrough path** | _String_ | Replace the path above with the actual server path.  |
 | **video passthrough route** | _String_ | Api route to direct access videos.  |
 | **video passthrough path** | _String_ | Replace the path above with the actual server path.  |
-
+>  
 ##### proxy object  
-leave out or set to false to ignore  
-
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **host** | _String_ | Host to start on. default 0.0.0.0  |
@@ -107,10 +105,8 @@ leave out or set to false to ignore
 | **keystone** | _Boolean_ | Use keystone if you want to save channel configs from the UI.  |
 | **nodeadmin** | _Boolean_ | Load the nodeadmin app.  |
 | **auth** | _Boolean_ | Used with keystone. Set to false at first to create a new user @ http://localhost/keystone  |
-
 > You can add any keystone option to the proxy configuration.   
 > If you want to use channel saving and do not want to use keystone, then attach a mongoose model to `Woobi.libs._mongo.ChannelConfig.model`
-
 ##### adapters Array of Objects  
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
@@ -121,8 +117,8 @@ leave out or set to false to ignore
 | **config.pass** | _String_ | password |
 | **config.host** | _String_ | host |
 | **config.database** | _String_ | database |
-
 > **note** - The default adapter name should be mysql.
+
 
 ## Woobi UI
 
