@@ -136,7 +136,6 @@ let file = new Woobi.Sources.File({
     file: '/home/woobi/Pitures/woobi.mp3'
 });
 ```
-
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
