@@ -148,7 +148,7 @@ let file = new Woobi.Sources.File({
 ```javascript
 let fluent = new Woobi.Sources.Fluent({
     name: 'Test',
-    file: '/home/woobi/Pitures/woobi.mp4',
+    file: '/home/woobi/Videos/woobi.mp4',
     streamable: true
 });
 ```
