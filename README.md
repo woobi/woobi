@@ -20,11 +20,11 @@ LAN media server, IPTV broadcaster, and media converter.
 
 [Woobi.Streams](#woobistreams)  
   - [.bridge](#bridge)
-  - [.HLS](#hls)
-  - [.MpegTS](#mpegts)
-  - [.throttle](#throttle)
+  - [.HLS](#hlsoptions-callback)
+  - [.MpegTS](#mpegtsoptions-callback)
+  - [.throttle](#throttlesource-rate-onend)
   - [.transform](#transform)
-  - [.UDP](#udp)
+  - [.UDP](#udpoptions-callback-1)
 
 [Woobi.Channel](#woobichannel)
   - [Options](#options)
@@ -199,12 +199,95 @@ let updSource = new Woobi.Sources.UDP({
 | **port** | _Number_ |  |
 
 ## Woobi.Streams
-#### .bridge   
-#### .HLS    
-#### .MpegTS  
-#### .throttle  
-#### .transform  
-#### .UDP
+#### .bridge() 
+>   
+```javascript
+let bridge = new Woobi.Streams.bridge();
+```
+> normal passthrough stream
+
+#### .HLS(options, callback)  
+> @param - **options** - Object  
+> @param - **callback** - Function  
+```javascript
+let hls = new Woobi.Streams.HLS({
+    name: 'Test',
+    file: '/home/woobi/Videos/woobi.mp4',
+    streamable: true
+});
+```
+| option | type | info |
+| :--------------- | :------------ | :------------------ |
+| **name** | _String_ | Unique name for asset  |
+| **file** | _Object_ | *optional* Full path to file. |
+| **stream** | _Object_ | *optional* Source stream. |
+| **progress** | _Boolean_ | Emit progress info.  |
+| **metadata** | _Object_ | Object of information about file. Should be flat with exception of the `art` key(an Array).  | 
+| **seek** | _Number_ |  |
+| **inputFormat** | _String_ |  |
+| **inputOptions** |  _Array\|String_ |  |
+| **outputOptions** |  _Array\|String_ |  |
+| **onlyOptions** | _Array\|String_ |  |
+| **hlsOptions** | _Array\|String_ |  |
+| **passthrough** | _Boolean_ |  |
+| **streamable** | _Boolean_ |  |
+| **format** | _String_ |  |
+
+#### .MpegTS(options, callback)  
+> @param - **options** - Object  
+> @param - **callback** - Function  
+```javascript
+let mpegts = new Woobi.Streams.MpegTS({
+    name: 'Test',
+    file: '/home/woobi/Videos/woobi.mp4',
+    streamable: true
+});
+```
+| option | type | info |
+| :--------------- | :------------ | :------------------ |
+| **name** | _String_ | Unique name for asset  |
+| **program** | _String_ |  |
+| **path** | _String_ |  |
+| **urlPath** | _String_ |  |
+| **source** | _Object_ | input source. |
+| **video** | _String_ |  |
+| **audio** | _String_ |  |
+| **other** | _String_ |  |
+| **segment** | _String_ |  |
+
+#### .throttle(source, rate, onEnd)
+> @param - **source** - Stream  
+> @param - **rate** - Number
+> @param - **onEnd** - Function
+```javascript
+let throttle = new Woobi.Streams.throttle(stream, 1000);
+// throttle.stream.pipe(somewhere)
+```
+> 
+
+#### .transform()
+>   
+```javascript
+let transformer = new Woobi.Streams.transform();
+```
+> transform stream
+
+#### .UDP(options, callback)   
+> @param - **options** - Object  
+> @param - **callback** - Function  
+```javascript
+let updStream = new Woobi.Streams.UDP({
+    name: 'UDPSource',
+    host: '10.10.10.11',
+    port: 7006
+});
+```
+| option | type | info |
+| :--------------- | :------------ | :------------------ |
+| **name** | _String_ | Unique name for asset  |
+| **host** | _String_ |  |
+| **port** | _Number_ |  |
+
 
 ## Woobi.Channel
 ### Options
