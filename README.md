@@ -130,7 +130,7 @@ leave out or set to false to ignore
 #### .File(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**  
+  
 
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
@@ -140,7 +140,6 @@ leave out or set to false to ignore
 #### .Fluent(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**  
 
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
@@ -162,7 +161,6 @@ leave out or set to false to ignore
 #### .Program(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**  
 
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
@@ -174,7 +172,6 @@ leave out or set to false to ignore
 #### .UDP(options, callback)   
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**  
 
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
