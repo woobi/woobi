@@ -244,19 +244,7 @@ export default class mainMenu extends React.Component {
 						]}
 					/>
 					
-					<MenuItem 
-						leftIcon={<FontIcon className="material-icons">polymer</FontIcon>}
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'Programs',
-								path: '/programs',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-						style={{}}
-						href="/noscript/programs"
-						children="Programs"
-					/>							
+								
 				</div>
 			</Drawer>
 		);

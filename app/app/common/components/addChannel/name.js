@@ -79,18 +79,19 @@ export default class addChannelName extends React.Component {
 			</div>
 			<br />
 			<br />
+			
+			{this.props.name !== '' ? <p><RaisedButton
+				label="Finish (Review)"
+				primary={true}
+				onTouchTap={() => (this.props.changeScreen(3))} 
+				style={{float: 'left' }} 
+			/>
 			<RaisedButton
 				label="Next (Assets)"
 				secondary={true}
 				onTouchTap={() => (this.props.changeScreen(1))} 
 				style={{float: 'left' }} 
-			/>
-			<RaisedButton
-				label="Finish (Review)"
-				primary={false}
-				onTouchTap={() => (this.props.changeScreen(3))} 
-				style={{float: 'right' }} 
-			/>
+			/> </p>: <span />}
 		</div>);
 	}
 }

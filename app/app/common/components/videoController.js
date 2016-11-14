@@ -259,6 +259,10 @@ export default class VideoController extends React.Component {
 						
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
+						if (c.sources.length < 2) {
+							this.doRequestCommand(newC);
+							return;
+						}
 						Gab.emit('dialog2 open', {
 							title: newC.label +  "",
 							open: true,
@@ -293,6 +297,10 @@ export default class VideoController extends React.Component {
 						
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
+						if (c.sources.length < 2) {
+							this.doRequestCommand(newC2);
+							return;
+						}
 						Gab.emit('dialog2 open', {
 							title: newC2.label +  "",
 							open: true,
@@ -323,6 +331,10 @@ export default class VideoController extends React.Component {
 					<RaisedButton style={buttonStyleP} key="pass"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="with Passthrough" onClick={(e) => {
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
+						if (c.sources.length < 2) {
+							this.doRequestCommand(newC3);
+							return;
+						}
 						Gab.emit('dialog2 open', {
 							title: newC3.label +  "",
 							open: true,
@@ -432,6 +444,10 @@ export default class VideoController extends React.Component {
 			source: this.source
 		}
 		debug('Gab emit', this.source, data);
+		let lookFor = 'on' + action.charAt(0).toUpperCase() + action.slice(1);
+		if (typeof this.props[lookFor] == 'function') {
+			this.props[lookFor]();
+		}
 		Gab.emit(this.source, data);
 	}
 	

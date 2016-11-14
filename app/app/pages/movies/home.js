@@ -40,7 +40,8 @@ export default class Movies extends React.Component {
 			channels,
 			channel: chanel,
 			play,
-			movieImages: props.movieImages
+			movieImages: props.movieImages,
+			hideVideo: false
 		};
 		
 		this.buttonStyle = { margin: '0 auto',  width: false, height: false, padding: 0};
@@ -259,6 +260,17 @@ export default class Movies extends React.Component {
 					});
 				}}
 				destroy={true}
+				onPlay={() => {
+					debug('onPlay');
+					this._update = true;
+					this.setState({ hideVideo: false });
+				}}
+				//onPause={() => { document.body.style.background = bg; }}
+				onStop={() => {
+					debug('onStop');
+					this._update = true;
+					this.setState({ hideVideo: true });
+				}}
 			/>
 		);
 	}
@@ -282,33 +294,33 @@ export default class Movies extends React.Component {
 			}
 			return (<Sticky style={{  zIndex: 1005, background: art, width: '100%', position: 'relative', overflow: 'hidden' }} >
 				{this.nowPlaying()}
-				<Video  
-					style={{ margin: 'auto'  }} 
-					chromeless={false} 
-					source={source} 
-					mimeType="video/mp4"  
-					width={384} 
-					height={216} 
-					mute={false} 
-					controls={false} 
-					autoPlay={false}
-					//onPlay={() => { document.body.style.background = '#000'; }}
-					//onPause={() => { document.body.style.background = bg; }}
-					//onStop={() => { document.body.style.background = bg; }}
-				 />
+				<div style={{ display: this.state.hideVideo ? 'none' : 'block' }} >
+					<Video  
+						style={{ margin: 'auto' }} 
+						chromeless={false} 
+						source={source} 
+						mimeType="video/mp4"  
+						width={384} 
+						height={216} 
+						mute={false} 
+						controls={false} 
+						autoPlay={false}
+						
+					 />
+				</div>
 			</Sticky>);
 		}
 		return <span />;
 	}
 	
 	fanartButton() {
-		return (<IconButton title="Fanart View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 10 }} key="fanart"  secondary={true} onClick={(e) => { this.props.appState({ movieImages: true }) }} >
-			<FontIcon style={{ }} className="material-icons" color={this.state.movieImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_module</FontIcon>
+		return (<IconButton title="Fanart View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'absolute', top: 15, right: 10 }} key="fanart"  secondary={true} onClick={(e) => { this.props.appState({ movieImages: true }) }} >
+			<FontIcon style={{ }} className="material-icons" color={this.state.movieImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_stream</FontIcon>
 		</IconButton>);
 	}
 	
 	posterButton() {
-		return (<IconButton title="Poster View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 40 }} key="view"  secondary={true} onClick={(e) => { this.props.appState({ movieImages: false }) }} >
+		return (<IconButton title="Poster View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'absolute', top: 15, right: 40 }} key="view"  secondary={true} onClick={(e) => { this.props.appState({ movieImages: false }) }} >
 			<FontIcon style={{ }} className="material-icons" color={!this.state.movieImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_column</FontIcon>
 		</IconButton>);
 	}
@@ -336,7 +348,7 @@ export default class Movies extends React.Component {
 					var asset2 = Find(c.art, { type: 'poster' });
 					if(asset2 && !this.state.movieImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "') no-repeat right top";
 				}
-				return (<div  className={this.state.movieImages ? "col-xs-12 col-sm-6 col-md-4" : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
+				return (<div  className={this.state.movieImages ? "col-xs-12 " : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
 					<div style={{ margin: 0, cursor: 'pointer', height: !this.state.movieImages ? 275 : 200, background: art, backgroundSize: 'cover'}}  onClick={(e) => {
 						e.preventDefault();
 						this.props.goTo({
@@ -344,9 +356,9 @@ export default class Movies extends React.Component {
 							path: '/library/movies/movie/' + c.imdb
 						});
 					}} > 
-						<Card zDepth={1}  style={{ opacity: this.state.movieImages ? '.75' : '0' }}>
+						<Card zDepth={1}  style={{ opacity: this.state.movieImages ? '.85' : '.75' }}>
 							<CardHeader
-								title={this.state.movieImages ? c.name : ''}
+								title={<div style={{ fontWeight: 400, fontSize: 16 }}>{this.state.movieImages ? c.name : ''}</div>}
 								style={{ height: 40 }}
 							/>
 						</Card>

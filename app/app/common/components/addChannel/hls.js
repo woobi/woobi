@@ -27,9 +27,28 @@ export default class addChannelHLS extends React.Component {
 		debug('## RENDER ## addChannelHLS',  this.state, this.props);
 		let picked = (this.props.hls.passthrough  || (this.state.only));
 		return (<div>
+			<h3> {this.props.name} </h3>
 			<div> HLS Stream </div>
 			<p>An HLS stream requires sufficient hard drive space.  Three hours of recordings are saved. </p>
 			<div style={{ height: 15 }} />
+			<div><RaisedButton
+				label="Back (Assets)"
+				primary={true}
+				onTouchTap={() => (this.props.changeScreen(1))} 
+				style={{float: 'left', }} 
+			/>
+			<RaisedButton
+				label="Next (Review)"
+				secondary={true}
+				onTouchTap={() => (this.props.changeScreen(3))} 
+				style={{float: 'left',}} 
+			/></div>
+			
+			
+			
+			
+			<div className="clearfix" style={{ height: 35 }} />
+			
 			<Checkbox
 				checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="airplay" />}
 				uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="airplay" />}
@@ -143,20 +162,7 @@ export default class addChannelHLS extends React.Component {
 						hintText="hls"
 					/>
 			</div>
-				
-			<div style={{ height: 15 }} />
-			<RaisedButton
-				label="Back (Assets)"
-				primary={true}
-				onTouchTap={() => (this.props.changeScreen(1))} 
-				style={{float: 'left', }} 
-			/>
-			<RaisedButton
-				label="Next (Review)"
-				secondary={true}
-				onTouchTap={() => (this.props.changeScreen(3))} 
-				style={{float: 'left',}} 
-			/>
+			
 		</div>);
 	}
 }

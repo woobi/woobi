@@ -358,6 +358,10 @@ export default class miniChannel extends React.Component {
 						
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
+						if (c.channel.sources.length < 2) {
+							this.doRequestCommand(newC);
+							return;
+						}
 						Gab.emit('dialog2 open', {
 							title: newC.label +  "",
 							open: true,

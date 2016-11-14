@@ -14,7 +14,7 @@ var moduleRoot = (function(_rootPath) {
 
 var snowstreams = function() {
 	this._options = {
-		'name': 'snowstreams',
+		'name': 'woobi',
 		'module root': moduleRoot,
 		'media passthrough route': '/media',
 		'media passthrough path': '/media',
@@ -54,6 +54,9 @@ var snowstreams = function() {
 			opts.adapters = [];
 		}
 		debug('init! ');
+		
+		Object.assign(this._options, opts);
+		
 		this.channelPort = opts.channelPort || 13000;
 		this.host = opts.host ? this.set('host', opts.host || 'localhost').get('host') : this.get('host');
 		this.port = opts.proxy.port? this.set('port', opts.proxy.port || 7001).get('port') : this.get('port');

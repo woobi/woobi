@@ -82,7 +82,7 @@ export default class TVShows extends React.Component {
 	
 	fanartButton() {
 		return (<IconButton title="Fanart View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 10 }} key="fanart"  secondary={true} onClick={(e) => { this.props.appState({ tvImages: true }) }} >
-			<FontIcon style={{ }} className="material-icons" color={this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_module</FontIcon>
+			<FontIcon style={{ }} className="material-icons" color={this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_stream</FontIcon>
 		</IconButton>);
 	}
 	

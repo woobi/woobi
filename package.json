@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/woobi/woobi.git"
   },
-  "author": "snowkeeper",
+  "author": "woobi",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/woobi/woobi/issues"

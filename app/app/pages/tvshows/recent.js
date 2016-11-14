@@ -19,13 +19,13 @@ export default class RecentEpisodes extends React.Component {
 		let channels = [];
 		if(props.initialData) {
 			debug('got props initialData');
-			shows = props.initialData.recentshows || [];
-			channels = props.initialData.channels || [];
+			shows = props.initialData.recentshows.recentshows || [];
+			channels = props.initialData.recentshows.channels || [];
 			this._skipMount = true;
 		}
 		let channel = false;
 		let chanel = channels.find((c, i) => { 
-			if ((c.channel ==  'movieChannel' && !this.props.params.recent) || (c.channel ==  'recentMovies' && this.props.params.recent)) {
+			if (c.channel ==  'recentEpisodes' ) {
 				return true;	
 			}
 			return false
@@ -42,7 +42,8 @@ export default class RecentEpisodes extends React.Component {
 			channel: chanel,
 			play,
 			creating: false,
-			tvImages: props.tvImages
+			tvImages: props.tvImages,
+			hideVideo: false
 		};
 		
 		this.buttonStyle = { margin: '0 auto', width: false, height: false, padding: 0};
@@ -255,6 +256,17 @@ export default class RecentEpisodes extends React.Component {
 					});
 				}}
 				destroy={true}
+				onPlay={() => {
+					debug('onPlay');
+					this._update = true;
+					this.setState({ hideVideo: false });
+				}}
+				//onPause={() => { document.body.style.background = bg; }}
+				onStop={() => {
+					debug('onStop');
+					this._update = true;
+					this.setState({ hideVideo: true });
+				}}
 			/>
 		);
 	}
@@ -279,20 +291,22 @@ export default class RecentEpisodes extends React.Component {
 			}
 			return (<Sticky onStickyStateChange={this.onStickyStateChange.bind(this)} style={{  zIndex: 1005, background: art, backgroundSize: 'cover',  width: '100%', position: 'relative' }} >
 				{this.nowPlaying()} 
-				<Video  
-					style={{ margin: 'auto'  }} 
-					chromeless={false} 
-					source={source} 
-					mimeType="video/mp4"  
-					width={384} 
-					height={216} 
-					mute={false} 
-					controls={false} 
-					autoPlay={false}
-					//onPlay={() => { document.body.style.background = '#000'; }}
-					//onPause={() => { document.body.style.background = bg; }}
-					//onStop={() => { document.body.style.background = bg; }}
-				 />
+				<div style={{ display: this.state.hideVideo ? 'none' : 'block' }} >
+					<Video  
+						style={{ margin: 'auto'  }} 
+						chromeless={false} 
+						source={source} 
+						mimeType="video/mp4"  
+						width={384} 
+						height={216} 
+						mute={false} 
+						controls={false} 
+						autoPlay={false}
+						//onPlay={() => { document.body.style.background = '#000'; }}
+						//onPause={() => { document.body.style.background = bg; }}
+						//onStop={() => { document.body.style.background = bg; }}
+					 />
+				</div>
 			</Sticky>);
 		}
 		return <span />;
@@ -300,7 +314,7 @@ export default class RecentEpisodes extends React.Component {
 	
 	fanartButton() {
 		return (<IconButton title="Fanart View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 10 }} key="fanart"  secondary={true} onClick={(e) => { this.props.appState({ tvImages: true }) }} >
-			<FontIcon style={{ }} className="material-icons" color={this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_module</FontIcon>
+			<FontIcon style={{ }} className="material-icons" color={this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_stream</FontIcon>
 		</IconButton>);
 	}
 	
@@ -329,11 +343,11 @@ export default class RecentEpisodes extends React.Component {
 				let bgSize = 'cover';
 				if(c.art) {
 					var asset = Find(c.art, { type: 'fanart' });
-					if(asset && this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')left top / 100% no-repeat fixed";
+					if(asset && this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')center top / 100% no-repeat fixed";
 					var asset2 = Find(c.art, { type: 'poster' });
 					if(asset2 && !this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "')  no-repeat right top";
 				}
-				return (<div  className={this.state.tvImages ? "col-xs-12 col-sm-6 col-md-4" : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
+				return (<div  className={this.state.tvImages ? "col-xs-12" : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
 					<div style={{ margin: 0, cursor: 'pointer', height: !this.state.tvImages ? 285 : 200, background: art, backgroundSize: 'cover'}}  onClick={(e) => {
 						e.preventDefault();
 						this.props.goTo({
@@ -341,9 +355,9 @@ export default class RecentEpisodes extends React.Component {
 							path: '/library/tv/episode/' + c.idShow + '/' + c.episodeID
 						});
 					}} > 
-						<Card zDepth={1}  style={{ opacity: this.state.tvImages ? '.75' : '0' }}>
+						<Card zDepth={1}  style={{ opacity: this.state.tvImages ? '.85' : '.85' }}>
 							<CardHeader
-								title={this.state.tvImages ? c.name : ''}
+								title={<div style={{ fontWeight: 400, fontSize: 16 }}>{this.state.tvImages ? c.name : ''}</div>}
 								style={{ height: 40 }}
 							/>
 						</Card>

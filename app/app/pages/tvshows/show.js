@@ -45,7 +45,8 @@ export default class Show extends React.Component {
 			channel: chanel,
 			play,
 			episode: false,
-			creating: false
+			creating: false,
+			hideVideo: false
 		};
 		
 		this._autoPlay = false; 
@@ -468,21 +469,23 @@ export default class Show extends React.Component {
 			this._autoPlay = false;
 			return (<Sticky style={{ width: '100%', position: 'relative', zIndex: 1100, textAlign: 'center'}} >
 				{this.killChannelButton()}
-				<Video  
-					style={{ margin: 'auto'  }} 
-					chromeless={false} 
-					source={source} 
-					mimeType="video/mp4"  
-					width={384} 
-					height={216} 
-					mute={false} 
-					controls={false} 
-					autoPlay={play}
-					listenTo={this.state.show.name + ":video"} 
-					onPlay={() => { document.body.style.background = '#000'; }}
-					onPause={() => { document.body.style.background = bg; }}
-					onStop={() => { document.body.style.background = bg; }}
-				 />
+				<div style={{ display: this.state.hideVideo ? 'none' : 'block' }} >
+					<Video  
+						style={{ margin: 'auto'  }} 
+						chromeless={false} 
+						source={source} 
+						mimeType="video/mp4"  
+						width={384} 
+						height={216} 
+						mute={false} 
+						controls={false} 
+						autoPlay={play}
+						listenTo={this.state.show.name + ":video"} 
+						onPlay={() => { document.body.style.background = '#000'; }}
+						onPause={() => { document.body.style.background = bg; }}
+						onStop={() => { document.body.style.background = bg; }}
+					 />
+				</div>
 			</Sticky>);
 		}
 		return <span />;
@@ -591,6 +594,17 @@ export default class Show extends React.Component {
 					});
 				}}
 				destroy={true}
+				onPlay={() => {
+					debug('onPlay');
+					this._update = true;
+					this.setState({ hideVideo: false });
+				}}
+				//onPause={() => { document.body.style.background = bg; }}
+				onStop={() => {
+					debug('onStop');
+					this._update = true;
+					this.setState({ hideVideo: true });
+				}}
 			/>
 		</div>);
 	}
