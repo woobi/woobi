@@ -7,29 +7,31 @@ Woobi Media Streams
   - [Configuration](#configuration)
     - [Options](#options)
     - [Servers](#servers)
-      - [Simple](#simple-servers)
-      - [Keystone](#keystone-servers)
-      - [Existing](#existing-servers)
+      - [Simple](#simple)
+      - [Keystone](#keystone)
+      - [Existing](#existing)
     - [Sources](#sources)
-      - [File](#file-sources)
-      - [Other](#other-sources)
-      - [Program](#program-sources)
-      - [UDP](#udp-sources)
+      - [File](#file)
+      - [Other](#other-)
+      - [Program](#program)
+      - [UDP](#udp)
     - [Streams](#streams)
-      - [HLS](#file-streams)
-      - [UDP](#other-streams)
-      - [HTTP](#program-streams)
+      - [HLS](#hls)
+      - [UDP](#udp2)
+      - [HTTP](#http)
     - [Channels](#channels)
       - [Options](#options-channels)
       - [Adding Assets](#adding-assets-channels)
-      - [Watch / Listen](#watch-listen-channels)
+      - [Watch / Listen](#watch-listen)
   - [More Screen Shots](#more-screen-shots)
   - [Contributing](#contributing)
   - [License](#license)
 
 
 ## Installation  
-<kbd>yarn install woobi</kbd>  
+```bash
+yarn install woobi
+```
 
 ## Screen Shots  
 
