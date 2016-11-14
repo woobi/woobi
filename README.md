@@ -302,17 +302,17 @@ Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly wi
 Woobi.libs.mysql.movies()
 .then((movies) => {
     movies = movies.map(r => {
-	return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
+		return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
     });
     return Woobi.addChannel('recentMovies', {
-	files: movies,
-	loop: true,
-	noTransition: true,
-	hls: {
-	    type: 'hls',
-	    name: 'movieChannel',
-	    passthrough: true, // uses the stream as is / no transcoding
-	}
+		files: movies,
+		loop: true,
+		noTransition: true,
+		hls: {
+			type: 'hls',
+			name: 'movieChannel',
+			passthrough: true, // uses the stream as is / no transcoding
+		}
     });
 })
 .catch((err) => {
