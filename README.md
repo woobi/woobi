@@ -130,7 +130,8 @@ leave out or set to false to ignore
 #### .File(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**
+> return **Promise**  
+
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
@@ -139,7 +140,8 @@ leave out or set to false to ignore
 #### .Fluent(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**
+> return **Promise**  
+
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
@@ -160,7 +162,8 @@ leave out or set to false to ignore
 #### .Program(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**
+> return **Promise**  
+
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
@@ -168,10 +171,11 @@ leave out or set to false to ignore
 | **args** | _String_ | Argument String. |
 | **redo** | _String_ | String used to restart program. |
 
-#### .UDP(options, callback)  
+#### .UDP(options, callback)   
 > @param - **options** - Object  
 > @param - **callback** - Function  
-> return **Promise**
+> return **Promise**  
+
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
