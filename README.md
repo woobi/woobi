@@ -9,9 +9,9 @@ LAN media server, IPTV broadcaster, and media converter.
 ## Contents
 [Pre-Requisites](#pre-requisites)  
 [Installation](#installation)  
-[Usage](#usage)  
-[Configuration](#configuration)  
-[Woobi UI](#woobi-ui)  
+[Usage](#usage)
+[Woobi UI](#woobi-ui) 
+[Configuration](#configuration)   
 [Woobi.Sources](#woobisources)
   - [.File](#fileoptions-callback)  
   - [.Fluent](#fluentoptions-callback)  
@@ -76,7 +76,15 @@ Woobi.init({
 	]
 });
 ```  
-Woobi UI -  http://localhost:7001
+
+## Woobi UI
+http://localhost:7001  
+If you set the `proxy` option you can use the Woobi UI.
+- Create Channels  
+- View Channels
+- Save / Manage Channels 
+- View local library
+
 
 ## Configuration 
 #### Woobi.init(options, callback)  
@@ -119,8 +127,6 @@ Woobi UI -  http://localhost:7001
 | **config.database** | _String_ | database |
 > **note** - The default adapter name should be mysql.
 
-
-## Woobi UI
 
 ## Woobi.Sources
 #### .File(options, callback)  
