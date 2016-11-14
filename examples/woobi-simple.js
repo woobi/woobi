@@ -47,7 +47,6 @@ Broadcast.init({
 			name: 'recentEpisodes',
 			passthrough: true, // uses the stream as is / no transcoding
 			//source: "udp://10.10.10.87:13334?fifo_size=1000000&overrun_nonfatal=1",
-			//args: [path.join(__dirname, 'video', 'Recent', 'Recent.m3u8')]
 		},
 		assets: [],
 		
