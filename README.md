@@ -130,7 +130,12 @@ leave out or set to false to ignore
 #### .File(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-  
+```javascript
+let file = new Woobi.Sources.File({
+    name: 'Test',
+    file: '/home/woobi/Pitures/woobi.mp3'
+});
+```
 
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
@@ -140,7 +145,12 @@ leave out or set to false to ignore
 #### .Fluent(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-
+```javascript
+let fluent = new Woobi.Sources.Fluent({
+    name: 'Test',
+    file: '/home/woobi/Pitures/woobi.mp3'
+});
+```
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
@@ -161,7 +171,14 @@ leave out or set to false to ignore
 #### .Program(options, callback)  
 > @param - **options** - Object  
 > @param - **callback** - Function  
-
+```javascript
+let program = new Woobi.Sources.Program({
+    name: 'TV',
+    program: 'gnutv',
+    arg: '-channels /home/woobi/dvb/channels.conf -out udp 10.10.10.82 13333 WAGA5',
+    redo: '-channels /home/woobi/dvb/channels.conf -out udp 10.10.10.82 13333 ##CMD##',
+});
+```
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
@@ -172,7 +189,13 @@ leave out or set to false to ignore
 #### .UDP(options, callback)   
 > @param - **options** - Object  
 > @param - **callback** - Function  
-
+```javascript
+let updSource = new Woobi.Sources.UDP({
+    name: 'UDPSource',
+    host: '10.10.10.10',
+    port: 7005
+});
+```
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for asset  |
