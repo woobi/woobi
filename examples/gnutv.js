@@ -1,4 +1,4 @@
-var Woobi = require('./snowstreams');
+var Woobi = require('../woobi');
 
 Woobi.init({
 	channelPort: 13000,

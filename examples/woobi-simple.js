@@ -1,11 +1,10 @@
-var Broadcast = require('../woobi');
+var Woobi = require('../woobi');
 var path = require('path');
 var list;
 var debug = require('debug')('woobi:test');
 var async = require('async');
 
-
-Broadcast.init({
+Woobi.init({
 	channelPort: 13000,
 	host: 'studio',
 	loadSaved: false,
@@ -30,7 +29,7 @@ Broadcast.init({
 		}
 	]
 })
-.then(r => Broadcast.libs.mysql.recentEpisodes(50))
+.then(r => Woobi.libs.mysql.recentEpisodes(50))
 .then((recent) => {
 	recent = recent.filter((r,i) => {
 		return i>-1;
@@ -38,7 +37,7 @@ Broadcast.init({
 		return { name: r.name, file: r.file, progress: true, metadata: r }
 	});
 	
-	var channel = Broadcast.addChannel('recentEpisodes', {
+	var channel = Woobi.addChannel('recentEpisodes', {
 		loop: true,
 		files: recent,
 		noTransition: true,
@@ -57,14 +56,14 @@ Broadcast.init({
 	return channel;
 	
 })
-.then(r => Broadcast.libs.mysql.recentMovies())
+.then(r => Woobi.libs.mysql.recentMovies())
 .then((movie) => {
 	movie = movie.filter((r,i) => {
 		return true;//i>3;
 	}).map(r => {
 		return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
 	});
-	return Broadcast.addChannel('recentMovies', {
+	return Woobi.addChannel('recentMovies', {
 		files: movie,
 		loop: true,
 		noTransition: true,
