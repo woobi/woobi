@@ -97,7 +97,9 @@ Woobi UI -  http://localhost:7001
 | **video passthrough route** | _String_ | Api route to direct access videos.  |
 | **video passthrough path** | _String_ | Replace the path above with the actual server path.  |
 
-##### proxy configuration  
+##### proxy object  
+leave out or set to false to ignore  
+
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **host** | _String_ | Host to start on. default 0.0.0.0  |
@@ -109,7 +111,7 @@ Woobi UI -  http://localhost:7001
 > You can add any keystone option to the proxy configuration.   
 > If you want to use channel saving and do not want to use keystone, then attach a mongoose model to `Woobi.libs._mongo.ChannelConfig.model`
 
-##### adapters configuration  
+##### adapters Array of Objects  
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for the adapter.  Can be accessed at `Woobi.libs[name]`  |
@@ -125,10 +127,56 @@ Woobi UI -  http://localhost:7001
 ## Woobi UI
 
 ## Woobi.Sources
-#### .File  
-#### .Fluent  
-#### .Program
-#### .UDP
+#### .File(options, callback)  
+> @param - **options** - Object  
+> @param - **callback** - Function  
+> return **Promise**
+| option | type | info |
+| :--------------- | :------------ | :------------------ |
+| **name** | _String_ | Unique name for asset  |
+| **file** | _Object_ | Full path to file. |
+
+#### .Fluent(options, callback)  
+> @param - **options** - Object  
+> @param - **callback** - Function  
+> return **Promise**
+| option | type | info |
+| :--------------- | :------------ | :------------------ |
+| **name** | _String_ | Unique name for asset  |
+| **file** | _Object_ | *optional* Full path to file. |
+| **stream** | _Object_ | *optional* Source stream. |
+| **progress** | _Boolean_ | Emit progress info.  |
+| **metadata** | _Object_ | Object of information about file. Should be flat with exception of the `art` key(an Array).  | 
+| **seek** | _Number_ |  |
+| **inputFormat** | _String_ |  |
+| **inputOptions** |  _Array\|String_ |  |
+| **outputOptions** |  _Array\|String_ |  |
+| **videoFilters** | _Object_ |  |
+| **onlyOptions** | _Array\|String_ |  |
+| **encode** | _Boolean_ |  |
+| **streamable** | _Boolean_ |  |
+| **format** | _String_ |  |
+
+#### .Program(options, callback)  
+> @param - **options** - Object  
+> @param - **callback** - Function  
+> return **Promise**
+| option | type | info |
+| :--------------- | :------------ | :------------------ |
+| **name** | _String_ | Unique name for asset  |
+| **program** | _String_ | Program name. |
+| **args** | _String_ | Argument String. |
+| **redo** | _String_ | String used to restart program. |
+
+#### .UDP(options, callback)  
+> @param - **options** - Object  
+> @param - **callback** - Function  
+> return **Promise**
+| option | type | info |
+| :--------------- | :------------ | :------------------ |
+| **name** | _String_ | Unique name for asset  |
+| **host** | _String_ |  |
+| **port** | _Number_ |  |
 
 ## Woobi.Streams
 #### .bridge   
