@@ -79,21 +79,21 @@ export default class addChannelAssetsFile extends React.Component {
 					checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="check" />}
 					label="Default Encode"
 					checked={this.props.current.encode}
-					onCheck={(el, value) => { this.setValue({ 'encode': value,  'passthrough': !value, 'stream': false });  this.setState({ 'custom':  false }); }}
+					onCheck={(el, value) => { this.setValue({ 'encode': value,  'passthrough': !value, 'streamable': false });  this.setState({ 'custom':  false }); }}
 				/> : <span />}
-				{this.props.current.stream || !picked ? <Checkbox
+				{this.props.current.streamable || !picked ? <Checkbox
 					uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="check" />}
 					checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="check" />}
 					label="Default Stream"
-					checked={this.props.current.stream}
-					onCheck={(el, value) => { this.setValue({ 'stream': value,  'encode': false, 'passthrough': !value });  this.setState({ 'custom':  false }); }}
+					checked={this.props.current.streamable}
+					onCheck={(el, value) => { this.setValue({ 'streamable': value,  'encode': false, 'passthrough': !value });  this.setState({ 'custom':  false }); }}
 				/> : <span />}
 				{this.state.custom || !picked ? <Checkbox
 					uncheckedIcon={<FontIcon className="material-icons"  color={this.props.theme.palette.disabledColor} children="check" />}
 					checkedIcon={<FontIcon className="material-icons"  color={Styles.Colors.lightGreenA400} children="check" />}
 					label="Custom Options"
 					checked={this.state.custom}
-					onCheck={(el, value) => { this.setState({ 'custom': value  });  this.setValue({  'encode': false, 'stream': false, passthrough: !value }); }}
+					onCheck={(el, value) => { this.setState({ 'custom': value  });  this.setValue({  'encode': false, 'streamable': false, passthrough: !value }); }}
 				/> : <span />}
 				{this.state.custom  ? <TextField
 					id="text-field-controlled"

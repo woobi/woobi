@@ -1,8 +1,13 @@
 {
   "name": "woobi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "stream media across a lan",
   "main": "woobi.js",
+  "keywords": [
+	"ffmpeg", "stream", "iptv", "ui", "video",
+	"audio", "mp4", "hls",  "x11grab", "webcam",
+	"http", "rtsp", "udp", "mp3", "media" 
+  ],
   "scripts": {
     "test": "mocha",
     "start": "DEBUG=woobi:* node test.js",
