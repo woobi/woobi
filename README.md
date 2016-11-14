@@ -50,7 +50,7 @@ yarn install woobi
 
 ## Usage  
 ```javascript
-import Woobi from 'woobi';
+var Woobi = require('woobi');
 Woobi.init({
 	channelPort: 13000,
 	host: 'studio',
