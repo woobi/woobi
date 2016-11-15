@@ -66,7 +66,7 @@ gulp.task('package', function() {
 
 gulp.task('production',  function (cb) {
 	var builder = new Builder('./app', './app/config.js');
-	builder.buildStatic('app/app', './static/js/bundles/material-system.js', { minify: true, sourceMaps: false })
+	builder.buildStatic('app/app', './static/js/bundles/material-system.js', { minify: false, sourceMaps: true })
 	.then(function() {
 		gulp.src([
 			'static/js/lib/jquery/jquery-2.1.1.min.js', 
