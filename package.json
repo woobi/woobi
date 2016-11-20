@@ -95,7 +95,6 @@
     "json-safe-parse": "^0.0.2",
     "jspm": "",
     "keystone": "keystonejs/keystone",
-    "keystone-greeter": "^0.3.5",
     "keystone-live": "^3.7.2",
     "lodash": "",
     "method-override": "",
