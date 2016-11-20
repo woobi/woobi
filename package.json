@@ -1,6 +1,6 @@
 {
   "name": "woobi",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "stream media across a lan",
   "main": "woobi.js",
   "keywords": [
