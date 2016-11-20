@@ -12,6 +12,14 @@ LAN media server, IPTV broadcaster, and media converter.
 [Usage](#usage)
 [Woobi UI](#woobi-ui) 
 [Configuration](#configuration)   
+
+[Woobi.Channel](#woobichannel)
+  - [Options](#options)
+  - [Adding Assets](#adding-assets)
+  - [Properties](#properties)  
+  - [API Routes](#api-routes)
+  - [Watch / Listen](#watch--listen)
+
 [Woobi.Sources](#woobisources)
   - [.File](#fileoptions-callback)  
   - [.Fluent](#fluentoptions-callback)  
@@ -25,13 +33,6 @@ LAN media server, IPTV broadcaster, and media converter.
   - [.throttle](#throttlesource-rate-onend)
   - [.transform](#transform)
   - [.UDP](#udpoptions-callback-1)
-
-[Woobi.Channel](#woobichannel)
-  - [Options](#options)
-  - [Adding Assets](#adding-assets)
-  - [Properties](#properties)  
-  - [API Routes](#api-routes)
-  - [Watch / Listen](#watch--listen)
 
 
 [Screen Shots](#screen-shots)  
@@ -127,6 +128,71 @@ If you set the `proxy` option you can use the Woobi UI.
 | **config.database** | _String_ | database |
 > **note** - The default adapter name should be mysql.
 
+
+## Woobi.Channel  
+Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.  This gives a directory of channels for iptv.  
+
+```javascript 
+/**
+ * grabbing a tv tuner card
+ **/
+Woobi.addChannel('TV', {
+	loop: true,
+	assets: [
+		{
+			type: 'program',
+			name: 'Air',
+			arg: 'gnutv -channels /home/woobi/dvb/channels.conf -out udp 10.10.10.82 13333 WAGA5',
+			redo: 'gnutv -channels /home/woobi/dvb/channels.conf -out udp 10.10.10.82 13333 ##CMD##',
+		},
+		{
+			type: 'udpSink',
+			port: 13333,
+			host: '10.10.10.82',
+			name: 'AirTV',
+		},
+		{
+			type: 'udpStream',
+			port: 13333,
+			host: '10.10.10.87',
+			name: 'streamAir'
+		},
+		
+	],
+}, (err) => {
+	if(err) console.log('##ERROR##',err);
+});
+
+/**
+ * using the library adapter
+ **/
+Woobi.libs.mysql.movies()
+.then((movies) => {
+    movies = movies.map(r => {
+		return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
+    });
+    return Woobi.addChannel('recentMovies', {
+		files: movies,
+		loop: true,
+		noTransition: true,
+		hls: {
+			type: 'hls',
+			name: 'movieChannel',
+			passthrough: true, // uses the stream as is / no transcoding
+		}
+    });
+})
+.catch((err) => {
+    if(err) debug('##ERROR##',err);
+});
+
+// channel is now available at Woobi.channels['movieChannel']
+```
+### Options
+### Adding Assets
+### Properties
+### API Routes
+### Watch / Listen  
 
 ## Woobi.Sources
 #### .File(options, callback)  
@@ -294,71 +360,6 @@ let updStream = new Woobi.Streams.UDP({
 | **host** | _String_ |  |
 | **port** | _Number_ |  |
 
-
-## Woobi.Channel  
-Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.  This gives a directory of channels for iptv.  
-
-```javascript 
-/**
- * grabbing a tv tuner card
- **/
-Woobi.addChannel('TV', {
-	loop: true,
-	assets: [
-		{
-			type: 'program',
-			name: 'Air',
-			arg: 'gnutv -channels /home/woobi/dvb/channels.conf -out udp 10.10.10.82 13333 WAGA5',
-			redo: 'gnutv -channels /home/woobi/dvb/channels.conf -out udp 10.10.10.82 13333 ##CMD##',
-		},
-		{
-			type: 'udpSink',
-			port: 13333,
-			host: '10.10.10.82',
-			name: 'AirTV',
-		},
-		{
-			type: 'udpStream',
-			port: 13333,
-			host: '10.10.10.87',
-			name: 'streamAir'
-		},
-		
-	],
-}, (err) => {
-	if(err) console.log('##ERROR##',err);
-});
-
-/**
- * using the library adapter
- **/
-Woobi.libs.mysql.movies()
-.then((movies) => {
-    movies = movies.map(r => {
-		return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
-    });
-    return Woobi.addChannel('recentMovies', {
-		files: movies,
-		loop: true,
-		noTransition: true,
-		hls: {
-			type: 'hls',
-			name: 'movieChannel',
-			passthrough: true, // uses the stream as is / no transcoding
-		}
-    });
-})
-.catch((err) => {
-    if(err) debug('##ERROR##',err);
-});
-
-// channel is now available at Woobi.channels['movieChannel']
-```
-### Options
-### Adding Assets
-### Properties
-### API Routes
-### Watch / Listen
 
 ## Screen Shots
 
