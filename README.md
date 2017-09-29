@@ -166,8 +166,9 @@ If you set the `proxy` option you can use the Woobi UI.
 > You can add any keystone option to the proxy configuration.   
 > If you want to use channel saving and do not want to use keystone, then attach a mongoose model to `Woobi.libs._mongo.ChannelConfig.model`
 ##### adapters Array of Objects  
-> Adapters are used to convert your information into the required format for the UI.  You can also uses adapters for non-ui use cases.  
-> For local media a `media` adapter is needed.  An example using mysql databases is included.
+> Adapters are used to convert your information into the required format for the UI.  
+> You can also uses adapters for non-ui use cases.   
+> For local media a `media` adapter is needed.  An example using mysql databases is included.  
 > For live tv a `livetv` adapter is needed. An example using a mix of mysql databses and tcp connections is supplied.  
 
 | option | type | info |
