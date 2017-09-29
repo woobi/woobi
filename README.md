@@ -187,8 +187,11 @@ If you set the `proxy` option you can use the Woobi UI.
 > **note** - config will be passed to custom adapters and can include additional key/value pairs
 
 >  The media adapter needs the following functions  
->  `tvShow( idShow )` `tvShows( obj )` `tvShowByName( name )` `tvShowByIMDB( imdb_id )` `tvShowEpisodes( idShow )` `recentEpisodes( obj )`   
->  `movie( idShow )` `movies( obj )` `movieByName( name )` `movieByIMDB( imdb_id )` `recentMovies( obj )` `grabMedia( obj )` `mediaFiles( obj )` `mediaFile( obj )`  
+>  `tvShow( idShow )` `tvShows( obj )` `tvShowByName( name )` `tvShowByIMDB( imdb_id )`  
+>  `tvShowEpisodes( idShow )` `recentEpisodes( obj )`   
+>  `movie( idShow )` `movies( obj )` `movieByName( name )`  
+>  `movieByIMDB( imdb_id )`  `recentMovies( obj )`
+>  `grabMedia( obj )` `mediaFiles( obj )` `mediaFile( obj )`  
 
 >  The livetv adapter needs the following functions  
 >  `connect( obj )` `getGuideData( channels, start, end )` `getSeriesTimers( obj )` `getTimers( obj )` `getTVChannels( obj )` `getChannelGroups( obj )` 
