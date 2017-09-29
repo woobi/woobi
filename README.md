@@ -171,7 +171,7 @@ If you set the `proxy` option you can use the Woobi UI.
 > For local media a `media` adapter is needed.  An example using mysql databases is included.  
 > For live tv a `livetv` adapter is needed. An example using a mix of mysql databses and tcp connections is supplied.  
   
->  Adapters are available at `Woobi.libs['USER_SUPPLIED_NAME']  
+>  Adapters are available at `Woobi.libs['USER_SUPPLIED_NAME']`  
 
 
 | option | type | info |
