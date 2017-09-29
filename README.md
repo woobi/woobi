@@ -191,11 +191,13 @@ If you set the `proxy` option you can use the Woobi UI.
 >  `connect` `getGuideData` `getSeriesTimers` `getTimers` `getTVChannels` `getChannelGroups` 
 
 ## Woobi.Channel  
-Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.  This gives a directory of channels for iptv.  
+Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.    
 
 ```javascript 
 /**
- * grabbing a tv tuner card
+ * This gives iptv by grabbing a 
+ * tv tuner card source and sending it over udp
+ * For wired networks a multicast can be used
  **/
 Woobi.addChannel('TV', {
 	loop: true,
