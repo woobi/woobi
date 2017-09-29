@@ -229,7 +229,7 @@ Woobi.addChannel('TV', {
 /**
  * using the library adapter
  **/
-Woobi.libs.mysql.movies()
+Woobi.libs.media.movies()
 .then((movies) => {
     movies = movies.map(r => {
 		return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
@@ -249,7 +249,7 @@ Woobi.libs.mysql.movies()
     if(err) debug('##ERROR##',err);
 });
 
-// channel is now available at Woobi.channels['movieChannel']
+// channel is now available at Woobi.channels['recentMovies']
 ```
 ### Options
 ### Adding Assets
