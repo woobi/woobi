@@ -52,7 +52,7 @@ yarn install woobi
 ## Usage  
 ```javascript
 var Woobi = require('woobi');
-Woobi.init({
+Woobi.init( {
 	channelPort: 13000,
 	host: 'studio',
 	loadSaved: true,
@@ -194,7 +194,7 @@ If you set the `proxy` option you can use the Woobi UI.
 >  `connect` `getGuideData` `getSeriesTimers` `getTimers` `getTVChannels` `getChannelGroups` 
 
 ## Woobi.Channel  
->  Use **`Woobi.addChannel(name, opts).then()`** to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.    
+>  Use **`Woobi.addChannel( name, opts ).then()`** to add channels instead of directly with `new Woobi.Channel( name, opts, callback )`.    
 
 ```javascript 
 /**
@@ -202,7 +202,7 @@ If you set the `proxy` option you can use the Woobi UI.
  * tv tuner card source and sending it over udp
  * For wired networks a multicast can be used
  **/
-Woobi.addChannel('TV', {
+Woobi.addChannel( 'TV', {
 	loop: true,
 	assets: [
 		{
@@ -225,19 +225,19 @@ Woobi.addChannel('TV', {
 		},
 		
 	],
-}, (err) => {
-	if(err) console.log('##ERROR##',err);
+}, ( err ) => {
+	if ( err ) console.log( '##ERROR##', err );
 });
 
 /**
  * using the library adapter
  **/
 Woobi.libs.media.movies()
-.then((movies) => {
-    movies = movies.map(r => {
+.then( ( movies ) => {
+    movies = movies.map( r => {
 		return { name: r.name, file: r.file, progress: true, metadata: r, encode: false }
     });
-    return Woobi.addChannel('recentMovies', {
+    return Woobi.addChannel( 'recentMovies', {
 		files: movies,
 		loop: true,
 		noTransition: true,
@@ -248,8 +248,8 @@ Woobi.libs.media.movies()
 		}
     });
 })
-.catch((err) => {
-    if(err) debug('##ERROR##',err);
+.catch( ( err ) => {
+    if ( err ) debug( '##ERROR##', err );
 });
 
 // channel is now available at Woobi.channels.recentMovies
