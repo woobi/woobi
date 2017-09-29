@@ -249,7 +249,7 @@ Woobi.libs.media.movies()
     if(err) debug('##ERROR##',err);
 });
 
-// channel is now available at Woobi.channels['recentMovies']
+// channel is now available at Woobi.channels.recentMovies
 ```
 ### Options
 ### Adding Assets
