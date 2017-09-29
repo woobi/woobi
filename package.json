@@ -4,9 +4,21 @@
   "description": "stream media across a lan",
   "main": "woobi.js",
   "keywords": [
-	"ffmpeg", "stream", "iptv", "ui", "video",
-	"audio", "mp4", "hls",  "x11grab", "webcam",
-	"http", "rtsp", "udp", "mp3", "media" 
+    "ffmpeg",
+    "stream",
+    "iptv",
+    "ui",
+    "video",
+    "audio",
+    "mp4",
+    "hls",
+    "x11grab",
+    "webcam",
+    "http",
+    "rtsp",
+    "udp",
+    "mp3",
+    "media"
   ],
   "scripts": {
     "test": "mocha",
@@ -28,7 +40,7 @@
       "baseURL": "app"
     },
     "dependencies": {
-      "capaj/systemjs-hot-reloader": "github:capaj/systemjs-hot-reloader",
+      "capaj/systemjs-hot-reloader": "github:alexisvincent/systemjs-hot-reloader",
       "clappr": "npm:clappr@^0.2.63",
       "clappr-chromecast-plugin": "npm:clappr-chromecast-plugin@^0.0.5",
       "classnames": "npm:classnames",
@@ -42,12 +54,12 @@
       "javascript-natural-sort": "npm:javascript-natural-sort@^0.7.1",
       "lodash": "npm:lodash",
       "marked": "npm:marked@^0.3.6",
-      "material-ui": "npm:material-ui",
+      "material-ui": "npm:material-ui@^0.19.2",
       "moment": "npm:moment@^2.15.1",
       "path": "github:jspm/nodelibs-path",
       "react": "npm:react@^15.3.2",
       "react-copy-to-clipboard": "npm:react-copy-to-clipboard@^4.2.3",
-      "react-dom": "npm:react-dom@15.3.1",
+      "react-dom": "npm:react-dom@^16.0.0",
       "react-html5video": "npm:react-html5video@^1.2.12",
       "react-motion": "npm:react-motion@^0.4.5",
       "react-router": "npm:react-router@^2.4.1",
@@ -55,7 +67,7 @@
       "react-select": "npm:react-select",
       "react-sticky": "npm:react-sticky@^5.0.5",
       "react-swipeable-views": "npm:react-swipeable-views@^0.7.11",
-      "react-tap-event-plugin": "npm:react-tap-event-plugin",
+      "react-tap-event-plugin": "npm:react-tap-event-plugin@^2.0.1",
       "react-tooltip": "npm:react-tooltip",
       "sanitize-filename": "npm:sanitize-filename@^1.6.1",
       "socket.io-client": "npm:socket.io-client",
@@ -67,10 +79,10 @@
       "util": "github:jspm/nodelibs-util"
     },
     "devDependencies": {
-      "babel": "npm:babel-core",
-      "babel-runtime": "npm:babel-runtime",
-      "core-js": "npm:core-js",
-      "systemjs-hot-reloader": "github:capaj/systemjs-hot-reloader"
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4",
+      "systemjs-hot-reloader": "github:alexisvincent/systemjs-hot-reloader"
     }
   },
   "dependencies": {

@@ -73,6 +73,26 @@ Woobi.init({
 				host: 'MYSQLHOST',
 				database: 'MYSQLDB'
 			},
+		},
+		/* custom adapters can be added */
+		{
+			name: 'userAdded',
+			adapter: function ( Woobi ) {
+			
+				var MyAdapter = function ( opts, callback ) {
+		
+					if ( !( this instanceof MyAdapter ) ) return new MyAdapter( opts, callback );
+					
+				}
+				MyAdapter.prototype.doThis = function ( withThis ) {
+				
+				}
+				return MyAdapter;
+			
+			},
+			config: {
+				
+			}
 		}
 	]
 });
@@ -81,10 +101,11 @@ Woobi.init({
 ## Woobi UI
 http://localhost:7001  
 If you set the `proxy` option you can use the Woobi UI.
+- Live Tv EPG and DVR Manager (ui only)  
 - Create Channels  
-- View Channels
-- Save / Manage Channels 
-- View local library
+- View Channels  
+- Save / Manage Channels  
+- View local library  
 
 
 ## Configuration 
@@ -97,7 +118,7 @@ If you set the `proxy` option you can use the Woobi UI.
 | :--------------- | :------------ | :------------------ |
 | **host** | _String_ | Host to use to access Woobi UI and api routes.  |
 | **proxy** | _false\|Object_ | Optional server for api routes and Woobi UI. |
-| **adapters** | _Object\|Array_ | Adapters for local media.  |
+| **adapters** | _Object\|Array_ | Adapters can convert your info to the correct format.  |
 | **loadSaved** | _Boolean_ | Load saved channels on boot that are set to autostart.  |
 | **channelPort** | _Number_ | If a port is not supplied the port will be pulled starting at this number.  | 
 | **mediaPath** | _String_ | Full path to store saved HLS files.  Defaults to **/_module_path_/media**  |
@@ -120,14 +141,14 @@ If you set the `proxy` option you can use the Woobi UI.
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for the adapter.  Can be accessed at `Woobi.libs[name]`  |
-| **adapter** | _Object_ | Port for api routes and Woobi UI access. |
+| **adapter** | _String|Function_ | String for included adapter and function to provide your own. |
 | **config** | _Object_ | |
 | **config.user** | _String_ | username  |
 | **config.pass** | _String_ | password |
 | **config.host** | _String_ | host |
 | **config.database** | _String_ | database |
-> **note** - The default adapter name should be mysql.
-
+> **note** - The default adapter name will be mysql if not supplied.  
+> **note** - config will be passed to custom adapters and can include additional key/value pairs
 
 ## Woobi.Channel  
 Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.  This gives a directory of channels for iptv.  

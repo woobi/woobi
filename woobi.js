@@ -45,8 +45,8 @@ var snowstreams = function() {
 	
 }
  
- snowstreams.prototype.init = function(opts, callback) {
-	return new Promise((resolve, reject) => {
+ snowstreams.prototype.init = function (opts, callback) {
+	return new Promise ((resolve, reject) => {
 		if(!_.isArray(opts.adapters)) {
 			console.log('No adapter configs found! ');
 			//process.exit();
@@ -170,15 +170,23 @@ _.extend(snowstreams.prototype, require('./lib/core/keystone')());
 snowstreams.prototype.addChannel = function(channel, opts) {
 		
 	return new Promise((resolve, reject) => { 
+		
+		debug('Add Channel ' + channel);
+		
 		if (this.channels[channel]) {
 			return reject('Channel exists');
 		}
 		this.channels[channel] = new this.Channel(channel, opts, (err, c) => {
-			//this.channels[channel] = c;
+			this.channels[channel] = c;
+			
 			if(err) return reject(err);
 			
+			debug('Added Channel ' + channel); 
+			
 			Broadcast.notify('channels', Broadcast.socketListeners.channels());
+			
 			return resolve(this.channels[channel]);
+		
 		});
 	});
 }

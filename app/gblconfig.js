@@ -13,8 +13,8 @@ Number.prototype.clip = function(numbers) {
 var snowUI = {
 	name: 'Woobi Lodge',
 	materialStyle: {},
-	defaultTheme: 'light',
-	__currentTheme: 'light',
+	defaultTheme: 'woobi',
+	__currentTheme: 'woobi',
 	__lastTheme: false,
 	__userTheme: false,
 	__state: {},
@@ -109,11 +109,13 @@ snowUI.fadeIn = function(speed, me, callback) {
 }
 
 snowUI.artStringReplace = function(art) {
-	return art.replace('smb://VIZIO', '/media');
+	return art.replace('smb://SAM', '/media');
 }
 
 snowUI.videoStringReplace = function(art) {
-	return art.replace('smb://VIZIO', '/direct');
+	return art.replace('smb://SAM', '/direct');
+	//return art.replace('smb://SAM', '/media');
+
 }
 
 // sticky menu

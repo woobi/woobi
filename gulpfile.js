@@ -15,7 +15,7 @@ var fs = require('fs-extra');
 // see app/app/app.js to use
 gulp.task('bundle',  function (cb) {
 	var builder = new Builder('./app', './app/config.js');
-	builder.bundle('app/app - [app/**/*]', './app/bundles/dependencies.js', { minify: true, sourceMaps: false })
+	builder.bundle('app/app - [app/**/*]', './app/bundles/dependencies.js', { minify: false, sourceMaps: false })
 	.then(function() {
 		gutil.log('wrote /bundles/dependencies.js');
 		builder.reset()

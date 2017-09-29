@@ -495,9 +495,9 @@ export default class miniChannel extends React.Component {
 			});
 		}
 		
-		let art = '/images/fanart.gif';
-		let poster ='/images/fanart.jpg';
-		let banner =  "url('/images/banner.jpg')no-repeat  center";
+		let art = ''; //'/images/fanart.gif';
+		let poster = ''; //'/images/fanart.jpg';
+		let banner =  ''; //"url('/images/banner.jpg')no-repeat  center";
 		let bgSize = 'cover';
 		if(c.playing.metadata.thumb) {
 				poster = c.playing.metadata.thumb;

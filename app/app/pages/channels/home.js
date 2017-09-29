@@ -130,6 +130,41 @@ export default class Home extends React.Component {
 		});
 	}
 	
+	startChannel(c) {
+		Gab.emit('snackbar', {
+			style: 'warning',
+			html: 'Starting channel ' + c.name,
+			open: true,
+			onRequestClose: () => {}
+		});
+		Gab.rawRequest('/alvin/start/channel/' + c.name + '/?config=' + c.config, false)
+		.then(data => {
+			if(data.success) {
+				Gab.emit('snackbar', {
+					style: 'success',
+					html: data.message,
+					open: true,
+					onRequestClose: () => {}
+				});
+			} else {
+				Gab.emit('snackbar', {
+					style: 'danger',
+					html: data.error,
+					open: true,
+					onRequestClose: () => {}
+				});
+			}
+		})
+		.catch(e => {
+			Gab.emit('snackbar', {
+				style: 'danger',
+				html: data.error,
+				open: true,
+				onRequestClose: () => {}
+			});
+		});
+	}
+	
 	manageChannel() {
 		return (<div style={{ padding: '10px ' }}>
 			<FlatButton  label={"Add Channel"} onClick={()=>{
@@ -161,7 +196,21 @@ export default class Home extends React.Component {
 						})
 							
 					}}/>
-					<div title="Start" style={{ cursor: 'pointer', float: 'left', margin: 5, padding: 5  }} children={<FontIcon className="material-icons" color={this.props.theme.palette.alternateTextColor} children="play_circle_filled" /> } />
+					<div title="Start" style={{ cursor: 'pointer', float: 'left', margin: 5, padding: 5  }} children={<FontIcon className="material-icons" color={this.props.theme.palette.alternateTextColor} children="play_circle_filled" /> }  onClick={() => {
+						Gab.emit('confirm open', {
+							html: 'Start ' + r.name + '?',
+							answer:(yesno) => { 
+								Gab.emit('confirm open', { open: false });
+								if(yesno) {
+									this.startChannel(r);
+								}
+							},
+							open: true,
+							noText: 'Cancel',
+							yesText: 'Yes, Start Channel', 
+						})
+							
+					}} />
 					<div title="Auto Start" style={{ float: 'left', margin: 5, padding: 5  }} children={!r.autostart ? <FontIcon className="material-icons" color={this.props.theme.palette.disabledColor} children="queue_play_next" /> : <FontIcon className="material-icons" children="queue_play_next" color={Styles.Colors.lightGreenA400} />} />
 					<div style={{ float: 'left', margin: 5, padding: 5  }} children={r.name} title={r.config} />
 				</div>);

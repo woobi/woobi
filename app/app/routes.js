@@ -2,6 +2,8 @@ import Home from './pages/home';
 import Status from './pages/status';
 import Channel from './pages/channels';
 import Channels from './pages/channels/index';
+import EPG from './pages/epg';
+import EPGs from './pages/epg/index';
 import TV from './pages/tvshows';
 import TVs from './pages/tvshows/index';
 import Movies from './pages/movies';
@@ -46,6 +48,22 @@ Routes.push({
 		{ path: ':action', component: Channels.Home },
 		{ path: ':action/:id', component: Channels.Home },
 		{ path: 'view/:channel', component: Channels.Home },
+    ]
+});
+
+Routes.push({
+    path: 'epg', 
+    component: EPG,
+    indexRoute: { component: EPGs.Home },
+    catchAll: { component: EPGs.Home },
+    childRoutes: [
+		{ path: 'channels', component: EPGs.Channels },
+		{ path: 'channels/:group', component: EPGs.Channels },
+		{ path: 'channels/:group/', component: EPGs.Channels },
+		{ path: 'channel/:channel', component: EPGs.Channels },
+		{ path: 'channel/:channel/:episode', component: EPGs.Channels },
+		{ path: 'timers', component: EPGs.Timers },
+		{ path: 'series', component: EPGs.Series },
     ]
 });
 

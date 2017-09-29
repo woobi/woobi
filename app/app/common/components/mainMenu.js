@@ -44,18 +44,6 @@ export default class mainMenu extends React.Component {
 		
 	}
 	
-	setGame(gameLink) {
-		debug(' ## setGame ##',  gameLink);
-		this.props.goTo({ 
-			page: `${gameLink.visitor} vs. ${gameLink.home}`, 
-			path: '/gameday/games/' + gameLink.gid + '/' + (this.props.params.page || '') +  (this.props.params.inning ? '/' + this.props.params.inning : '')}, 
-			{ game: {} }, 
-			() => { 
-				this.toggleDrawer(false, false)
-			} 
-		);
-	}
-	
 	render() {
 		debug('## RENDER ## mainMenu render', this.props);
 		
@@ -133,6 +121,66 @@ export default class mainMenu extends React.Component {
 					<Divider />
 					<div className="clearfix" />
 					
+					<MenuItem
+						primaryText="Live TV"
+						rightIcon={<ArrowDropRight />}
+						leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
+						menuItems={[
+							<MenuItem 
+								primaryText="Guide" 
+								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'EPG',
+										path: '/epg',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/epg"
+							/>,
+							<MenuItem 
+								primaryText="Channels" 
+								leftIcon={<FontIcon className="material-icons">list</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'Channels',
+										path: '/epg/channels',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/epg/channels"
+							/>,
+							<MenuItem 
+								primaryText="Timers" 
+								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'Timers',
+										path: '/epg/timers',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/epg/timers"
+							/>,
+							<MenuItem 
+								primaryText="Series" 
+								leftIcon={<FontIcon className="material-icons">add_to_queue</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'Series',
+										path: '/epg/series',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/epg/series"
+							/>,
+						]}
+					
+					/>
 					
 					<MenuItem
 						primaryText="Channels"

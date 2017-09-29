@@ -80,6 +80,8 @@ export default (Component) => {
 				tvBanners: true,
 				tvPosters: false,
 				moviePosters: true,
+				query: {},
+				params: {}
 			}, _props);
 			
 			debug('new state:', this.state);
