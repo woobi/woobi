@@ -183,6 +183,7 @@ If you set the `proxy` option you can use the Woobi UI.
 | **config.pass** | _String_ | password |
 | **config.host** | _String_ | host |
 | **config.database** | _String_ | database |  
+
 View `/lib/core/adapter.js` for all available functions to use.  
 > **note** - A `media` and `livetv` adapters are used by the UI if supplied.  
 > **note** - config will be passed to custom adapters and can include additional key/value pairs
