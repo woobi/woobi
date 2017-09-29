@@ -84,7 +84,9 @@ Woobi.init({
 					if ( !( this instanceof MyAdapter ) ) return new MyAdapter( opts, callback );
 					
 				}
-				MyAdapter.prototype.doThis = function ( withThis ) {
+				
+				/* Add any function available in /lib/core/apapters.js */
+				MyAdapter.prototype.connect = function ( config, callback ) {
 				
 				}
 				return MyAdapter;
@@ -141,7 +143,7 @@ If you set the `proxy` option you can use the Woobi UI.
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for the adapter.  Can be accessed at `Woobi.libs[name]`  |
-| **adapter** | _String\|Function_ | String for included adapter and function to provide your own. |
+| **adapter** | _String\|Function_ | String for included adapter or a function to provide your own. |
 | **config** | _Object_ | |
 | **config.user** | _String_ | username  |
 | **config.pass** | _String_ | password |
@@ -370,7 +372,7 @@ let transformer = new Woobi.Streams.transform();
 > @param - **callback** - Function  
 ```javascript
 let updStream = new Woobi.Streams.UDP({
-    name: 'UDPSource',
+    name: 'UDPStream',
     host: '10.10.10.11',
     port: 7006
 });
