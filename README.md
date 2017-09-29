@@ -187,11 +187,11 @@ If you set the `proxy` option you can use the Woobi UI.
 > **note** - config will be passed to custom adapters and can include additional key/value pairs
 
 >  The media adapter needs the following functions  
->  `tvShow` `tvShows` `tvShowByName` `tvShowByIMDB` `tvShowEpisodes` `recentEpisodes`   
->  `movie` `movies` `movieByName` `movieByIMDB` `recentMovies` `grabMedia` `mediaFiles` `mediaFile`  
+>  `tvShow( idShow )` `tvShows( obj )` `tvShowByName( name )` `tvShowByIMDB( imdb_id )` `tvShowEpisodes( idShow )` `recentEpisodes( obj )`   
+>  `movie( idShow )` `movies( obj )` `movieByName( name )` `movieByIMDB( imdb_id )` `recentMovies( obj )` `grabMedia( obj )` `mediaFiles( obj )` `mediaFile( obj )`  
 
 >  The livetv adapter needs the following functions  
->  `connect` `getGuideData` `getSeriesTimers` `getTimers` `getTVChannels` `getChannelGroups` 
+>  `connect( obj )` `getGuideData( channels, start, end )` `getSeriesTimers( obj )` `getTimers( obj )` `getTVChannels( obj )` `getChannelGroups( obj )` 
 
 ## Woobi.Channel  
 >  Use **`Woobi.addChannel( name, opts ).then()`** to add channels instead of directly with `new Woobi.Channel( name, opts, callback )`.    
