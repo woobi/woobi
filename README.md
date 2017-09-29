@@ -183,7 +183,7 @@ If you set the `proxy` option you can use the Woobi UI.
 > **note** - A `media` and `livetv` adapters are used by the UI if supplied.  
 > **note** - config will be passed to custom adapters and can include additional key/value pairs
 
->  The media adapter needs the following functions
+>  The media adapter needs the following functions  
 >  `tvShow` `tvShows` `tvShowByName` `tvShowByIMDB` `tvShowEpisodes` `recentEpisodes`   
 >  `movie` `movies` `movieByName` `movieByIMDB` `recentMovies` `grabMedia`  
 
