@@ -26,7 +26,7 @@ var snowstreams = function() {
 	
 	this.version = require('./package.json').version;
 	
-	this.channels = {};
+	this.Channels = this.channels = {};
 	this.servers = {};
 	this.programs = {};
 	this.proxies = [];
@@ -173,11 +173,11 @@ snowstreams.prototype.addChannel = function(channel, opts) {
 		
 		debug('Add Channel ' + channel);
 		
-		if (this.channels[channel]) {
+		if (this.Channels[channel]) {
 			return reject('Channel exists');
 		}
-		this.channels[channel] = new this.Channel(channel, opts, (err, c) => {
-			this.channels[channel] = c;
+		this.Channels[channel] = new this.Channel(channel, opts, (err, c) => {
+			this.Channels[channel] = c;
 			
 			if(err) return reject(err);
 			
@@ -185,7 +185,7 @@ snowstreams.prototype.addChannel = function(channel, opts) {
 			
 			Broadcast.notify('channels', Broadcast.socketListeners.channels());
 			
-			return resolve(this.channels[channel]);
+			return resolve(this.Channels[channel]);
 		
 		});
 	});
