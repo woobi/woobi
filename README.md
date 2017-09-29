@@ -194,7 +194,7 @@ If you set the `proxy` option you can use the Woobi UI.
 >  `connect` `getGuideData` `getSeriesTimers` `getTimers` `getTVChannels` `getChannelGroups` 
 
 ## Woobi.Channel  
->  Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.    
+>  Use **`Woobi.addChannel(name, opts).then()`** to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.    
 
 ```javascript 
 /**
