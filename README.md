@@ -148,7 +148,7 @@ If you set the `proxy` option you can use the Woobi UI.
 | **proxy** | _false\|Object_ | Optional server for api routes and Woobi UI. |
 | **adapters** | _Object\|Array_ | Adapters can convert your info to the correct format.  |
 | **loadSaved** | _Boolean_ | Load saved channels on boot that are set to autostart.  |
-| **channelPort** | _Number_ | if you do not supply a port when streaming a channel, the port will be assigned starting at this number.  | 
+| **channelPort** | _Number_ | If you do not supply a port when streaming a channel, the port will be assigned starting at this number.  | 
 | **mediaPath** | _String_ | Full path to store saved HLS files.  Defaults to **/_module_path_/media**  |
 | **media passthrough route** | _String_ | Api route to direct access media.  |
 | **media passthrough path** | _String_ | Replace the path above with the actual server path.  |
@@ -170,6 +170,9 @@ If you set the `proxy` option you can use the Woobi UI.
 > You can also uses adapters for non-ui use cases.   
 > For local media a `media` adapter is needed.  An example using mysql databases is included.  
 > For live tv a `livetv` adapter is needed. An example using a mix of mysql databses and tcp connections is supplied.  
+  
+>  Adapters are available at `Woobi.libs['USER_SUPPLIED_NAME']  
+
 
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
