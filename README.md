@@ -8,9 +8,9 @@ LAN media server, IPTV broadcaster, and media converter.
 
 ## Contents
 [Pre-Requisites](#pre-requisites)  
-[Installation](#installation)  
-[Usage](#usage)
-[Woobi UI](#woobi-ui) 
+[Installation](#installation)   
+[Usage](#usage)  
+[Woobi UI](#woobi-ui)  
 [Configuration](#configuration)   
 
 [Woobi.Channel](#woobichannel)
@@ -141,7 +141,7 @@ If you set the `proxy` option you can use the Woobi UI.
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for the adapter.  Can be accessed at `Woobi.libs[name]`  |
-| **adapter** | _String|Function_ | String for included adapter and function to provide your own. |
+| **adapter** | _String\|Function_ | String for included adapter and function to provide your own. |
 | **config** | _Object_ | |
 | **config.user** | _String_ | username  |
 | **config.pass** | _String_ | password |
