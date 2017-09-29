@@ -168,7 +168,8 @@ If you set the `proxy` option you can use the Woobi UI.
 ##### adapters Array of Objects  
 > Adapters are used to convert your information into the required format for the UI.  You can also uses adapters for non-ui use cases.  
 > For local media a `media` adapter is needed.  An example using mysql databases is included.
-> For live tv a `livetv` adapter is needed. An example using a mix of mysql databses and tcp connections is supplied.
+> For live tv a `livetv` adapter is needed. An example using a mix of mysql databses and tcp connections is supplied.  
+
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for the adapter.  Can be accessed at `Woobi.libs[name]`  |
