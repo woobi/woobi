@@ -57,7 +57,7 @@ Woobi.init({
 	host: 'studio',
 	loadSaved: true,
 	proxy: {
-		port: 7001,
+		port: 2777,
 		nodeadmin: false,
 		host: '0.0.0.0',
 		keystone: true, // required to save channel configs
@@ -87,7 +87,7 @@ Woobi.init({
 				}
 				
 				/* Add any function available in /lib/core/apapters.js */
-				MyAdapter.prototype.getGuideData = function ( config, callback ) {
+				MyAdapter.prototype.getGuideData = function ( channels, start, end ) {
 				
 				}
 				return MyAdapter;
@@ -148,7 +148,7 @@ If you set the `proxy` option you can use the Woobi UI.
 | **proxy** | _false\|Object_ | Optional server for api routes and Woobi UI. |
 | **adapters** | _Object\|Array_ | Adapters can convert your info to the correct format.  |
 | **loadSaved** | _Boolean_ | Load saved channels on boot that are set to autostart.  |
-| **channelPort** | _Number_ | If a port is not supplied the port will be pulled starting at this number.  | 
+| **channelPort** | _Number_ | if you do not supply a port when streaming a channel, the port will be assigned starting at this number.  | 
 | **mediaPath** | _String_ | Full path to store saved HLS files.  Defaults to **/_module_path_/media**  |
 | **media passthrough route** | _String_ | Api route to direct access media.  |
 | **media passthrough path** | _String_ | Replace the path above with the actual server path.  |
