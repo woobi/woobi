@@ -64,9 +64,10 @@ Woobi.init({
 		auth: false, // set to true once you create a new user @ /keystone
 	},
 	adapters:  [
+		/* the included media adapter is for a mysql database setup */
 		{
-			name: 'mysql',
-			adapter: 'mysql',
+			name: 'media',
+			adapter: 'media',
 			config: {
 				user: 'MYSQLUSER',
 				pass: 'MYSQLPASS',
@@ -74,9 +75,9 @@ Woobi.init({
 				database: 'MYSQLDB'
 			},
 		},
-		/* custom adapters can be added */
+		/* custom adapters can be added. use the included adapters as a template */
 		{
-			name: 'userAdded',
+			name: 'livetv',
 			adapter: function ( Woobi ) {
 			
 				var MyAdapter = function ( opts, callback ) {
@@ -86,7 +87,7 @@ Woobi.init({
 				}
 				
 				/* Add any function available in /lib/core/apapters.js */
-				MyAdapter.prototype.connect = function ( config, callback ) {
+				MyAdapter.prototype.getGuideData = function ( config, callback ) {
 				
 				}
 				return MyAdapter;
@@ -95,7 +96,32 @@ Woobi.init({
 			config: {
 				
 			}
-		}
+		},
+		/* The included live tv adapter uses a mix of mysql databases and direct tcp connections */
+		{
+			name: 'livetv',
+			adapter: 'livetv',
+			config: {
+				epg: {
+					user: 'MYSQLUSER',
+					pass: 'MYSQLPASS',
+					host: 'MYSQLHOST',
+					database: 'MYSQLDB'
+				},
+				tv: {
+					user: 'MYSQLUSER',
+					pass: 'MYSQLPASS',
+					host: 'MYSQLHOST',
+					database: 'MYSQLDB'
+				},
+				socket: {
+					host: 'anna',
+					port: '9080',
+					hostname: 'studio',
+					agent: 'Woobi'
+				},
+			}
+		},
 	]
 });
 ```  
@@ -140,6 +166,9 @@ If you set the `proxy` option you can use the Woobi UI.
 > You can add any keystone option to the proxy configuration.   
 > If you want to use channel saving and do not want to use keystone, then attach a mongoose model to `Woobi.libs._mongo.ChannelConfig.model`
 ##### adapters Array of Objects  
+> Adapters are used to convert your information into the required format for the UI.  You can also uses adapters for non-ui use cases.  
+> For local media a `media` adapter is needed.  An example using mysql databases is included.
+> For live tv a `livetv` adapter is needed. An example using a mix of mysql databses and tcp connections is supplied.
 | option | type | info |
 | :--------------- | :------------ | :------------------ |
 | **name** | _String_ | Unique name for the adapter.  Can be accessed at `Woobi.libs[name]`  |
@@ -149,8 +178,15 @@ If you set the `proxy` option you can use the Woobi UI.
 | **config.pass** | _String_ | password |
 | **config.host** | _String_ | host |
 | **config.database** | _String_ | database |
-> **note** - The default adapter name will be mysql if not supplied.  
+> **note** - A `media` and `livetv` adapters are used by the UI if supplied.  
 > **note** - config will be passed to custom adapters and can include additional key/value pairs
+
+>  The media adapter needs the following functions
+>  `tvShow` `tvShows` `tvShowByName` `tvShowByIMDB` `tvShowEpisodes` `recentEpisodes` 
+>  `movie` `movies` `movieByName` `movieByIMDB` `recentMovies` `grabMedia`  
+
+>  The livetv adapter needs the following functions  
+>  `connect` `getGuideData` `getSeriesTimers` `getTimers` `getTVChannels` `getChannelGroups` 
 
 ## Woobi.Channel  
 Use `Woobi.addChannel(name, opts).then()` to add channels instead of directly with `new Woobi.Channel(name, opts, callback)`.  This gives a directory of channels for iptv.  
