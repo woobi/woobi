@@ -52,11 +52,13 @@ Routes.push({
 });
 
 Routes.push({
-    path: 'epg', 
+    path: 'livetv', 
     component: EPG,
     indexRoute: { component: EPGs.Home },
     catchAll: { component: EPGs.Home },
     childRoutes: [
+		{ path: 'guide', component: EPGs.Home },
+		{ path: 'guide/:group', component: EPGs.Home },
 		{ path: 'channels', component: EPGs.Channels },
 		{ path: 'channels/:group', component: EPGs.Channels },
 		{ path: 'channels/:group/', component: EPGs.Channels },

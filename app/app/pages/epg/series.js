@@ -1,23 +1,21 @@
 import React from 'react';
 import moment from 'moment';
 import Debug from 'debug';
+import { sortBy } from 'lodash';
 import Gab from '../../common/gab';
 import Table from '../../common/components/table';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText , FlatButton, FontIcon, Toggle} from 'material-ui';
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu, LinearProgress, MenuItem, Toggle, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 
-let debug = Debug('woobi:app:pages:epg:channels');
+let debug = Debug('woobi:app:pages:epg:series');
 
 export default class Series extends React.Component {
 	constructor(props) {
 		super(props)
 		
 		this.displayName = 'Series';
-		this.state = {
-			entries: {},
-			series: []
-		};
+		this.state = {};
 		
 		this.getSeries = this.getSeries.bind(this);
 		
@@ -91,12 +89,15 @@ export default class Series extends React.Component {
 	
 	render ( ) { 
 		debug('## render  ##  Series  render', this.props, this.state);
-		let ret = <span >Loading Series</span>;
+		let ret = <div style={{ padding: 50 }}><span style={{ color: 'white' }} children="Preparing Series Data" /><br /><LinearProgress mode="indeterminate" /></div>;
+		let sort = this.props.location.query.sortBy || 'show';
+		if ( sort === 'nextToAir' ) sort = 'start';
 		if (this.state.series) {
 			
-			ret =  this.state.series.map( ( obj, i ) => {
+			ret = sortBy( this.state.series, [ sort ] ).map( ( obj, i ) => {
 				let c = obj;
-				return (<div className="col-sm-12 col-md-6"  style={{ marginBottom: 5 }}>
+				let time = moment.unix( c.start ).format( "h:mm a ");
+				return (<div className="col-sm-12 col-md-6"  style={{ marginBottom: 5 }}  key={c.id}>
 					<Card expanded={this.state.expanded} onExpandChange={() => {
 						//const s = moment.utc().unix();
 						//const f = moment.utc().add(1, 'days').unix();
@@ -104,7 +105,7 @@ export default class Series extends React.Component {
 					}}>
 						<CardHeader
 							title={c.name}
-							subtitle={c.runType === '1' ? 'New Episodes' : 'New and Repeat Episodes'}
+							subtitle={c.runType === '1' ? 'New Episodes   |   ' + time : 'All Episodes   |   ' + time }
 							//avatar={c.logo}
 							actAsExpander={true}
 							showExpandableButton={true}
@@ -117,15 +118,23 @@ export default class Series extends React.Component {
 			});
 			
 		}
+		
 		//return <div>{ret}</div>;
-		return (<div style={{ padding: '0 10px' }}>
-			<div style={{ padding: '10px 5px' }}>
-				<Card   zDepth={1}>
-					<CardHeader
-						title={<span>Series</span>}
-						avatar={<FontIcon style={{fontSize:'42px'}} className="material-icons" color={ColorMe(5, this.props.theme.baseTheme.palette.accent1Color).color}  >live_tv</FontIcon>}
-					/>
-				</Card>
+		return (<div style={{ padding: '0 0px' }}>
+			<div style={{ padding: '10px 15px' }}>
+				<Toolbar>
+					<ToolbarGroup firstChild={true}>
+						
+						<ToolbarTitle text="Series" style={{ paddingLeft: 5 }} />
+					</ToolbarGroup>
+					<ToolbarGroup>
+						<ToolbarSeparator />
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/livetv/series/', query: {sortBy: 'show'}, page: 'show'}); } }>sort_by_alpha</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/livetv/series/', query: {sortBy: 'nextToAir'}, page: 'next to air'}); } } >access_time</FontIcon>
+						<ToolbarSeparator />
+         
+					</ToolbarGroup>
+				</Toolbar>
 			</div>
 			{ret}
 		</div>);

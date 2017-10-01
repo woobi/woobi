@@ -54,12 +54,12 @@ export default class mainMenu extends React.Component {
         let LeftDrawer = (
 			<Drawer 
 				zDepth={5}
-				docked={this.props.docked}
+				docked={false}
 				open={this.state.leftNav}
 				style={{ zIndex: 1200 }}
 				containerStyle={{ zIndex: 1200 }}
-				openSecondary={this.props.secondary}
-				width={255}
+				openSecondary={false}
+				width={225}
 				onRequestChange={open => {
 					debug('## RENDER ## mainMenu request change', open, this.props);
 					this._update = true;
@@ -67,10 +67,11 @@ export default class mainMenu extends React.Component {
 				}}
 			>
 				<div className="menu" style={{
-					height: this.props.window.height - 65,
+					height: this.props.window.height - 50,
 					width: '100%',
 					overflow: 'auto',
 					marginTop: 0,
+					borderLeft: '10px solid ' + this.props.theme.baseTheme.palette.canvasColor
 				}} >
 					
 					<div style={{float:'left',width:'33%', textAlign: 'center'}}>
@@ -124,7 +125,7 @@ export default class mainMenu extends React.Component {
 					<MenuItem
 						primaryText="Live TV"
 						rightIcon={<ArrowDropRight />}
-						leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
+						leftIcon={<FontIcon className="material-icons">live_tv</FontIcon>} 
 						menuItems={[
 							<MenuItem 
 								primaryText="Guide" 
@@ -132,12 +133,12 @@ export default class mainMenu extends React.Component {
 								onClick={(e) => {
 									e.preventDefault(e);
 									this.props.goTo({
-										page: 'EPG',
-										path: '/epg',
+										page: 'Episode Program Guide',
+										path: '/livetv/guide',
 									}, {}, () => { this.toggleDrawer(false, false) });
 								}}
 								style={{}}
-								href="/noscript/epg"
+								href="/noscript/livetv"
 							/>,
 							<MenuItem 
 								primaryText="Channels" 
@@ -146,11 +147,11 @@ export default class mainMenu extends React.Component {
 									e.preventDefault(e);
 									this.props.goTo({
 										page: 'Channels',
-										path: '/epg/channels',
+										path: '/livetv/channels',
 									}, {}, () => { this.toggleDrawer(false, false) });
 								}}
 								style={{}}
-								href="/noscript/epg/channels"
+								href="/noscript/livetv/channels"
 							/>,
 							<MenuItem 
 								primaryText="Timers" 
@@ -159,11 +160,11 @@ export default class mainMenu extends React.Component {
 									e.preventDefault(e);
 									this.props.goTo({
 										page: 'Timers',
-										path: '/epg/timers',
+										path: '/livetv/timers',
 									}, {}, () => { this.toggleDrawer(false, false) });
 								}}
 								style={{}}
-								href="/noscript/epg/timers"
+								href="/noscript/livetv/timers"
 							/>,
 							<MenuItem 
 								primaryText="Series" 
@@ -172,11 +173,11 @@ export default class mainMenu extends React.Component {
 									e.preventDefault(e);
 									this.props.goTo({
 										page: 'Series',
-										path: '/epg/series',
+										path: '/livetv/series',
 									}, {}, () => { this.toggleDrawer(false, false) });
 								}}
 								style={{}}
-								href="/noscript/epg/series"
+								href="/noscript/livetv/series"
 							/>,
 						]}
 					
@@ -185,7 +186,7 @@ export default class mainMenu extends React.Component {
 					<MenuItem
 						primaryText="Channels"
 						//rightIcon={<ArrowDropRight />}
-						leftIcon={<FontIcon className="material-icons">live_tv</FontIcon>} 
+						leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
 						/*menuItems={[
 							<MenuItem 
 								primaryText="View Channels" 
@@ -306,6 +307,5 @@ export default class mainMenu extends React.Component {
 }
 
 mainMenu.defaultProps = {
-	games: [],
-	game: {}
+
 }

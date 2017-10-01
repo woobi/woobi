@@ -1,25 +1,23 @@
 import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import Debug from 'debug';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Router, match, browserHistory as history } from 'react-router'
 import { routeConfig as routes } from './routes';
 let debug = Debug('woobi:app');
 
-if(!snowUI.__injected) {
-	injectTapEventPlugin();
-	snowUI.__injected = true;
-}
+
 window.myDebug = Debug;
 // set the host to public
-//snowUI.host = 'fire.snowpi.org';
+
 snowUI.serverRendered = false;
+
 let myComponent;
-function createElementFn(serverProps) {
-	return function(Component, props) {
+let createElementFn = ( serverProps ) => {
+	return ( Component, props ) => {
 		return <Component {...serverProps} {...props} />
 	}
 }
+
 match({ history, routes }, (error, redirectLocation, renderProps) => {
 	//console.log('APP RENDER', initialData, window.initialData, renderProps);
 	myComponent = render(<Router { ...renderProps } createElement={createElementFn({ noscript: false, renderInitialData: window.renderInitialData })} />, document.getElementById('react-hot-reload'))

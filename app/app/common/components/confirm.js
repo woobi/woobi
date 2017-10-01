@@ -2,6 +2,8 @@ import React from 'react';
 import { RaisedButton, FlatButton, Dialog } from 'material-ui';
 import { Styles } from '../styles';
 import Gab from '../gab';
+import debugging from 'debug';
+let	debug = debugging('woobi:app:common:components:confirm');
 
 export default class Confirm extends React.Component {
 	constructor(props) {
@@ -25,6 +27,7 @@ export default class Confirm extends React.Component {
 	}
 	
 	setProps(data) {
+		debug('Confirm received commands  ' , data);
 		let props = { ...Confirm.defaultProps };
 		Object.assign(props, data);
 		if (!props.component) {
@@ -44,6 +47,7 @@ export default class Confirm extends React.Component {
 	}
 	
 	handleNo() {
+		debug('Confirm received cancel  ' , this.state, typeof this.state.answer == 'function');
 		if(typeof this.state.answer == 'function') {
 			this.state.answer(false);
 		}
@@ -62,13 +66,13 @@ export default class Confirm extends React.Component {
 			<RaisedButton
 				label={this.state.noText}
 				primary={true}
-				onTouchTap={this.handleNo}
+				onClick={this.handleNo}
 				
 			/>,
 			<RaisedButton
 				label={this.state.yesText}
 				primary={false}
-				onTouchTap={this.handleYes} 
+				onClick={this.handleYes} 
 				style={{float: 'left', color: this.props.theme.baseTheme.palette.alternateTextColor }} 
 			/>,
 			

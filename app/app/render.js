@@ -325,13 +325,13 @@ class Render extends Component {
 	appBar() {
 		
 		let title = this.state.page; //this.props.noscript ? snowUI.name + ' noScript' : snowUI.name; //;
-		let hamburger =(<IconButton title="Menu" style={{ textAlign: 'left', marginLeft: 10, padding: 0, width: 40, height: 40  }} onClick={this.handleLeftNav} ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.state.theme.appBar.textColor || 'initial'} >menu</FontIcon></IconButton>);
+		let hamburger =(<IconButton title="Menu" style={{ position: 'relative', textAlign: 'left', marginLeft: 0, padding: 0, width: 40, height: 40,   }} onClick={this.handleLeftNav} ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.state.theme.appBar.textColor || 'initial'} >menu</FontIcon></IconButton>);
 		return (<div id="appbar"> 
-			<div style={{zIndex:1000, width: '100%', height: '64px'  }} >
+			<div style={{ width: '100%', height: '64px'  }} >
 				<AppBar
 					zDepth={3}
-					title={<div id="appbarTitle" style={{height:65,width:'100%'}} >{title}</div>}
-					style={{boxShadow: 'none'}}
+					title={<div id="appbarTitle" style={{height: 65, width: '90%', marginLeft: 0}} >{title}</div>}
+					style={{boxShadow: 'none', zIndex: 'initial'}}
 					iconElementLeft={<span>{hamburger}</span>}
 				/>
 			</div>
@@ -357,7 +357,7 @@ class Render extends Component {
 				</div>
 			</div>
 			<div className="clearfix" />
-			<div className="simpledocs-footer" id="simpledocs-footer"  />
+			<div className="simpledocs-footer1" id="simpledocs-footer"  />
 		</div>);	
 	}
 	

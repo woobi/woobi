@@ -49,10 +49,10 @@ export default class Menu extends React.Component {
 				style={this.props.style}
 				className={this.props.className}
 				openSecondary={this.props.secondary}
-				width={this.props.width || 255}
-				onRequestChange={open => {
+				width={this.props.width || 200}
+				onRequestChange={ open => {
 					if(this.props.toggleDrawer) {
-						this.props.toggleDrawer();
+						this.props.toggleDrawer( open );
 					}
 				}}
 			>
@@ -60,6 +60,7 @@ export default class Menu extends React.Component {
 					height: '100%',
 					width: '100%',
 					overflow: 'auto',
+					borderRight: '10px solid ' + this.props.theme.baseTheme.palette.canvasColor
 				}, this.props.containerStyle)} >
 					{this.props.children}					
 				</div>

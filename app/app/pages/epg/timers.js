@@ -1,9 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import Debug from 'debug';
+import { sortBy } from 'lodash';
 import Gab from '../../common/gab';
 import Table from '../../common/components/table';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText , FlatButton, FontIcon, Toggle} from 'material-ui';
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu, LinearProgress, MenuItem, Toggle, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 
@@ -14,9 +15,7 @@ export default class Timers extends React.Component {
 		super(props)
 		
 		this.displayName = 'Timers';
-		this.state = {
-			timers: []
-		};
+		this.state = {};
 		
 		this.getTimers = this.getTimers.bind(this);
 		
@@ -90,12 +89,14 @@ export default class Timers extends React.Component {
 	
 	render ( ) { 
 		debug('## render  ##  Timers  render', this.props, this.state);
-		let ret = <span >Loading Timers</span>;
+		let ret = <div style={{ padding: 50 }}><span style={{ color: 'white' }} children="Preparing Timer Data" /><br /><LinearProgress mode="indeterminate" /></div>;
+		let sort = this.props.location.query.sortBy || 'start';
+		if ( sort === 'nextToAir' ) sort = 'start';
 		if (this.state.timers) {
 			
-			ret =  this.state.timers.map( ( obj, i ) => {
+			ret =  sortBy( this.state.timers, [ sort ] ).map( ( obj, i ) => {
 				let c = obj;
-				return (<div className="col-sm-12 col-md-6"  style={{ marginBottom: 5 }}>
+				return (<div className="col-sm-12 col-md-6"  style={{ marginBottom: 5 }} key={c.id}>
 					<Card expanded={this.state.expanded} onExpandChange={() => {}}>
 						<CardHeader
 							title={c.name}
@@ -113,14 +114,21 @@ export default class Timers extends React.Component {
 			
 		}
 		//return <div>{ret}</div>;
-		return (<div style={{ padding: '0 10px' }}>
-			<div style={{ padding: '10px 5px' }}>
-				<Card   zDepth={1}>
-					<CardHeader
-						title={<span>Timers</span>}
-						avatar={<FontIcon style={{fontSize:'42px'}} className="material-icons" color={ColorMe(5, this.props.theme.baseTheme.palette.accent1Color).color}  >live_tv</FontIcon>}
-					/>
-				</Card>
+		return (<div style={{ padding: '0 0px' }}>
+			<div style={{ padding: '10px 15px' }}>
+				<Toolbar>
+					<ToolbarGroup firstChild={true}>
+						
+						<ToolbarTitle text="Timers" style={{ paddingLeft: 5 }} />
+					</ToolbarGroup>
+					<ToolbarGroup>
+						<ToolbarSeparator />
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/livetv/timers/', query: {sortBy: 'name'}, page: 'name'}); } }>sort_by_alpha</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/livetv/timers/', query: {sortBy: 'nextToAir'}, page: 'next to air'}); } } >access_time</FontIcon>
+						<ToolbarSeparator />
+         
+					</ToolbarGroup>
+				</Toolbar>
 			</div>
 			{ret}
 		</div>);

@@ -11,10 +11,10 @@ Number.prototype.clip = function(numbers) {
 	return Math.round(this * number) / number;
 }; 
 var snowUI = {
-	name: 'Woobi Lodge',
+	name: 'Woobi',
 	materialStyle: {},
-	defaultTheme: 'woobi',
-	__currentTheme: 'woobi',
+	defaultTheme: 'blue',
+	__currentTheme: 'blue',
 	__lastTheme: false,
 	__userTheme: false,
 	__state: {},

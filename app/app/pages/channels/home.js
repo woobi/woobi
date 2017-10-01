@@ -184,10 +184,10 @@ export default class Home extends React.Component {
 					<div title="Delete" style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children=<FontIcon className="material-icons" children="delete_forever" color={Styles.Colors.orangeA400} /> onClick={() => {
 						Gab.emit('confirm open', {
 							html: 'Remove Saved Config ' + r.name + '?',
-							answer:(yesno) => { 
+							answer: ( yesno ) => { 
 								Gab.emit('confirm open', { open: false });
-								if(yesno) {
-									this.removeSavedConfig(r);
+								if ( yesno ) {
+									this.removeSavedConfig( r );
 								}
 							},
 							open: true,
@@ -199,9 +199,9 @@ export default class Home extends React.Component {
 					<div title="Start" style={{ cursor: 'pointer', float: 'left', margin: 5, padding: 5  }} children={<FontIcon className="material-icons" color={this.props.theme.palette.alternateTextColor} children="play_circle_filled" /> }  onClick={() => {
 						Gab.emit('confirm open', {
 							html: 'Start ' + r.name + '?',
-							answer:(yesno) => { 
+							answer: ( yesno ) => { 
 								Gab.emit('confirm open', { open: false });
-								if(yesno) {
+								if ( yesno ) {
 									this.startChannel(r);
 								}
 							},

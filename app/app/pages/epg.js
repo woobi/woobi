@@ -10,11 +10,11 @@ export default class EPG extends React.Component {
 	constructor(props) {
 		super(props);
 		
-		let channels = {};
+		let channels = [];
 		let entries = {};
 		let groups = {};
 		if ( props.initialData ) {
-			channels = props.initialData.channels || {};
+			channels = props.initialData.channels || [];
 			entries = props.initialData.entries || {};
 			groups = props.initialData.groups || {};
 			if ( props.initialData.channels ) {
@@ -49,8 +49,8 @@ export default class EPG extends React.Component {
 		if(!this._skipMount) {
 			this.getChannelGroups();
 			this.getChannels();
-			const s = moment.utc().unix();
-			const f = moment.utc().add(1, 'days').unix();
+			const s = moment().startOf('hour').subtract(30, 'm').unix();
+			const f = moment.utc().add(3, 'days').unix();
 			this.getGuideData( false, s, f);
 			
 		}

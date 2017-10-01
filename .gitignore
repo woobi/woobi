@@ -7,7 +7,7 @@ npm-debug.log*
 pids
 *.pid
 *.seed
-*.lock
+#*.lock
 
 # backup files
 *.bak

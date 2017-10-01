@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
-import _ from 'lodash';
+import { sortBy, find as Find } from 'lodash';
 import Debug from 'debug';
 import Gab from '../../common/gab';
 import Table from '../../common/components/table';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu, MenuItem, Toggle, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui';
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu, LinearProgress, MenuItem, Toggle, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 
@@ -85,10 +85,10 @@ export default class Channels extends React.Component {
 	}
 	
 	groups() {
-		return (<DropDownMenu value={this.props.params.group || 'All channels' } onChange={( event, index, value ) => { this.props.goTo({ path: '/epg/channels/'+value, page: value}); } }> 
+		return (<DropDownMenu value={this.props.params.group || 'All channels' } onChange={( event, index, value ) => { this.props.goTo({ path: '/livetv/channels/'+value, page: value}); } }> 
 			{
 				Object.keys( this.props.groups ).map( ( keyName, i ) => {
-					return (<MenuItem value={keyName} primaryText={keyName} />)
+					return (<MenuItem key={keyName} value={keyName} primaryText={keyName}  />)
 				})
 			} 
 		</DropDownMenu>)	
@@ -97,13 +97,13 @@ export default class Channels extends React.Component {
 	
 	render ( ) { 
 		debug('## render  ##  Channels  render', this.props, this.state);
-		let ret = <span >Loading Channels</span>;
+		let ret = <div style={{ padding: 50 }}><span style={{ color: 'white' }} children="Preparing Channel List" /><br /><LinearProgress mode="indeterminate" /></div>;
 		let group = this.props.params.group || 'All channels';
-		let sort = this.props.query.sortBy || 'channel';
+		let sort = this.props.location.query.sortBy || 'channel';
 		if ( Object.keys(this.props.groups).length > 0 ) {
  			// ret =  Object.keys(this.props.channels).map((keyName, i) => {
-			ret =  _.sortBy( this.props.groups[group], [ sort ] ).map( ( c, i ) => {
-				return (<div className="col-sm-12 col-md-6" style={{ marginBottom: 5 }}>
+			ret =  sortBy( this.props.groups[group], [ sort ] ).map( ( c, i ) => {
+				return (<div className="col-sm-12 col-md-6" style={{ marginBottom: 5 }}  key={c.channel}>
 					<Card  >
 						<CardHeader
 							subtitle={c.channel}
@@ -121,16 +121,16 @@ export default class Channels extends React.Component {
 			
 		}
 		//return <div>{ret}</div>;
-		return (<div style={{ padding: '0 10px' }}>
-			<div style={{ padding: '10px 5px' }}>
+		return (<div style={{ padding: '0 0px' }}>
+			<div style={{ padding: '10px 15px' }}>
 				<Toolbar>
 					<ToolbarGroup firstChild={true}>
 						{ this.groups() }
 					</ToolbarGroup>
 					<ToolbarGroup>
 						<ToolbarSeparator />
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'channel' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/epg/channels/'+group, query: {sortBy: 'channel'}, page: group + ' by channel'}); } }>format_list_numbered</FontIcon>
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'name' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/epg/channels/'+group, query: {sortBy: 'name'}, page: group + ' by name'}); } } >sort_by_alpha</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'channel' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/livetv/channels/'+group, query: {sortBy: 'channel'}, page: group + ' by channel'}); } }>format_list_numbered</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'name' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/livetv/channels/'+group, query: {sortBy: 'name'}, page: group + ' by name'}); } } >sort_by_alpha</FontIcon>
 						<ToolbarSeparator />
          
 					</ToolbarGroup>

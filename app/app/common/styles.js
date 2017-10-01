@@ -9,10 +9,10 @@ export let WOOBI  = deep( {
 		primary2Color: colors.blue300,
 		textColor: colors.blue50,
 		alternateTextColor: colors.lightBlue500,
-		primary1Color: 'initial',
+		//primary1Color: 'initial',
 		canvasColor: '#001933',
-		bodyColor: 'initial',
-		contentColor: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
 		accent1Color: colors.lightBlue700,
 		accent2Color: colors.lightBlue800,
 		accent3Color: colors.lightBlue900,
@@ -30,23 +30,23 @@ export let WOOBI  = deep( {
 	},
 	raisedButton: {
 		textColor: '#001933',
-		secondaryTextColor: 'white',
+		secondaryTextColor: '#ffffff',
 	},
 	appBar: {
 		buttonColor: colors.indigoA200,
 		textColor: colors.indigo100,
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 }, darkBaseTheme);
 
 export let NITELITE  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial',
-		primary1Color: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
+		//primary1Color: 'initial',
 		textColor: colors.indigo50,
 		alternateTextColor: colors.blue200,
 		primary2Color: colors.indigoA200,
@@ -67,16 +67,16 @@ export let NITELITE  = deep( {
 		buttonColor: colors.blue200
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 }, darkBaseTheme);
 
 export let NITELITE2  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial',
-		primary1Color: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
+		//primary1Color: 'initial',
 		primary2Color: '#77B5D0',
 		textColor: colors.orange700,
 		accent1Color: colors.orange700,
@@ -100,7 +100,7 @@ export let NITELITE2  = deep( {
 		textColor: colors.orange700,
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 	
@@ -108,8 +108,8 @@ export let NITELITE2  = deep( {
 
 export let LIGHT  = deep( {	
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
 		primary1Color: '#FFFFFF',
 		textColor: colors.indigo900,
 		alternateTextColor: colors.indigoA700,
@@ -126,23 +126,23 @@ export let LIGHT  = deep( {
 	},
 	raisedButton: {
 		textColor: '#FFFFFF',
-		secondaryTextColor: 'white',
+		secondaryTextColor: '#FFFFFF',
 	},
 	appBar: {
 		buttonColor: colors.indigoA200,
 		//textColor: colors.indigo100,
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 }, lightBaseTheme);
 
 export let CREAM  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial',
-		primary1Color: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
+		//primary1Color: 'initial',
 		primary2Color: colors.lightBlue700,
 		textColor: colors.grey700,
 		accent1Color: colors.blue50,
@@ -155,7 +155,7 @@ export let CREAM  = deep( {
 		
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 }, lightBaseTheme);
@@ -163,9 +163,9 @@ export let CREAM  = deep( {
 
 export let GRAPHITE  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial',
-		primary1Color: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
+		//primary1Color: 'initial',
 		primary3Color: colors.deepPurple200,
 		primary2Color: colors.deepPurple300,
 		textColor: colors.deepPurple200,
@@ -183,16 +183,16 @@ export let GRAPHITE  = deep( {
 		buttonColor: colors.deepPurple200
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 }, darkBaseTheme);
 
 export let NIGHT  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial',
-		primary1Color: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
+		//primary1Color: 'initial',
 		primary2Color: '#303030',
 		textColor: ColorMe(30, colors.indigoA200).bgcolor,
 		accent1Color: colors.indigo900,
@@ -200,7 +200,7 @@ export let NIGHT  = deep( {
 		accent3Color: colors.indigo100,
 		alternateTextColor: colors.indigo300,
 		searchBarMini: '#E8EAF6',
-		searchBarLarge: 'initial',
+		//searchBarLarge: 'initial',
 	},
 	snackbar: {
 		textColor: '#222',
@@ -224,16 +224,16 @@ export let NIGHT  = deep( {
 		textColor: '#fff',
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		largeColor: colors.indigoA100,
 		mini: '#E8EAF6',
-		miniColor: 'initial',
+		//miniColor: 'initial',
 	}
 }, darkBaseTheme);
 
 export let ALTERNATEBLUE  = deep( {
 	palette: {
-		bodyColor: 'initial',
+		//bodyColor: 'initial',
 		contentColor: '#ffffff',
 		primary1Color: '#1A237E',
 		primary2Color: '#448AFF',
@@ -259,7 +259,7 @@ export let ALTERNATEBLUE  = deep( {
 		textColor: '#303030',
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 }, lightBaseTheme);
@@ -267,8 +267,8 @@ export let ALTERNATEBLUE  = deep( {
 
 export let BLUE  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial',
+		//bodyColor: 'initial',
+		//contentColor: 'initial',
 		primary1Color: colors.indigo800,
 		primary2Color: '#303030',
 		accent1Color: colors.blue100,
@@ -306,28 +306,28 @@ export let BLUE  = deep( {
 
 export let DEFAULT  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial'
+		//bodyColor: 'initial',
+		//contentColor: 'initial'
 	},
 	snackbar: {
 		textColor: '#222',
 		
 	},
 	searchBar: {
-		large: 'initial',
-		largeColor: 'initial',
+		//large: 'initial',
+		//largeColor: 'initial',
 		mini: '#E8EAF6',
-		miniColor: 'initial',
+		//miniColor: 'initial',
 	}
 }, lightBaseTheme);
 
 export let DARK  = deep( {
 	palette: {
-		bodyColor: 'initial',
-		contentColor: 'initial'
+		//bodyColor: 'initial',
+		//contentColor: 'initial'
 	},
 	searchBar: {
-		large: 'initial',
+		//large: 'initial',
 		mini: '#E8EAF6',
 	}
 }, darkBaseTheme);

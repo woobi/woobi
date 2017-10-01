@@ -18,7 +18,7 @@ export default class Dialog2 extends React.Component {
 		Gab.on(this.name, this.setProps);
 		Gab.on(this.name2, this.setProps);
 		
-		this.handleNo = this.handleNo.bind(this);
+		this.handleNo = this.handleNo.bind(this); 
 	}
 	
 	componentWillUnmount() {
@@ -37,7 +37,7 @@ export default class Dialog2 extends React.Component {
 	
 	setProps(data) {
 		this._update = true;
-		
+		debug('Dialog receive commands on: ' + this.name);
 		if (data.html && !data.component) {
 			data.component = false;
 		}
@@ -66,7 +66,7 @@ export default class Dialog2 extends React.Component {
 			<FlatButton
 				label={this.props.closeText}
 				secondary={true}
-				onTouchTap={this.handleNo} 
+				onClick={this.handleNo} 
 				style={{ color: snowUI.__state.theme.baseTheme.palette.alternateTextColor }} 
 			/>
 		];

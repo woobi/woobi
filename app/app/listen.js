@@ -30,10 +30,10 @@ export default (Component) => {
 				page = page.substring(1);
 			}
 			
-			if(!page || page =='/') page = snowUI.name;
+			// if(!page || page =='/') page = snowUI.name;
 			
 			if(!loc.state) {
-				debug('#### I think this produces an error...  we are pushing the last known history into the stack on first load ####');
+				debug('#### Is this bad???..  we are pushing the last known history into the stack on first load ####');
 				props.router.push({
 					pathname: loc.pathname,
 					query: loc.query,
