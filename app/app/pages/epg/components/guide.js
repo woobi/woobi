@@ -4,7 +4,7 @@ import Gab from '../../common/gab';
 import { Divider, FontIcon, IconButton, LinearProgress, MenuItem} from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
-import { isObject, isFunction, findIndex, find as Find, sortBy, map as Map, filter as Filter } from 'lodash';
+import { isFunction, findIndex, find as Find, sortBy, map as Map, filter as Filter } from 'lodash';
 import moment from 'moment';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Collection from 'react-virtualized/dist/commonjs/Collection';
@@ -39,7 +39,7 @@ export default class EPG extends PureComponent {
 		this.state = {
 			minutesPerColumn: 30,
 			columnWidth: 120,
-			columnCount: 103,
+			columnCount: 50,
 			height: 400,
 			overscanColumnCount: 20,
 			overscanRowCount: 20,
@@ -49,12 +49,10 @@ export default class EPG extends PureComponent {
 			channelList: [],
 			scrollToCell: undefined,
 			group: props.params.group ? props.params.group.trim() : 'All channels',
-			sortGuideBy: props.query.sortGuideBy ? props.query.sortGuideBy.trim() : 'channel',
+			sortBy: props.query.sortBy ? props.query.sortBy.trim() : 'channel',
 			guideLoaded: Object.keys(props.entries).length > 0 ? true : false,
 			channelsLoaded: props.channels.length > 0 ? true : false,
 			groupsLoaded: Object.keys(props.groups).length > 0 ? true : false,
-			seriesLoaded: props.series.length > 0 ? true : false,
-			timersLoaded: props.timers.length > 0 ? true : false,
 			open: false,
 			get pixelsPerMinute ( ) {
 				return _this.state.columnWidth / _this.state.minutesPerColumn;
@@ -64,11 +62,12 @@ export default class EPG extends PureComponent {
 			},
 		};
 		
+		this.state.channelList = this._channelList( this.state );
+		
 		this.guideData = [];
 		this.dayOfWeek = moment().format("dddd");
 		this.scrollTop = 0;
-		let startTime = moment().startOf('hour').unix() - moment().startOf('hour').subtract(this.props.guidePreHours, 'h').unix() ;
-		this.scrollLeft = startTime * this.state.pixelsPerSecond;
+		this.scrollLeft = 0;
 		
 		this._channelList = this._channelList.bind(this);
 		this._cellSizeAndPositionGetter = this._cellSizeAndPositionGetter.bind(this);
@@ -88,7 +87,7 @@ export default class EPG extends PureComponent {
 	
 	componentDidMount() {
 		debug('######### componentDidMount  ##  EPG HOME',  this.props, this.state);
-		this._channelList( this.state, ( err, ret ) => ( this.setState( { channelList: ret, height: document.documentElement.clientHeight - 40} ) ));
+		this.setState( { height: document.documentElement.clientHeight - 40 } );
 		
 	}
 	
@@ -96,7 +95,7 @@ export default class EPG extends PureComponent {
 	}
 	
 	componentDidUpdate (prevProps, prevState) {
-		if ( prevState.group !== this.state.group || prevState.sortGuideBy !== this.state.sortGuideBy ) {
+		if ( prevState.group !== this.state.group || prevState.sortBy !== this.state.sortBy ) {
 			if ( this.grid2 ) this.grid2.forceUpdate();
 			if ( this.grid1 ) this.grid1.forceUpdate();
 			if ( this.collection ) this.collection.forceUpdate()
@@ -113,16 +112,14 @@ export default class EPG extends PureComponent {
 			channelsLoaded: props.channels.length > 0 ? true : false,
 			groupsLoaded: Object.keys(props.groups).length > 0 ? true : false,
 			group: props.params.group ? props.params.group : this.state.group,
-			sortGuideBy: props.query.sortGuideBy ? props.query.sortGuideBy : this.state.sortGuideBy,
-			seriesLoaded: props.series.length > 0 ? true : false,
-			timersLoaded: props.timers.length > 0 ? true : false,
+			sortBy: props.query.sortBy ? props.query.sortBy : this.state.sortBy
 		};
 		
 		state.group = state.group.trim();
-		state.sortGuideBy = state.sortGuideBy.trim(); 
+		state.sortBy = state.sortBy.trim(); 
 		if ( state.guideLoaded && state.channelsLoaded && state.groupsLoaded ) {
-			if ( state.group !== this.state.group || state.sortGuideBy !== this.state.sortGuideBy || this.state.channelList.length === 0 ) {
-				this._channelList(  { ...props, ...state } , ( err, ret ) => ( this.setState( { ...state, channelList: ret } ) ));
+			if ( state.group !== this.state.group || state.sortBy !== this.state.sortBy || this.state.channelList.length === 0 ) {
+				state.channelList = this._channelList( state, () => ( this.setState( state ) ));
 			}
 		} else {
 			this.setState( state );
@@ -138,33 +135,29 @@ export default class EPG extends PureComponent {
 	}
 	
 	_channelList ( props, callback ) {
-		props = { ...props };
-		debug( 'Channel list getter',  props, props.group, this.guideData);
-		
-		if ( !Array.isArray(this.guideData) ) this.guideData = [];
-		
+		props = { ...this.props, ...props };
+		debug( 'Channel list getter',  props, this.state);
+ 
 		if ( props.guideLoaded && props.channelsLoaded && props.groupsLoaded ) {
-			if ( props.group !== this.state.group || props.sortGuideBy !== this.state.sortGuideBy || this.state.channelList.length === 0 ) {
+			if ( props.group !== this.state.group || props.sortBy !== this.state.sortBy || this.state.channelList.length === 0 ) {
 					let a = props.groups[props.group]
-						.map( chan => chan[props.sortGuideBy] )
+						.map( chan => chan[props.sortBy] )
 						.sort(natSort)
 						.map( o => {
-								let ret = { ...Find( props.groups[props.group], g => g[props.sortGuideBy] === o ) };
+								let ret = { ...Find( props.groups[props.group], g => g[props.sortBy] === o ) };
 								let channel = ret.channelName;
 								let data = props.entries[channel];
 								ret.guide = data; 
 								if ( Array.isArray(data) ) {
-									this.guideData = [ ...this.guideData, ...data.filter( c => ( c.startTime < moment().add( ( this.state.minutesPerColumn * ( this.state.columnCount + 1 ) ), 'm' ).unix()  ) ) ];
+									this.guideData = [ ...this.guideData, ...data.filter( c => ( c.startTime < moment().add( ( this.state.minutesPerColumn * ( this.state.columnCount + 1 ) ), 'm' ).unix() ) ) ];
 								}
 								return ret;
 						});
-					
-					debug('guideData', this.guideData);
-					if ( isFunction( callback ) ) callback(null, a);
-					return;
+					if ( isFunction( callback ) ) callback();
+					return a;
 			}
 		}
-		if ( isFunction( callback ) ) callback(null, []);
+		
 		return [];		
 	}
 	
@@ -193,7 +186,7 @@ export default class EPG extends PureComponent {
 						</div>
 						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
 							<IconButton 
-								title="TV Channels"
+								title="Channels"
 								onClick={(e)=>{
 									e.preventDefault();
 									this.props.goTo({path: '/tv/channels', page: 'Live TV'});
@@ -204,7 +197,7 @@ export default class EPG extends PureComponent {
 									hoverColor={Styles.Colors.limeA400} 
 									color={this.props.theme.appBar.buttonColor || 'initial'} 
 								> 
-									featured_videos
+									list
 								</FontIcon>
 							</IconButton>
 						</div>
@@ -221,7 +214,7 @@ export default class EPG extends PureComponent {
 									hoverColor={Styles.Colors.limeA400} 
 									color={this.props.theme.appBar.buttonColor || 'initial'} 
 								> 
-									fiber_dvr
+									add_to_queue
 								</FontIcon>
 							</IconButton>
 						</div>	
@@ -241,7 +234,7 @@ export default class EPG extends PureComponent {
 									dvr
 								</FontIcon>
 							</IconButton>
-						</div>
+						</div>	
 					</div>
 					{
 						Object.keys( this.props.groups ).map( ( keyName, i ) => {
@@ -251,10 +244,10 @@ export default class EPG extends PureComponent {
 					<Divider inset={false} style={{ marginBottom: 15 }}/>
 					
 					<div style={{float:'left',width:'50%', textAlign: 'center'}}>
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={this.state.sortGuideBy === 'name' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/guide/' + this.state.group, query: {sortGuideBy: 'name'}, page: 'sort by name'}, this.leftNavClose) } } title="sort by channel name">sort_by_alpha</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={this.state.sortBy === 'name' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/guide/' + this.state.group, query: {sortBy: 'name'}, page: 'sort by name'}, this.leftNavClose) } } title="sort by channel name">sort_by_alpha</FontIcon>
 					</div>
 					<div style={{float:'left',width:'50%', textAlign: 'center'}}>
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={this.state.sortGuideBy === 'channel' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/guide/' + this.state.group, query: {sortGuideBy: 'channel'}, page: 'next to air'}, this.leftNavClose) } } title="sort by channel number">filter_8</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={this.state.sortBy === 'channel' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/guide/' + this.state.group, query: {sortBy: 'channel'}, page: 'next to air'}, this.leftNavClose) } } title="sort by channel number">filter_8</FontIcon>
 					</div>
 				</div>
 			</Menu>
@@ -292,10 +285,6 @@ export default class EPG extends PureComponent {
 					{ !this.state.channelsLoaded ? 'Waiting for Channels' : <span style={{ color: Styles.Colors.limeA400 }} children='Channels Ready' /> }
 					<br />
 					{ !this.state.groupsLoaded ? 'Waiting for Channel Groups' : <span style={{ color: Styles.Colors.limeA400 }} children='Channel Groups Ready' /> }
-					<br />
-					{ !this.state.seriesLoaded ? 'Waiting for Series Passes' : <span style={{ color: Styles.Colors.limeA400 }} children='Series Passes Ready' /> }
-					<br />
-					{ !this.state.timersLoaded ? 'Waiting for Timers' : <span style={{ color: Styles.Colors.limeA400 }} children='Timers Ready' /> }
 				</div>
 			);
 		
@@ -304,7 +293,6 @@ export default class EPG extends PureComponent {
 		if ( this.props.params.channel ) {
 			return this.renderChannel();
 		}
-		
 		return this.renderGuide();
 		
 	}
@@ -312,7 +300,7 @@ export default class EPG extends PureComponent {
 	renderChannel ( ) {
 		const channel= Find( this.state.channelList, [ 'channel', this.props.params.channel ] );
 		debug('renderChannel', this.props.params.channel, channel );
-		return (<RenderChannel renderChannel={channel} bgcolor={ rgbToHex( { ...LEFT_COLOR_TO } ) } goBack={()=>(this.props.goTo('tv/guide') )} { ...this.props } />)
+		return (<RenderChannel renderChannel={channel} bgcolor={ rgbToHex( { ...LEFT_COLOR_TO } ) } { ...this.props } />)
 	}
 	
 	renderGuide ( ) { 
@@ -515,12 +503,13 @@ export default class EPG extends PureComponent {
 	_onScroll ( { clientHeight, clientWidth, scrollHeight, scrollLeft, scrollTop, scrollWidth } ) {
 		this.scrollLeft = scrollLeft;
 		this.scrollTop = scrollTop;
-		const now = moment().subtract(this.props.guidePreHours, 'h').unix();
+		const tomorrow = moment().endOf('day').add(1,'s').unix();
+		const now = moment().unix();
 		// check for a date change
-		// convert our scroll position to seconds and add on 1 columns for the channel number 
-		// add the scroll time to the grid start time and we have the current time of the grid
-		const checkBy = ( this.scrollLeft / this.state.pixelsPerSecond ) + now - ( (this.state.minutesPerColumn * 1.2 )* 60  );
-		const time = moment.unix(checkBy).format("dddd");
+		//  get the seconds until tommorw and convert to pixels per second
+		// add on 1 columns for the channel number 
+		const checkBy = ( ( tomorrow - now ) * this.state.pixelsPerSecond ) + ( this.state.columnWidth + 50 );
+		const time = checkBy < this.scrollLeft ?  moment.unix(tomorrow).format("dddd") :  moment().format("dddd");
 		if ( time !== this.dayOfWeek ) {
 			this.dayOfWeek = time;
 			if ( this.grid1 ) this.grid1.forceUpdate();
@@ -534,11 +523,11 @@ export default class EPG extends PureComponent {
 		const { columnCount, pixelsPerSecond, rowHeight, channelList } = this.state;
 		const channelIndex = findIndex( channelList, ['channelName', data.channelName] );
 		
-		let startTime = moment().startOf('hour').subtract(this.props.guidePreHours, 'h').unix();
+		let startTime = moment().startOf('hour').subtract(30, 'm').unix();
 		
 		//debug( '_cellSizeAndPositionGetter', data, channelIndex, now.unix(), pixelsPerSecond );
 		
-		const end = moment().add( ( this.state.minutesPerColumn * ( this.state.columnCount - 1.5  ) ), 'm' ).unix();
+		const end = moment().add( ( this.state.minutesPerColumn * ( this.state.columnCount + 1 ) ), 'm' ).unix();
 		const endsAfter = data.endTime > end;
 		
 		const height = rowHeight;
@@ -554,29 +543,10 @@ export default class EPG extends PureComponent {
 	_renderBodyCell( { index, isScrolling, key, style } ) {
 
 		let data = this.guideData[index];
-		const channel = Find( this.state.channelList, [ 'channelName', data.channelName] );
+		
 		const { rowHeight, columnWidth } = this.state;
-		const isTimer = isObject( Find( this.props.timers, ( v ) => ( v.episodeId == data.broadcastUid  ) ) );
-		const isSeries = isObject( Find( this.props.series, ( v ) => ( v.show == data.title  ) ) );
+		
 		//debug('renderBodyCell', this.scrollLeft, style.left, this.scrollLeft - style.left);
-		
-		let timer = <span />;
-		let series = <span />;
-		
-		if ( isTimer ) {
-			timer = (
-				<div style={{ float: 'right', width: 15, height: 15, textAlign: 'center'}}>
-					<FontIcon className="material-icons"  color={Styles.Colors.red800} style={{cursor:'pointer', fontSize: 15}}  title="This episode will be recorded">radio_button_checked</FontIcon>
-				</div>
-			);
-		}
-		if ( isSeries ) {
-			series = (
-				<div style={{ float: 'right', marginLeft: 3, width: 15, height: 15, textAlign: 'center'}}>
-					<FontIcon className="material-icons"  color={Styles.Colors.blue500} style={{cursor:'pointer', fontSize: 15}}  title="You have a Series Pass enabled for this program">fiber_dvr</FontIcon>
-				</div>
-			);
-		}
 		
 		const classNames = { 
 			  height: '100%',
@@ -600,19 +570,11 @@ export default class EPG extends PureComponent {
 					//backgroundSize: 'cover',
 					//backgroundPosition: 'left top / 100%',
 					backgroundColor:  "#" + decimalToHexString("" +data.genreSubType + data.genreType),
-					cursor: 'pointer',
 				}} 
 				key={key} 
-				onClick={ ( ) => (
-					this.props.goTo({ path: '/tv/channel/' + channel.channel + '/' + data.broadcastUid, page: 'Program Info' } )
-				)}
 			>
 				<div style={{ height: rowHeight / 3, width: style.width - 10, overflow: 'hidden', padding: '0 0', }} >{data.title} </div> 
 				<div style={{ fontWeight: 400, height: (rowHeight / 3) * 2, width: '100%', overflow: 'hidden', padding: ' 0', }} >{data.episodeName} </div>
-				<div style={{ position: 'absolute', bottom: 0, right: 0, width: 45, height: 15, textAlign: 'center'}}>
-					{series} 
-					{timer}
-				</div>
 			</div>
 		)
 		
@@ -625,7 +587,7 @@ export default class EPG extends PureComponent {
 				...style,
 				 border: "2px solid "  + ColorMe( 2, rgbToHex(this.topBackgroundColor) ).bgcolor
 			}}>
-				{moment().startOf('hour').subtract(this.props.guidePreHours, 'h').add( ( columnIndex*this.state.minutesPerColumn), 'm').format(' h:mm a')}
+				{moment().startOf('hour').subtract(30, 'm').add( ( columnIndex*30), 'm').format(' h:mm a')}
 				<div style={{ 
 						width: 1,
 						height: '30%',

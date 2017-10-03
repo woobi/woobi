@@ -4,7 +4,7 @@ import { sortBy, find as Find } from 'lodash';
 import Debug from 'debug';
 import Gab from '../../common/gab';
 import Table from '../../common/components/table';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu, LinearProgress, MenuItem, Toggle, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui';
+import { Avatar, Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu, LinearProgress, MenuItem, Toggle, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 
@@ -85,7 +85,7 @@ export default class Channels extends React.Component {
 	}
 	
 	groups() {
-		return (<DropDownMenu value={this.props.params.group || 'All channels' } onChange={( event, index, value ) => { this.props.goTo({ path: '/livetv/channels/'+value, page: value}); } }> 
+		return (<DropDownMenu value={this.props.params.group || 'All channels' } onChange={( event, index, value ) => { this.props.goTo({ path: '/tv/channels/'+value, page: value}); } }> 
 			{
 				Object.keys( this.props.groups ).map( ( keyName, i ) => {
 					return (<MenuItem key={keyName} value={keyName} primaryText={keyName}  />)
@@ -99,7 +99,7 @@ export default class Channels extends React.Component {
 		debug('## render  ##  Channels  render', this.props, this.state);
 		let ret = <div style={{ padding: 50 }}><span style={{ color: 'white' }} children="Preparing Channel List" /><br /><LinearProgress mode="indeterminate" /></div>;
 		let group = this.props.params.group || 'All channels';
-		let sort = this.props.location.query.sortBy || 'channel';
+		let sort = this.props.location.query.sortChannelsBy || 'channel';
 		if ( Object.keys(this.props.groups).length > 0 ) {
  			// ret =  Object.keys(this.props.channels).map((keyName, i) => {
 			ret =  sortBy( this.props.groups[group], [ sort ] ).map( ( c, i ) => {
@@ -108,7 +108,7 @@ export default class Channels extends React.Component {
 						<CardHeader
 							subtitle={c.channel}
 							title={c.name}
-							avatar={c.iconPath}
+							avatar={<Avatar size="50" backgroundColor='none'  children={<img src={c.iconPath} style={{maxWidth: 75 }}  />} style={{ background: 'none', borderRadius: 'none', width: 75, height: 50, marginRight: 16 }} />}
 							actAsExpander={true}
 							showExpandableButton={true}
 						/>						
@@ -129,8 +129,8 @@ export default class Channels extends React.Component {
 					</ToolbarGroup>
 					<ToolbarGroup>
 						<ToolbarSeparator />
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'channel' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/livetv/channels/'+group, query: {sortBy: 'channel'}, page: group + ' by channel'}); } }>format_list_numbered</FontIcon>
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'name' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/livetv/channels/'+group, query: {sortBy: 'name'}, page: group + ' by name'}); } } >sort_by_alpha</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'channel' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/channels/'+group, query: {sortChannelsBy: 'channel'}, page: group + ' by channel'}); } }>format_list_numbered</FontIcon>
+						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'name' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/channels/'+group, query: {sortChannelsBy: 'name'}, page: group + ' by name'}); } } >sort_by_alpha</FontIcon>
 						<ToolbarSeparator />
          
 					</ToolbarGroup>

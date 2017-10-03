@@ -272,9 +272,9 @@ export let BLUE  = deep( {
 		primary1Color: colors.indigo800,
 		primary2Color: '#303030',
 		accent1Color: colors.blue100,
-		accent2Color: colors.blue200,
-		accent3Color: "#5C6BC0",
-		textColor: colors.indigo100,
+		accent2Color: "#737474",
+		accent3Color: "#D4258D",
+		textColor: "#E4E4E7",
 		alternateTextColor: colors.blue800,
 	},
 	snackbar: {
@@ -283,7 +283,8 @@ export let BLUE  = deep( {
 	},
 	appBar: {
 		textColor: '#fff',
-		buttonColor: '#bbb'
+		buttonColor: '#bbb',
+		background: 'none',
 	},
 	flatButton: {
 		textColor: '#fff',

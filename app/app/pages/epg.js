@@ -27,7 +27,12 @@ export default class EPG extends React.Component {
 		this.state = {
 			channels,	
 			entries,
-			groups
+			groups,
+			series: [],
+			timers: [],
+			entriesMap: [],
+			numberOfGuideDays: 6,
+			guidePreHours: 24,
 		};
 		
 		debug('EPG start props', props);
@@ -37,24 +42,29 @@ export default class EPG extends React.Component {
 		this.getChannels = this.getChannels.bind(this);
 		this.getGuideData = this.getGuideData.bind(this);
 		this.getChannelGroups = this.getChannelGroups.bind(this);
+		this.getSeries = this.getSeries.bind(this);
+		this.getTimers = this.getTimers.bind(this);
 				
 	}
 	
 	componentDidUpdate() {
-		snowUI.fadeIn();
+		//snowUI.fadeIn();
 		debug('EPG didUpdate');
 	}
+	
 	componentDidMount() {
-		debug('EPG did mount');
+		debug('EPG will mount');
 		if(!this._skipMount) {
 			this.getChannelGroups();
 			this.getChannels();
-			const s = moment().startOf('hour').subtract(30, 'm').unix();
-			const f = moment.utc().add(3, 'days').unix();
+			this.getSeries();
+			this.getTimers();
+			const s = moment().startOf('hour').subtract(this.state.guidePreHours, 'h').unix();
+			const f = moment().add(this.state.numberOfGuideDays, 'days').unix();
 			this.getGuideData( false, s, f);
 			
 		}
-		snowUI.fadeIn();
+		//snowUI.fadeIn();
 	}
 	
 	componentWillUnmount() {
@@ -62,9 +72,7 @@ export default class EPG extends React.Component {
 	
 	componentWillReceiveProps(props) {
 		debug('## componentWillReceiveProps  ##  ## EPG ##',  props, this.state);
-		
 		this._update = true;
-		
 	}
 	
 	shouldComponentUpdate() {
@@ -74,6 +82,22 @@ export default class EPG extends React.Component {
 			return true;
 		}
 		return false;
+	}
+	
+	getTimers ( ) {
+		this.props.Request({
+			action: 'getTimers'
+		})
+		.then(data => {
+			debug('### series data ###', data);
+			this._update = true;
+			this.setState({
+				timers: data.timers
+			});
+		})
+		.catch(error => {
+			debug('ERROR from getSeriesTimers', error)
+		});
 	}
 	
 	getChannelGroups() {
@@ -104,7 +128,8 @@ export default class EPG extends React.Component {
 			debug('### getGuideData ###', data);
 			this._update = true;
 			this.setState({
-				entries: Object.assign(this.state.entries, data.entries)
+				entries: { ...this.state.entries, ...data.entries.groups },
+				entriesMap: data.entries.map
 			});
 		})
 		.catch(error => {
@@ -125,6 +150,22 @@ export default class EPG extends React.Component {
 		})
 		.catch(error => {
 			debug('ERROR from getTVChannels', error)
+		});
+	}
+	
+	getSeries ( ) {
+		this.props.Request({
+			action: 'getSeriesTimers'
+		})
+		.then(data => {
+			debug('### series data ###', data);
+			this._update = true;
+			this.setState({
+				series: data.series
+			});
+		})
+		.catch(error => {
+			debug('ERROR from getSeriesTimers', error)
 		});
 	}
 	

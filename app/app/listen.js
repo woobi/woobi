@@ -70,7 +70,7 @@ export default (Component) => {
 				initialData: snowUI.loaded ? false : props.renderInitialData,
 				mounted: false,
 				path: page,
-				page: snowUI.name,
+				page: page,
 				Request: Request.bind(this),
 				sockets: Sockets,
 				Sockets,
@@ -221,16 +221,20 @@ export default (Component) => {
 				// only update once done moving
 				let muchX = x < this.state.window.width ? (x + 100 < this.state.window.width) : (x - 100 > this.state.window.width);
 				let muchY = y < this.state.window.height ? (y + 100 < this.state.window.height) : (y - 100 > this.state.window.height);
-				debug((muchX || muchY) || force === true);
+				//debug((muchX || muchY) || force === true);
 				if((muchX || muchY) || force === true) {
 					if(snowUI.__resizing) {
 						clearTimeout(snowUI.__resizing);
 					}
-					snowUI.__resizing = setTimeout((resize) => { debug('## SEND RESIZE EVENT ##', force);Gab.emit('resize', resize);snowUI.__resizing = false }, 500, { width: x, height: y });
+					snowUI.__resizing = setTimeout( ( resize ) => { 
+						debug('## SEND RESIZE EVENT ##', force);
+						Gab.emit('resize', resize);
+						snowUI.__resizing = false
+					}, 500, { width: x, height: y });
 				}
 			}
-			//window.removeEventListener('resize', _resizing);
-			//window.addEventListener('resize', _resizing);
+			window.removeEventListener('resize', _resizing);
+			window.addEventListener('resize', _resizing);
 			
 			_resizing(true);
 			

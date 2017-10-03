@@ -33,7 +33,7 @@ function sendToStatus(nextState, replaceState) {
 Routes.push({ path: 'disconnected', onEnter: sendToStatus })
 
 function sendToChannels(nextState, replaceState) {
-	replaceState({ nextPathname: nextState.location.pathname }, '/channels')
+	replaceState({ nextPathname: nextState.location.pathname }, '/tv')
 }
 
 Routes.push({ path: '/home', onEnter: sendToChannels });
@@ -54,6 +54,14 @@ Routes.push({
 Routes.push({
     path: 'livetv', 
     component: EPG,
+    indexRoute: { 
+		onEnter: (nextState, replace) => replace('/tv')
+	}
+});
+
+Routes.push({
+    path: 'tv', 
+    component: EPG,
     indexRoute: { component: EPGs.Home },
     catchAll: { component: EPGs.Home },
     childRoutes: [
@@ -62,8 +70,8 @@ Routes.push({
 		{ path: 'channels', component: EPGs.Channels },
 		{ path: 'channels/:group', component: EPGs.Channels },
 		{ path: 'channels/:group/', component: EPGs.Channels },
-		{ path: 'channel/:channel', component: EPGs.Channels },
-		{ path: 'channel/:channel/:episode', component: EPGs.Channels },
+		{ path: 'channel/:channel', component: EPGs.Home },
+		{ path: 'channel/:channel/:episode', component: EPGs.Home },
 		{ path: 'timers', component: EPGs.Timers },
 		{ path: 'series', component: EPGs.Series },
     ]

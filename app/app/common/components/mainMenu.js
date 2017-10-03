@@ -66,16 +66,19 @@ export default class mainMenu extends React.Component {
 					this.props.appState({ leftNav: open });
 				}}
 			>
-				<div className="menu" style={{
-					height: this.props.window.height - 50,
+				<div className="" style={{
+					height: 50,
 					width: '100%',
-					overflow: 'auto',
-					marginTop: 0,
+					overflow: 'hidden',
+					bottom: 0,
+					left: 0,
+					position: 'absolute',
 					borderLeft: '10px solid ' + this.props.theme.baseTheme.palette.canvasColor
 				}} >
 					
 					<div style={{float:'left',width:'33%', textAlign: 'center'}}>
 						<IconButton 
+							title="Home"
 							onClick={(e)=>{
 								e.preventDefault();
 								this.props.goTo({page: snowUI.name, path: snowUI.homepage});
@@ -91,10 +94,11 @@ export default class mainMenu extends React.Component {
 						</IconButton>
 					</div>
 					<div style={{float:'left',width:'33%', textAlign: 'center'}}>
-						<IconButton onClick={(e)=>{e.preventDefault();this.props.goTo('status');}} ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.props.theme.appBar.buttonColor || 'initial'} >router</FontIcon></IconButton>
+						<IconButton title="Status" onClick={(e)=>{e.preventDefault();this.props.goTo('status');}} ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.props.theme.appBar.buttonColor || 'initial'} >router</FontIcon></IconButton>
 					</div>
 					<div style={{float:'left',width:'34%', textAlign: 'center', paddingTop: 12}}>
 						<IconMenu
+							title="Change Theme"
 							iconButtonElement={<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={this.props.theme.appBar.buttonColor || 'initial'} style={{cursor:'pointer'}}>invert_colors</FontIcon>}
 							onItemTouchTap={(e, val) => {
 								debug('clecked switch theme link', e, val);
@@ -119,102 +123,91 @@ export default class mainMenu extends React.Component {
 						  <MenuItem style={{lineHeight: 2}} primaryText="MUI Light" value="default" />
 						</IconMenu>
 					</div>
+				</div>
+				<div className="menu" style={{
+					height: this.props.window.height - 50,
+					width: '100%',
+					overflow: 'hidden',
+					marginTop: 0,
+					borderLeft: '10px solid ' + this.props.theme.baseTheme.palette.canvasColor
+				}} >
+					
+						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
+							<IconButton 
+								title="Guide"
+								onClick={(e)=>{
+									e.preventDefault();
+									this.props.goTo({path: '/tv/guide', page: 'Program Guide'});
+								}} 
+							>
+								<FontIcon 
+									className="material-icons" 
+									hoverColor={Styles.Colors.limeA400} 
+									color={this.props.theme.appBar.buttonColor || 'initial'} 
+								> 
+									view_list
+								</FontIcon>
+							</IconButton>
+						</div>
+						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
+							<IconButton 
+								title="TV Channels"
+								onClick={(e)=>{
+									e.preventDefault();
+									this.props.goTo({path: '/tv/channels', page: 'Live TV'});
+								}} 
+							>
+								<FontIcon 
+									className="material-icons" 
+									hoverColor={Styles.Colors.limeA400} 
+									color={this.props.theme.appBar.buttonColor || 'initial'} 
+								> 
+									featured_videos
+								</FontIcon>
+							</IconButton>
+						</div>
+						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
+							<IconButton 
+								title="Series"
+								onClick={(e)=>{
+									e.preventDefault();
+									this.props.goTo({path: '/tv/series', page: 'Series'}, this.leftNavClose);
+								}} 
+							>
+								<FontIcon 
+									className="material-icons" 
+									hoverColor={Styles.Colors.limeA400} 
+									color={this.props.theme.appBar.buttonColor || 'initial'} 
+								> 
+									fiber_dvr
+								</FontIcon>
+							</IconButton>
+						</div>	
+						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
+							<IconButton 
+								title="Timers"
+								onClick={(e)=>{
+									e.preventDefault();
+									this.props.goTo({path: '/tv/timers', page: 'Timers'}, this.leftNavClose);
+								}} 
+							>
+								<FontIcon 
+									className="material-icons" 
+									hoverColor={Styles.Colors.limeA400} 
+									color={this.props.theme.appBar.buttonColor || 'initial'} 
+								> 
+									dvr
+								</FontIcon>
+							</IconButton>
+						</div>	
+						
+					<div className="clearfix" style={{ height: 10 }} />
+					
 					<Divider />
-					<div className="clearfix" />
 					
 					<MenuItem
-						primaryText="Live TV"
-						rightIcon={<ArrowDropRight />}
-						leftIcon={<FontIcon className="material-icons">live_tv</FontIcon>} 
-						menuItems={[
-							<MenuItem 
-								primaryText="Guide" 
-								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Episode Program Guide',
-										path: '/livetv/guide',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/livetv"
-							/>,
-							<MenuItem 
-								primaryText="Channels" 
-								leftIcon={<FontIcon className="material-icons">list</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Channels',
-										path: '/livetv/channels',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/livetv/channels"
-							/>,
-							<MenuItem 
-								primaryText="Timers" 
-								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Timers',
-										path: '/livetv/timers',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/livetv/timers"
-							/>,
-							<MenuItem 
-								primaryText="Series" 
-								leftIcon={<FontIcon className="material-icons">add_to_queue</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Series',
-										path: '/livetv/series',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/livetv/series"
-							/>,
-						]}
-					
-					/>
-					
-					<MenuItem
-						primaryText="Channels"
-						//rightIcon={<ArrowDropRight />}
+						primaryText="Streams"
 						leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
-						/*menuItems={[
-							<MenuItem 
-								primaryText="View Channels" 
-								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Channels',
-										path: '/channels',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/channels"
-							/>,
-							<MenuItem 
-								primaryText="Create Channel" 
-								leftIcon={<FontIcon className="material-icons">add_to_queue</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Create Channel',
-										path: '/channels/add',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/channels"
-							/>,
-						]}*/
 						onClick={(e) => {
 							e.preventDefault(e);
 							this.props.goTo({
@@ -309,3 +302,66 @@ export default class mainMenu extends React.Component {
 mainMenu.defaultProps = {
 
 }
+
+/*
+					<MenuItem
+						primaryText="Live TV"
+						rightIcon={<ArrowDropRight />}
+						leftIcon={<FontIcon className="material-icons">live_tv</FontIcon>} 
+						menuItems={[
+							<MenuItem 
+								primaryText="Guide" 
+								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'Episode Program Guide',
+										path: '/tv/guide',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/tv"
+							/>,
+							<MenuItem 
+								primaryText="Channels" 
+								leftIcon={<FontIcon className="material-icons">list</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'Channels',
+										path: '/tv/channels',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/tv/channels"
+							/>,
+							<MenuItem 
+								primaryText="Timers" 
+								leftIcon={<FontIcon className="material-icons">dvr</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'Timers',
+										path: '/tv/timers',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/livetv/timers"
+							/>,
+							<MenuItem 
+								primaryText="Series" 
+								leftIcon={<FontIcon className="material-icons">add_to_queue</FontIcon>} 
+								onClick={(e) => {
+									e.preventDefault(e);
+									this.props.goTo({
+										page: 'Series',
+										path: '/tv/series',
+									}, {}, () => { this.toggleDrawer(false, false) });
+								}}
+								style={{}}
+								href="/noscript/tv/series"
+							/>,
+						]}
+					
+					/>
+					*/

@@ -12,32 +12,20 @@ let debug = Debug('woobi:app:pages:epg:series');
 
 export default class Series extends React.Component {
 	constructor(props) {
-		super(props)
-		
+		super(props);
 		this.displayName = 'Series';
 		this.state = {};
-		
-		this.getSeries = this.getSeries.bind(this);
-		
 	}
 	
 	componentDidMount ( ) {
 		debug('######### componentDidMount  ##  Series',  this.props);
-		this.getSeries();
-		//this.props.Sockets.io.on('tvshows', this.gotShows);
 	}
 	
 	componentWillUnmount ( ) {
-		//this.props.Sockets.io.removeListener('tvshows', this.gotShows);
 	}
 	
 	componentWillReceiveProps ( props ) {
 		debug('## componentWillReceiveProps  ## Series got props', props);
-		/*if (props.channels.length !== this.state.channels.length) {
-			this.setState({
-				channels: props.channels
-			});
-		}*/
 		this._update = true;
 	}	
 	
@@ -48,22 +36,6 @@ export default class Series extends React.Component {
 			return true;
 		}
 		return false;
-	}
-	
-	getSeries ( ) {
-		this.props.Request({
-			action: 'getSeriesTimers'
-		})
-		.then(data => {
-			debug('### series data ###', data);
-			this._update = true;
-			this.setState({
-				series: data.series
-			});
-		})
-		.catch(error => {
-			debug('ERROR from getSeriesTimers', error)
-		});
 	}
 	
 	handleExpandChange = ( expanded ) => {
@@ -90,14 +62,15 @@ export default class Series extends React.Component {
 	render ( ) { 
 		debug('## render  ##  Series  render', this.props, this.state);
 		let ret = <div style={{ padding: 50 }}><span style={{ color: 'white' }} children="Preparing Series Data" /><br /><LinearProgress mode="indeterminate" /></div>;
-		let sort = this.props.location.query.sortBy || 'show';
+		let sort = this.props.location.query.sortSeriesBy || 'show';
 		if ( sort === 'nextToAir' ) sort = 'start';
-		if (this.state.series) {
+		if (this.props.series) {
 			
-			ret = sortBy( this.state.series, [ sort ] ).map( ( obj, i ) => {
+			ret = sortBy( this.props.series, [ sort ] ).map( ( obj, i ) => {
 				let c = obj;
 				let time = moment.unix( c.start ).format( "h:mm a ");
 				return (<div className="col-sm-12 col-md-6"  style={{ marginBottom: 5 }}  key={c.id}>
+					
 					<Card expanded={this.state.expanded} onExpandChange={() => {
 						//const s = moment.utc().unix();
 						//const f = moment.utc().add(1, 'days').unix();
@@ -116,26 +89,18 @@ export default class Series extends React.Component {
 					</Card>
 				</div>);
 			});
-			
+			return (<div style={{ padding: '0 0px' }}>
+				<div style={{ position: 'absolute', top: 15, right: 0, width: 100, height: 50 }}>
+					<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'show'}, page: 'Series by name'}); } }>sort_by_alpha</FontIcon>
+					<span> &nbsp; </span>
+					<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'nextToAir'}, page: 'Series by next to air'}); } } >access_time</FontIcon>
+				</div>
+				{ret}
+				</div>
+			);
 		}
 		
-		//return <div>{ret}</div>;
 		return (<div style={{ padding: '0 0px' }}>
-			<div style={{ padding: '10px 15px' }}>
-				<Toolbar>
-					<ToolbarGroup firstChild={true}>
-						
-						<ToolbarTitle text="Series" style={{ paddingLeft: 5 }} />
-					</ToolbarGroup>
-					<ToolbarGroup>
-						<ToolbarSeparator />
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/livetv/series/', query: {sortBy: 'show'}, page: 'show'}); } }>sort_by_alpha</FontIcon>
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/livetv/series/', query: {sortBy: 'nextToAir'}, page: 'next to air'}); } } >access_time</FontIcon>
-						<ToolbarSeparator />
-         
-					</ToolbarGroup>
-				</Toolbar>
-			</div>
 			{ret}
 		</div>);
 	}

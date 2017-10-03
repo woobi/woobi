@@ -15,7 +15,7 @@ export default class Confirm extends React.Component {
 		this.handleNo = this.handleNo.bind(this);
 		
  		this.setProps = this.setProps.bind(this);
-		
+		Gab.removeListener('confirm open', this.setProps);
 		Gab.on('confirm open', this.setProps);
 		
 	}

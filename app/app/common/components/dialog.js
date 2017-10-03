@@ -15,6 +15,8 @@ export default class Dialog2 extends React.Component {
 		this.name = 'dialog' + (props.name || '');
 		this.name2 = 'dialog' + (props.name || '') + ' open';
 		debug('Dialog receive commands on: ' + this.name);
+		Gab.removeListener(this.name, this.setProps);
+		Gab.removeListener(this.name2, this.setProps);
 		Gab.on(this.name, this.setProps);
 		Gab.on(this.name2, this.setProps);
 		

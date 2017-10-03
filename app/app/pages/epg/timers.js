@@ -13,31 +13,19 @@ let debug = Debug('woobi:app:pages:epg:channels');
 export default class Timers extends React.Component {
 	constructor(props) {
 		super(props)
-		
 		this.displayName = 'Timers';
-		this.state = {};
-		
-		this.getTimers = this.getTimers.bind(this);
-		
+		this.state = {};	
 	}
 	
 	componentDidMount ( ) {
 		debug('######### componentDidMount  ##  Timers',  this.props);
-		this.getTimers();
-		//this.props.Sockets.io.on('tvshows', this.gotShows);
 	}
 	
 	componentWillUnmount ( ) {
-		//this.props.Sockets.io.removeListener('tvshows', this.gotShows);
 	}
 	
 	componentWillReceiveProps ( props ) {
 		debug('## componentWillReceiveProps  ## Timers got props', props);
-		/*if (props.channels.length !== this.state.channels.length) {
-			this.setState({
-				channels: props.channels
-			});
-		}*/
 		this._update = true;
 	}	
 	
@@ -48,22 +36,6 @@ export default class Timers extends React.Component {
 			return true;
 		}
 		return false;
-	}
-	
-	getTimers ( ) {
-		this.props.Request({
-			action: 'getTimers'
-		})
-		.then(data => {
-			debug('### series data ###', data);
-			this._update = true;
-			this.setState({
-				timers: data.timers
-			});
-		})
-		.catch(error => {
-			debug('ERROR from getSeriesTimers', error)
-		});
 	}
 	
 	handleExpandChange = ( expanded ) => {
@@ -90,11 +62,11 @@ export default class Timers extends React.Component {
 	render ( ) { 
 		debug('## render  ##  Timers  render', this.props, this.state);
 		let ret = <div style={{ padding: 50 }}><span style={{ color: 'white' }} children="Preparing Timer Data" /><br /><LinearProgress mode="indeterminate" /></div>;
-		let sort = this.props.location.query.sortBy || 'start';
+		let sort = this.props.location.query.sortTimersBy || 'start';
 		if ( sort === 'nextToAir' ) sort = 'start';
-		if (this.state.timers) {
+		if (this.props.timers) {
 			
-			ret =  sortBy( this.state.timers, [ sort ] ).map( ( obj, i ) => {
+			ret =  sortBy( this.props.timers, [ sort ] ).map( ( obj, i ) => {
 				let c = obj;
 				return (<div className="col-sm-12 col-md-6"  style={{ marginBottom: 5 }} key={c.id}>
 					<Card expanded={this.state.expanded} onExpandChange={() => {}}>
@@ -111,25 +83,17 @@ export default class Timers extends React.Component {
 					</Card>
 				</div>);
 			});
+			return (<div style={{ padding: '0 0px' }}>
+				<div style={{ position: 'absolute', top: 15, right: 0, width: 100, height: 50 }}>
+					<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'name' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/timers/', query: {sortTimersBy: 'name'}, page: 'Timers by name'}); } }>sort_by_alpha</FontIcon>
+					<span> &nbsp; </span>
+					<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/timers/', query: {sortTimersBy: 'nextToAir'}, page: 'Timers by next to air'}); } } >access_time</FontIcon>
+				</div>
+				{ret}
+			</div>);
 			
 		}
-		//return <div>{ret}</div>;
 		return (<div style={{ padding: '0 0px' }}>
-			<div style={{ padding: '10px 15px' }}>
-				<Toolbar>
-					<ToolbarGroup firstChild={true}>
-						
-						<ToolbarTitle text="Timers" style={{ paddingLeft: 5 }} />
-					</ToolbarGroup>
-					<ToolbarGroup>
-						<ToolbarSeparator />
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/livetv/timers/', query: {sortBy: 'name'}, page: 'name'}); } }>sort_by_alpha</FontIcon>
-						<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/livetv/timers/', query: {sortBy: 'nextToAir'}, page: 'next to air'}); } } >access_time</FontIcon>
-						<ToolbarSeparator />
-         
-					</ToolbarGroup>
-				</Toolbar>
-			</div>
 			{ret}
 		</div>);
 	}

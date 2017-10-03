@@ -193,9 +193,9 @@ class Render extends Component {
 		if(e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
 		}
-		debug('handleLeftNav', this.state);
-		let state = stated ? stated : !this.state.leftNav;
-		this.appState({leftNav: !this.state.leftNav});
+		debug('handleLeftNav', this.state, state);
+		let state = stated === true || stated === false ? stated : !this.state.leftNav;
+		this.appState({leftNav: state});
 	} 
 	
 	LeftNavClose () {
@@ -229,7 +229,7 @@ class Render extends Component {
 		});
 	}
 	
-	goTo(route, state, callback, noFade = false, fadeMe) {
+	goTo(route, state, callback, noFade = true, fadeMe) {
 		
 		if(typeof route === 'string') {
 			// accept strings for the page
@@ -331,7 +331,7 @@ class Render extends Component {
 				<AppBar
 					zDepth={3}
 					title={<div id="appbarTitle" style={{height: 65, width: '90%', marginLeft: 0}} >{title}</div>}
-					style={{boxShadow: 'none', zIndex: 'initial'}}
+					style={{boxShadow: 'none', zIndex: 'initial', background: this.state.theme.appBar.background  }}
 					iconElementLeft={<span>{hamburger}</span>}
 				/>
 			</div>

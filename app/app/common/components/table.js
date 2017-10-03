@@ -3,6 +3,7 @@ import { Avatar, FontIcon, IconButton, Table as TTable, TableBody, TableHeader, 
 import { Styles } from '../styles';
 import { isObject, isFunction, isString } from 'lodash';
 import moment from 'moment';
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 
 import debugging from 'debug';
 let	debug = debugging('woobi:app:common:components:table');
@@ -54,16 +55,18 @@ export class Table extends React.Component {
 				{headers}
 			</TableRow>
 		</TableHeader>);
-		
-		debug('## render DeviceTable ##', this.props, '## body ##', body);
-		return (<div className="table-responsive">
-			<TTable { ...this.props.tableProps }	>
-				{header}
-				<TableBody { ...this.props.tableBodyProps } >
-					{body}
-				</TableBody>
-			</TTable>
-		</div>);
+			
+		let tProps = { ...this.props.tableProps }
+		return (
+			<div className=""  >
+				<TTable { ... tProps }	>
+					{header}
+					<TableBody { ...this.props.tableBodyProps } >
+						{body}
+					</TableBody>
+				</TTable>
+			</div>
+		);
 	}
 }
 
@@ -84,22 +87,7 @@ Table.defaultProps = {
 	style: {},
 	nextDay: false,
 	day: moment().format('D'),
-	fields: [
-		{ 
-			field: 'startTime', 
-			style: small , 
-			label: 'Time' , 
-			print: (v, props, obj) => { 
-				let div = <span />;
-				if (!props.nextDay  && moment.unix(v).format('D') !== props.day) {
-					div = (<div style={{ position: 'relative', width: '100%', height: 18, backgroundColor: '#ccc', marginTop: -15, marginLeft: -25, padding: '2px px px 5px'}}>{moment.unix(v).format('dddd')}</div>);
-					props.nextDay = true;
-				}
-				return <div>{div}{moment.unix(v).format('h:mm a')}</div> 
-			} 
-		},
-		{ field: 'title', style: large, label: 'Show'  },
-	],
+	fields: [],
 	tableProps: {
 		fixedHeader: false,
 		fixedFooter: true,
@@ -124,7 +112,6 @@ Table.defaultProps = {
 	tableHeaderColumnProps: {}
 };
 
-
 export default Table;
 
 function findByProp(list, prop, value) {
@@ -146,4 +133,3 @@ function findByProp(list, prop, value) {
 	if(!found) found = {};
 	return found;
 }
-

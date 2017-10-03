@@ -232,10 +232,9 @@ body.bluealt {
 
 body.blue {
 	background-color: #0277BD;
-	color: #777;
-	/* devices menu */
-	.devices-menu > div:nth-child(1) {
-		color: @ftc-white!important;
+	color: #cecdd6;
+	a {
+		color: #9DBFE6!important;
 	}
 }
 .blue .menu {
@@ -252,10 +251,7 @@ body.blue {
 body.nitelite {
 	background-color: #3F51B5;
 	color: #bbbbbb;
-	/* devices menu */
-	.devices-menu > div:nth-child(1) {
-		color: white!important;
-	}
+	
 }
 .nitelite .menu {
 	background-color: #3949AB;
@@ -522,4 +518,44 @@ table, tr, td {
 
 .player-poster[data-poster], .container[data-container] {
 	background: transparent!important;
+}
+
+/* tv channel page css */
+.channelProgramPeopleHeader {
+	border-bottom: 1px solid #333;
+	padding: 5px 0 5px 0;
+}
+
+.channelProgramCast, .channelProgramDirector, .channelProgramWriter {
+	margin-bottom: 10;
+}
+
+.channelProgramWrapper {
+	display: flex;
+	flex-flow: column wrap;
+	justify-content: space-evenly;
+	align-items: stretch;
+}
+
+/* We tell all items to be 100% width */
+.channelProgramMenu {
+	flex: 0 0;
+	width: 50px;
+}
+
+/* We tell all items to be 100% width */
+.channelProgramInfoPane {
+	flex: 1 100%;
+}
+
+/* We tell all items to be 100% width */
+.channelProgramInfo, .channelProgramList {
+	flex: 1 100%;
+}
+
+@media all and (min-width: 600px) {
+	/* We tell both sidebars to share a row */
+	.channelProgramInfo, .channelProgramList { 
+		flex: 1 auto; 
+	}
 }

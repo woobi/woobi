@@ -21,7 +21,7 @@ class SnackbarExampleSimple extends React.Component {
 		this.handleChangeDuration = this.handleChangeDuration.bind(this);
 		this.handleRequestClose = this.handleRequestClose.bind(this);
  		this.setProps = this.setProps.bind(this);
-		
+		Gab.removeListener('snackbar', this.setProps);
 		Gab.on('snackbar', this.setProps);
 		
 	}
