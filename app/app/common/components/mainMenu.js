@@ -131,7 +131,8 @@ export default class mainMenu extends React.Component {
 					marginTop: 0,
 					borderLeft: '10px solid ' + this.props.theme.baseTheme.palette.canvasColor
 				}} >
-					
+						<br />
+						<Divider />
 						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
 							<IconButton 
 								title="Guide"
@@ -202,11 +203,68 @@ export default class mainMenu extends React.Component {
 						</div>	
 						
 					<div className="clearfix" style={{ height: 10 }} />
+					<Divider />
+					<MenuItem 
+						primaryText="Local Files"
+						disabled={ true }
+					/>
+					<MenuItem 
+						primaryText="All Shows" 
+						leftIcon={<FontIcon className="material-icons">tv</FontIcon>} 
+						onClick={(e) => {
+							e.preventDefault(e);
+							this.props.goTo({
+								page: 'TV Shows',
+								path: '/library/tv',
+							}, {}, () => { this.toggleDrawer(false, false) });
+						}}
+						style={{}}
+						href="/noscript/library/tv"
+					/>
+					<MenuItem 
+						primaryText="Recent Shows" 
+						leftIcon={<FontIcon className="material-icons">queue_play_next</FontIcon>} 
+						onClick={(e) => {
+							e.preventDefault(e);
+							this.props.goTo({
+								page: 'Recent TV',
+								path: '/library/tv/recent',
+							}, {}, () => { this.toggleDrawer(false, false) });
+						}}
+						style={{}}
+						href="/noscript/library/tv/recent"
+					/>	
 					
+					<MenuItem 
+						primaryText="All Movies" 
+						leftIcon={<FontIcon className="material-icons">local_movies</FontIcon>} 
+						onClick={(e) => {
+							e.preventDefault(e);
+							this.props.goTo({
+								page: 'Movies',
+								path: '/library/movies',
+							}, {}, () => { this.toggleDrawer(false, false) });
+						}}
+						style={{}}
+						href="/noscript/library/movies"
+					/>
+					<MenuItem 
+						primaryText="Recent Movies" 
+						leftIcon={<FontIcon className="material-icons">slow_motion_video</FontIcon>} 
+						onClick={(e) => {
+							e.preventDefault(e);
+							this.props.goTo({
+								page: 'Recent Movies',
+								path: '/library/movies/recent',
+							}, {}, () => { this.toggleDrawer(false, false) });
+						}}
+						style={{}}
+						href="/noscript/library/movies/recent"
+					/>			
 					<Divider />
 					
 					<MenuItem
-						primaryText="Streams"
+						primaryText="Channels"
 						leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
 						onClick={(e) => {
 							e.preventDefault(e);
@@ -216,77 +274,7 @@ export default class mainMenu extends React.Component {
 							}, {}, () => { this.toggleDrawer(false, false) });
 						}}
 					/>
-					
-					<MenuItem
-						primaryText="TV Shows"
-						rightIcon={<ArrowDropRight />}
-						leftIcon={<FontIcon className="material-icons">tv</FontIcon>} 
-						menuItems={[
-							<MenuItem 
-								primaryText="All Shows" 
-								leftIcon={<FontIcon className="material-icons">view_list</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'TV Shows',
-										path: '/library/tv',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/library/tv"
-							/>,
-							<MenuItem 
-								primaryText="Recent Shows" 
-								leftIcon={<FontIcon className="material-icons">slow_motion_video</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Recent TV',
-										path: '/library/tv/recent',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/library/tv/recent"
-							/>,
-							
-						]}
-					/>
-					
-					<MenuItem
-						primaryText="Movies"
-						rightIcon={<ArrowDropRight />}
-						leftIcon={<FontIcon className="material-icons">movie</FontIcon>} 
-						menuItems={[
-							<MenuItem 
-								primaryText="All Movies" 
-								leftIcon={<FontIcon className="material-icons">local_movies</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Movies',
-										path: '/library/movies',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/library/movies"
-							/>,
-							<MenuItem 
-								primaryText="Recent Movies" 
-								leftIcon={<FontIcon className="material-icons">slow_motion_video</FontIcon>} 
-								onClick={(e) => {
-									e.preventDefault(e);
-									this.props.goTo({
-										page: 'Recent Movies',
-										path: '/library/movies/recent',
-									}, {}, () => { this.toggleDrawer(false, false) });
-								}}
-								style={{}}
-								href="/noscript/library/movies/recent"
-							/>
-						]}
-					/>
-					
-								
+					<Divider />			
 				</div>
 			</Drawer>
 		);
@@ -304,6 +292,22 @@ mainMenu.defaultProps = {
 }
 
 /*
+				<MenuItem
+						primaryText="TV Shows"
+						rightIcon={<ArrowDropRight />}
+						leftIcon={<FontIcon className="material-icons">tv</FontIcon>} 
+						menuItems={[
+							
+						]}
+					/>
+					<MenuItem
+						primaryText="Movies"
+						rightIcon={<ArrowDropRight />}
+						leftIcon={<FontIcon className="material-icons">movie</FontIcon>} 
+						menuItems={[
+						]}
+					/>
+				
 					<MenuItem
 						primaryText="Live TV"
 						rightIcon={<ArrowDropRight />}

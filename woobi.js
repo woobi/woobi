@@ -155,6 +155,7 @@ var snowstreams = function() {
 
 // send socket notifications
 snowstreams.prototype.notify = function(emitter, data) {
+	debug(emitter, data)
 	process.nextTick(() => {
 		this.lodge.emit(emitter, data);
 	});

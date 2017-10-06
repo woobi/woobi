@@ -63,19 +63,24 @@ export default class Confirm extends React.Component {
 	
 	render() {
 		const actions = [
-			<RaisedButton
-				label={this.state.noText}
-				primary={true}
-				onClick={this.handleNo}
-				
-			/>,
+			
 			<RaisedButton
 				label={this.state.yesText}
-				primary={false}
+				primary={this.state.yesStyle.primary}
 				onClick={this.handleYes} 
-				style={{float: 'left', color: this.props.theme.baseTheme.palette.alternateTextColor }} 
+				labelStyle={ this.state.yesStyle.labelStyle }
+				backgroundColor={ this.state.yesStyle.backgroundColor } 
+				style={ { float: 'left', marginRight: 20  }}
 			/>,
-			
+			<RaisedButton
+				label={this.state.noText}
+				primary={this.state.noStyle.primary}
+				onClick={this.handleNo}
+				labelStyle={ this.state.noStyle.labelStyle }
+				backgroundColor={ this.state.noStyle.backgroundColor } 
+				style={ { float: 'left' }}
+			/>,
+			<div className="clearfix" ></div>
 		];
 		return (
 			<div>
@@ -86,6 +91,9 @@ export default class Confirm extends React.Component {
 					modal={true}
 					open={this.state.open}
 					className={this.state.class}
+					style={this.state.style}
+					autoScrollBodyContent={true}
+					actionsContainerStyle={{ clear: 'both' }}
 				>
 					{this.renderHTML()}
 				</Dialog>
@@ -104,7 +112,17 @@ Confirm.defaultProps = {
 	style: {
 		body: {}
 	},
-	class: ''
+	class: '',
+	yesStyle: {
+		backgroundColor: false,
+		labelStyle: {},
+		primary: false,
+	},
+	noStyle: {
+		backgroundColor: false,
+		labelStyle: {},
+		primary: false,
+	}
 };
 Confirm.childContextTypes = {
     muiTheme: React.PropTypes.object

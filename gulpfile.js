@@ -15,7 +15,7 @@ var fs = require('fs-extra');
 // see app/app/app.js to use
 gulp.task('bundle',  function (cb) {
 	var builder = new Builder('./app', './app/config.js');
-	builder.bundle('app/app - [app/**/*]', './app/bundles/dependencies.js', { minify: false, sourceMaps: false })
+	builder.bundle('app/app - [app/**/*]', './app/bundles/dependencies.js', { minify: false, sourceMaps: true })
 	.then(function() {
 		gutil.log('wrote /bundles/dependencies.js');
 		builder.reset()
@@ -66,7 +66,7 @@ gulp.task('package', function() {
 
 gulp.task('production',  function (cb) {
 	var builder = new Builder('./app', './app/config.js');
-	builder.buildStatic('app/app', './static/js/bundles/material-system.js', { minify: false, sourceMaps: true })
+	builder.buildStatic('app/app', './static/js/bundles/material-system.js', { minify: false, sourceMaps: false })
 	.then(function() {
 		gulp.src([
 			'static/js/lib/jquery/jquery-2.1.1.min.js', 

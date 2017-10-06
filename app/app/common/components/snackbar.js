@@ -17,19 +17,29 @@ class SnackbarExampleSimple extends React.Component {
 			  open: false,
 		};
 		
+		// cache
+		this.cache = [];
+		
 		// binders
 		this.handleChangeDuration = this.handleChangeDuration.bind(this);
 		this.handleRequestClose = this.handleRequestClose.bind(this);
+		this.onRequestClose = this.onRequestClose.bind(this);
  		this.setProps = this.setProps.bind(this);
+ 		
 		Gab.removeListener('snackbar', this.setProps);
+		
 		Gab.on('snackbar', this.setProps);
 		
 	}
 	
-	setProps(data) {
-		console.log('snackbar got emitted');
-		this.props = Object.assign(this.props, data);
-		this.forceUpdate();
+	setProps( data ) {
+		debug('snackbar got emitted',  this.state.open, data, this.cache);
+		if ( this.props.open ) {
+			this.cache = [ ...this.cache, data ];
+		} else {
+			this.props = Object.assign(this.props, data);
+			this.forceUpdate();
+		}
 	}
 	
 	componentWillUnmount() {
@@ -55,6 +65,16 @@ class SnackbarExampleSimple extends React.Component {
 
 	handleRequestClose() {
 		this.setProps({ open: false });
+	}
+	
+	onRequestClose( how ) {
+		debug( 'snackbar closed', 'check for cache', this.cache.length, how, this.cache);
+		this.props.open = false; ;
+		if ( this.cache.length > 0 ) {
+			this.setProps( this.cache.shift() );
+		} else {
+			this.forceUpdate();
+		}
 		if (typeof this.props.onRequestClose === 'function') {
 			this.props.onRequestClose();
 		}
@@ -76,7 +96,7 @@ class SnackbarExampleSimple extends React.Component {
 	}
 	
 	renderHTML(bodyStyle) {
-		debug(this.props);
+		//debug(this.props);
 		if(this.props.data) {
 			if(this.props.data.error) {
 				return this.renderError(this.props.data);

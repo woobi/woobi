@@ -18,7 +18,9 @@ System.config({
   },
 
   map: {
+    "autobind-decorator": "npm:autobind-decorator@2.1.0",
     "babel": "npm:babel-core@5.8.38",
+    "transform-decorators-legacy": "npm:babel-plugin-transform-decorators-legacy@1.3.4",
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "bluebird": "npm:bluebird@3.4.3",
     "capaj/systemjs-hot-reloader": "github:capaj/systemjs-hot-reloader@0.6.0",
@@ -36,7 +38,7 @@ System.config({
     "history": "npm:history@3.0.0",
     "hls.js": "npm:hls.js@0.6.6",
     "javascript-natural-sort": "npm:javascript-natural-sort@0.7.1",
-    "lodash": "npm:lodash@4.16.5",
+    "lodash": "npm:lodash@4.17.4",
     "marked": "npm:marked@0.3.6",
     "material-ui": "npm:material-ui@0.19.2",
     "moment": "npm:moment@2.18.1",
@@ -218,12 +220,52 @@ System.config({
       "querystring": "github:jspm/nodelibs-querystring@0.1.0",
       "url": "github:jspm/nodelibs-url@0.1.0"
     },
+    "npm:babel-code-frame@6.26.0": {
+      "chalk": "npm:chalk@1.1.3",
+      "esutils": "npm:esutils@2.0.2",
+      "js-tokens": "npm:js-tokens@3.0.2"
+    },
+    "npm:babel-messages@6.23.0": {
+      "babel-runtime": "npm:babel-runtime@6.26.0",
+      "util": "github:jspm/nodelibs-util@0.1.0"
+    },
+    "npm:babel-plugin-transform-decorators-legacy@1.3.4": {
+      "babel-plugin-syntax-decorators": "npm:babel-plugin-syntax-decorators@6.13.0",
+      "babel-runtime": "npm:babel-runtime@6.26.0",
+      "babel-template": "npm:babel-template@6.26.0",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
     "npm:babel-runtime@5.8.38": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:babel-runtime@6.26.0": {
       "core-js": "npm:core-js@2.5.1",
       "regenerator-runtime": "npm:regenerator-runtime@0.11.0"
+    },
+    "npm:babel-template@6.26.0": {
+      "babel-runtime": "npm:babel-runtime@6.26.0",
+      "babel-traverse": "npm:babel-traverse@6.26.0",
+      "babel-types": "npm:babel-types@6.26.0",
+      "babylon": "npm:babylon@6.18.0",
+      "lodash": "npm:lodash@4.17.4"
+    },
+    "npm:babel-traverse@6.26.0": {
+      "babel-code-frame": "npm:babel-code-frame@6.26.0",
+      "babel-messages": "npm:babel-messages@6.23.0",
+      "babel-runtime": "npm:babel-runtime@6.26.0",
+      "babel-types": "npm:babel-types@6.26.0",
+      "babylon": "npm:babylon@6.18.0",
+      "debug": "npm:debug@2.6.9",
+      "globals": "npm:globals@9.18.0",
+      "invariant": "npm:invariant@2.2.2",
+      "lodash": "npm:lodash@4.17.4",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:babel-types@6.26.0": {
+      "babel-runtime": "npm:babel-runtime@6.26.0",
+      "esutils": "npm:esutils@2.0.2",
+      "lodash": "npm:lodash@4.17.4",
+      "to-fast-properties": "npm:to-fast-properties@1.0.3"
     },
     "npm:babel@5.8.38": {
       "babel-core": "npm:babel-core@5.8.38",
@@ -248,6 +290,10 @@ System.config({
       "systemjs-json": "github:systemjs/plugin-json@0.1.2",
       "util": "github:jspm/nodelibs-util@0.1.0",
       "vm": "github:jspm/nodelibs-vm@0.1.0"
+    },
+    "npm:babylon@6.18.0": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:benchmark@1.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -499,6 +545,9 @@ System.config({
     "npm:debug@2.2.0": {
       "ms": "npm:ms@0.7.1"
     },
+    "npm:debug@2.6.9": {
+      "ms": "npm:ms@2.0.0"
+    },
     "npm:deep-extend@0.4.1": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1"
     },
@@ -745,6 +794,9 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
+    "npm:globals@9.18.0": {
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
+    },
     "npm:graceful-fs@4.1.4": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "constants": "github:jspm/nodelibs-constants@0.1.0",
@@ -764,7 +816,7 @@ System.config({
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:has-ansi@2.0.0": {
-      "ansi-regex": "npm:ansi-regex@2.0.0"
+      "ansi-regex": "npm:ansi-regex@2.1.1"
     },
     "npm:has-binary@0.1.6": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
@@ -798,13 +850,13 @@ System.config({
     },
     "npm:history@2.1.2": {
       "deep-equal": "npm:deep-equal@1.0.1",
-      "invariant": "npm:invariant@2.2.1",
+      "invariant": "npm:invariant@2.2.2",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "query-string": "npm:query-string@3.0.3",
       "warning": "npm:warning@2.1.0"
     },
     "npm:history@3.0.0": {
-      "invariant": "npm:invariant@2.2.1",
+      "invariant": "npm:invariant@2.2.2",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "query-string": "npm:query-string@4.2.2",
       "warning": "npm:warning@2.1.0"
@@ -858,7 +910,7 @@ System.config({
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:invariant@2.2.1": {
+    "npm:invariant@2.2.2": {
       "loose-envify": "npm:loose-envify@1.3.1",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -1279,7 +1331,7 @@ System.config({
     "npm:react-router@2.4.1": {
       "history": "npm:history@2.1.2",
       "hoist-non-react-statics": "npm:hoist-non-react-statics@1.2.0",
-      "invariant": "npm:invariant@2.2.1",
+      "invariant": "npm:invariant@2.2.2",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "react": "npm:react@15.6.2",
       "warning": "npm:warning@2.1.0"
@@ -1584,7 +1636,7 @@ System.config({
       "zlib": "github:jspm/nodelibs-zlib@0.1.0"
     },
     "npm:strip-ansi@3.0.1": {
-      "ansi-regex": "npm:ansi-regex@2.0.0"
+      "ansi-regex": "npm:ansi-regex@2.1.1"
     },
     "npm:strip-json-comments@1.0.4": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",
@@ -1738,7 +1790,7 @@ System.config({
       "xmlbuilder": "npm:xmlbuilder@4.2.1"
     },
     "npm:xmlbuilder@4.2.1": {
-      "lodash": "npm:lodash@4.16.5",
+      "lodash": "npm:lodash@4.17.4",
       "process": "github:jspm/nodelibs-process@0.1.2"
     }
   }

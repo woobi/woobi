@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, FontIcon, IconButton, Table as TTable, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui';
+import { Avatar, FontIcon, IconButton, Table as TTable, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui';
 import { Styles } from '../styles';
 import { isObject, isFunction, isString } from 'lodash';
 import moment from 'moment';
@@ -48,22 +48,30 @@ export class Table extends React.Component {
 			if(!isObject(field.headerProps)) {
 				field.headerProps = {};
 			}
-			return (<TableHeaderColumn  { ...this.props.tableHeaderColumnProps } style={field.style || {}} { ...field.headerProps } >{field.label}</TableHeaderColumn>);
+			return (<TableHeaderColumn  { ...this.props.tableHeaderColumnProps }  { ...field.headerProps } >{field.label}</TableHeaderColumn>);
 		});
+		
 		let header = (<TableHeader { ...this.props.tableHeaderProps }	>
 			<TableRow { ...this.props.tableRowProps } >
 				{headers}
 			</TableRow>
 		</TableHeader>);
+		
+		let footer = (<TableFooter { ...this.props.tableFooterProps }	>
+			<TableRow { ...this.props.tableFooterRowProps } >
+				{headers}
+			</TableRow>
+		</TableFooter>);
 			
 		let tProps = { ...this.props.tableProps }
 		return (
 			<div className=""  >
-				<TTable { ... tProps }	>
-					{header}
+				<TTable { ...tProps }	>
+					{tProps.fixedHeader ? header : <span />}
 					<TableBody { ...this.props.tableBodyProps } >
 						{body}
 					</TableBody>
+					{tProps.fixedFooter ? footer : <span />}
 				</TTable>
 			</div>
 		);

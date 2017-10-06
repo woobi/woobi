@@ -10,6 +10,11 @@ Number.prototype.clip = function(numbers) {
 	var number = Math.pow(10, numbers);
 	return Math.round(this * number) / number;
 }; 
+String.prototype.format = function () {
+  var args = arguments;
+  return this.replace(/\{(\d+)\}/g, function (m, n) { return args[n]; });
+};
+
 var snowUI = {
 	name: 'Woobi',
 	materialStyle: {},
