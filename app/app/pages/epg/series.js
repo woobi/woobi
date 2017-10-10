@@ -1,12 +1,13 @@
 import React from 'react';
 import moment from 'moment';
 import Debug from 'debug';
-import { sortBy } from 'lodash';
+import { sortBy, filter as Filter, find as Find } from 'lodash';
 import Gab from '../../common/gab';
 import Table from '../../common/components/table';
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText, DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu, LinearProgress, MenuItem, Toggle, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
+import RenderScheduled from './components/scheduled.js';
 
 let debug = Debug('woobi:app:pages:epg:series');
 
@@ -43,6 +44,7 @@ export default class Series extends React.Component {
 	};
 	
 	renderSchedule ( obj ) {
+		
 		let fields = [
 			{ 
 				field: 'key',
@@ -53,10 +55,28 @@ export default class Series extends React.Component {
 				label: 'Value' , 
 			},
 		];
-		return (<Table fields={fields} list={ Object.keys( obj ).map( ( keyName, i ) => {
-			return ({ key: keyName, value: obj[keyName] })
-		}) } />)
-			
+		let component = (
+			<Table 
+				fields={fields} 
+				list={ Object.keys( obj ).map( ( keyName, i ) => {
+						return ({ key: keyName, value: obj[keyName] })
+					}) 
+				} 
+				tableProps= {{
+					fixedHeader: true,
+					fixedFooter: false,
+					selectable: false,
+					multiSelectable: false,
+					height: false,
+				}}
+			/>
+		);
+		Gab.emit('dialog open', {
+			title:" Series Information",
+			component,
+			open: true,
+			close: true			
+		});	
 	}
 	
 	render ( ) { 
@@ -68,32 +88,54 @@ export default class Series extends React.Component {
 			
 			ret = sortBy( this.props.series, [ sort ] ).map( ( obj, i ) => {
 				let c = obj;
-				let time = moment.unix( c.start ).format( "h:mm a ");
-				return (<div className="col-sm-12 col-md-6"  style={{ marginBottom: 5 }}  key={c.id}>
+				let time = moment.unix( c.start ).format( "LLLL ");
+				let list = Filter( this.props.timers, ( t ) => ( t.name == obj.showName ) );
+				let innerList = (<div>
+					<h5 style={{ padding: 0, margin: '10 0 10 0' }} >Scheduled Recordings</h5>
+					<RenderScheduled  fixedHeader={true} fixedFooter={false} program={{ title: c.showName }} list={list} channels={this.props.channels} onRowSelection={( i ) => {
+							let programId = list[i].programId;
+							let channel = Find( this.props.channels, (v) => ( v.channelId == list[i].channelId ));
+							//debug(programId, list[i])
+							if( channel ) this.props.goTo({ path: '/tv/channel/' + channel.channel + '/' + programId, page: 'Program Info' } );
+					}} /> 
 					
-					<Card expanded={this.state.expanded} onExpandChange={() => {
-						//const s = moment.utc().unix();
-						//const f = moment.utc().add(1, 'days').unix();
-						//this.getEntries( c.id, s, f );
-					}}>
-						<CardHeader
-							title={c.name}
-							subtitle={c.runType === '1' ? 'New Episodes   |   ' + time : 'All Episodes   |   ' + time }
-							//avatar={c.logo}
-							actAsExpander={true}
-							showExpandableButton={true}
-						/>						
-						<CardText expandable={true}>
-							{this.renderSchedule( c )}
-						</CardText>
-					</Card>
 				</div>);
+				return (
+					<div className="col-sm-12 col-md-6"  style={{ marginBottom: 10 }}  key={c.id}>
+						
+						<Card expanded={this.state.expanded} onExpandChange={() => {
+							//const s = moment.utc().unix();
+							//const f = moment.utc().add(1, 'days').unix();
+							//this.getEntries( c.id, s, f );
+						}}>
+							<CardHeader
+								title={c.name}
+								subtitle={c.runType === '1' ? 'New Episodes   |   ' + time : 'All Episodes   |   ' + time }
+								//avatar={c.logo}
+								actAsExpander={true}
+								showExpandableButton={true}
+							/>						
+							<CardText expandable={true}>
+								{innerList}
+								
+								<FlatButton onClick={()=>(this.renderSchedule( c ))} label="Key/Value Pairs" title="View stored information key/value pairs" />
+							</CardText>
+
+						</Card>
+					</div>
+				);
 			});
+			
+			
 			return (<div style={{ padding: '0 0px' }}>
-				<div style={{ position: 'absolute', top: 15, right: 0, width: 100, height: 50 }}>
-					<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'show'}, page: 'Series by name'}); } }>sort_by_alpha</FontIcon>
+				<div style={{ position: 'absolute', top: 15, right: 0, width: 200, height: 50 }}>
+					
+					<FontIcon className="material-icons" title="Sort by Name" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'show'}, page: 'Series by name'}); } }>sort_by_alpha</FontIcon>
 					<span> &nbsp; </span>
-					<FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'nextToAir'}, page: 'Series by next to air'}); } } >access_time</FontIcon>
+					<FontIcon className="material-icons" title="Sort by time" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'nextToAir'}, page: 'Series by next to air'}); } } >access_time</FontIcon>
+					<span> &nbsp; </span>
+					<FontIcon className="material-icons" title="View All Timers" hoverColor={Styles.Colors.limeA400} color={'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/timers/', query: {sortTimersBy: this.props.location.query.sortSeriesBy}, page: 'Timers by next to air'}) } } >dvr</FontIcon>
+					<span> &nbsp; </span>
 				</div>
 				{ret}
 				</div>

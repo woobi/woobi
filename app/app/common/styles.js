@@ -193,7 +193,7 @@ export let NIGHT  = deep( {
 		//bodyColor: 'initial',
 		//contentColor: 'initial',
 		//primary1Color: 'initial',
-		primary2Color: '#303030',
+		primary2Color: '#0277BD',
 		textColor: ColorMe(30, colors.indigoA200).bgcolor,
 		accent1Color: colors.indigo900,
 		accent2Color: colors.indigoA700,
@@ -268,9 +268,9 @@ export let ALTERNATEBLUE  = deep( {
 export let BLUE  = deep( {
 	palette: {
 		//bodyColor: 'initial',
-		//contentColor: 'initial',
+		canvasColor: '#0170B3',
 		primary1Color: colors.indigo800,
-		primary2Color: '#303030',
+		primary2Color: '#015485',
 		accent1Color: colors.blue100,
 		accent2Color: "#737474",
 		accent3Color: "#D4258D",
@@ -334,6 +334,7 @@ export let DARK  = deep( {
 }, darkBaseTheme);
 
 export let Styles = {
+	ColorMe,
 	Colors: colors,
 	getMuiTheme: getMuiTheme,
 	ThemeManager: themeManager,
@@ -351,3 +352,5 @@ export let Styles = {
 	NITELITE,
 	NITELITE2
 }
+
+export default Styles;

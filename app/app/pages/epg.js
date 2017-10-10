@@ -32,6 +32,7 @@ export default class EPG extends React.Component {
 			groups,
 			series: [],
 			timers: [],
+			recordings: [],
 			numberOfGuideDays: 3,
 			guidePreHours: 24,
 		};
@@ -47,6 +48,7 @@ export default class EPG extends React.Component {
 		this.getTimers = this.getTimers.bind(this);
 		this.reload = this.reload.bind(this);
 		this.notify = this.notify.bind(this);
+		this.getRecordings = this.getRecordings.bind(this);
 					
 	}
 	
@@ -68,6 +70,7 @@ export default class EPG extends React.Component {
 		if(!this._skipMount) {
 			this.getChannelGroups();
 			this.getChannels();
+			this.getRecordings();
 			this.getSeries();
 			this.getTimers();
 			const s = moment().startOf('hour').subtract(this.state.guidePreHours, 'h').unix();
@@ -108,6 +111,23 @@ export default class EPG extends React.Component {
 		});
 	}
 	
+	getRecordings() {
+		debug('### getRecordings ###');
+		this.props.Request({
+			action: 'getRecordings'
+		})
+		.then(data => {
+			debug('### getRecordings ###', data);
+			this._update = true;
+			this.setState({
+				recordings: data.recordings
+			});
+		})
+		.catch(error => {
+			debug('ERROR from getRecordings', error)
+		});
+	}
+	
 	getAllTimers ( ) {
 		this.getTimers();
 		this.getSeries();
@@ -130,6 +150,7 @@ export default class EPG extends React.Component {
 						html: "Added Timer for " + v.name + ' on ' +  moment.unix(v.startTime).format("l [at] LT"),
 						open: true,
 						onRequestClose: () => {},
+						autoHideDuration: 2000
 					});
 				});
 				let removed = differenceWith( this.state.timers, data.timers,  ( a, b ) => {
@@ -141,6 +162,7 @@ export default class EPG extends React.Component {
 						html: "Removed Timer for " + v.name + ' on ' + moment.unix(v.startTime).format("l [at] LT"),
 						open: true,
 						onRequestClose: () => {},
+						autoHideDuration: 2000
 					});
 				});
 			}
@@ -229,26 +251,29 @@ export default class EPG extends React.Component {
 			groupsLoaded: Object.keys(this.state.groups).length > 0 ? true : false,
 			seriesLoaded: this.state.series.length > 0 ? true : false,
 			timersLoaded: this.state.timers.length > 0 ? true : false,
+			recordingsLoaded: this.state.recordings.length > 0 ? true : false,
 		};
 		
 		debug('## render  ##  EPG ', state, this.state);
 		
-		if ( !state.guideLoaded || !state.channelsLoaded ||  !state.groupsLoaded ||  !state.seriesLoaded ||  !state.timersLoaded ) {
+		if ( !state.recordingsLoaded || !state.guideLoaded || !state.channelsLoaded ||  !state.groupsLoaded ||  !state.seriesLoaded ||  !state.timersLoaded ) {
 			debug('## render  ##  EPG Loading', this.props, this.state);
 			return (
 				<div style={{ padding: 50, color: this.props.theme.baseTheme.palette.accent1Color }}>
-					{ !state.guideLoaded ? 'Waiting for Guide Data' : <span style={{ color: Styles.Colors.limeA400 }} children='Guide Ready'  /> }
+					
 					<br />
 					<LinearProgress mode="indeterminate" />
-					
+					{ !state.guideLoaded ? 'Waiting for Guide Data' : <span style={{ color: Styles.Colors.limeA400 }} children='Guide Ready'  /> }
 					<br />
 					{ !state.channelsLoaded ? 'Waiting for Channels' : <span style={{ color: Styles.Colors.limeA400 }} children='Channels Ready' /> }
 					<br />
 					{ !state.groupsLoaded ? 'Waiting for Channel Groups' : <span style={{ color: Styles.Colors.limeA400 }} children='Channel Groups Ready' /> }
 					<br />
-					{ !state.seriesLoaded ? 'Waiting for Series Passes' : <span style={{ color: Styles.Colors.limeA400 }} children='Series Passes Ready' /> }
+					{ !state.seriesLoaded ? 'Waiting for Season Passes' : <span style={{ color: Styles.Colors.limeA400 }} children='Season Passes Ready' /> }
 					<br />
 					{ !state.timersLoaded ? 'Waiting for Timers' : <span style={{ color: Styles.Colors.limeA400 }} children='Timers Ready' /> }
+					<br />
+					{ !state.recordingsLoaded ? 'Waiting for Recodings' : <span style={{ color: Styles.Colors.limeA400 }} children='Recordings Ready' /> }
 				</div>
 			);
 		

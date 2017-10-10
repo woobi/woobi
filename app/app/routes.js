@@ -74,6 +74,7 @@ Routes.push({
 		{ path: 'channel/:channel/:episode', component: EPGs.Home },
 		{ path: 'timers', component: EPGs.Timers },
 		{ path: 'series', component: EPGs.Series },
+		{ path: 'recordings', component: EPGs.Recordings },
     ]
 });
 

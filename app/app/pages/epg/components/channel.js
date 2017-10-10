@@ -6,7 +6,11 @@ import moment from 'moment';
 import Table from '../../../common/components/table';
 import { FlatButton, Divider, FontIcon, IconButton } from 'material-ui';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
-import { isObject, find as Find, filter as Filter } from 'lodash';
+import {uniq, flatMap, keyBy, isObject, find as Find, filter as Filter } from 'lodash';
+import Video from '../../../common/components/videoGeneric';
+import VideoProgress from '../../../common/components/videoProgress';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import RenderScheduled from './scheduled';
 
 let debug = Debug('woobi:app:pages:epg:components:channel');
 
@@ -17,15 +21,21 @@ export default class EPGChannel extends PureComponent {
 		this.displayName = 'EPGChannel';
 						
 		this.state = {
-			programId: props.params.episode,
+			programId: Number(props.params.episode),
 			program: {},
 			guide: [],
 			boxHeight: props.desktop === 'xs' || props.desktop === 'sm' ? 'auto': props.window.height - 172,
 			show: 'plot',
 			wrapperHeight: props.desktop === 'xs' || props.desktop === 'sm' ? 'auto' : props.window.height - 122,
-			anyChannel: 1, // any channel
+			anyChannel: -1, // any channel
 			anyTime: 1, // anytime
-			runType: 1 // new eps only
+			runType: 1, // new eps only,
+			priority: 0,
+			lifetime: -1,
+			marginStart: 0,
+			marginEnd: 0,
+			maxRecordings: -1,			
+			recordShow: 'scheduled',
 		};
 		
 		this.changeProgram = this.changeProgram.bind(this);
@@ -45,7 +55,7 @@ export default class EPGChannel extends PureComponent {
 	
 	componentDidMount ( ) {
 		if ( this.state.programId ) this.getGuideProgram( );
-		this.getGuideData( );
+		this.getGuideData( this.props.renderChannel );
 	}
 	
 	componentWillReceiveProps ( props ) {
@@ -54,27 +64,27 @@ export default class EPGChannel extends PureComponent {
 			wrapperHeight: props.desktop === 'xs' || props.desktop === 'sm' ? 'auto' : props.window.height - 122,
 		}
 		if ( props.params.episode && ( props.params.episode !== this.state.programId ) ) {
-			state.programId = props.params.episode;
-			state.show = 'plot';
+			state.programId = Number(props.params.episode);
+			//state.show = 'plot';
 		}
-		if ( this.state.guide.length === 0 || this.props.params.channel != this.state.guide[0].channel ) {
-			this.getGuideData(); 
+		if ( this.state.guide.length === 0 || this.props.params.channel != props.params.channel ) {
+			this.getGuideData( props.renderChannel ); 
 		}
 		debug( 'componentWillReceiveProps', state);
 		this.setState( state, this.getGuideProgram );
 	}
 	
-	getGuideData (  ) {
-		debug( 'getGuideData', this.props.renderChannel.epgId );
+	getGuideData ( channel ) {
+		debug( 'getGuideData', channel.epgId );
 		this.props.Request({
 			action: 'getGuideData',
-			id: this.props.renderChannel.epgId
+			id: channel.epgId
 		})
 		.then(data => {
 			debug('### got getGuideData ###', data);
 			this._update = true;
 			this.setState({
-				guide: Filter( data.entries.groups[this.props.renderChannel.channel], v => ( Number(v.startTime) > moment().unix() ) ),
+				guide: Filter( data.entries.groups[channel.channel], v => ( Number(v.startTime) > moment().subtract(1, 'h').unix() ) ),
 			});
 		})
 		.catch(error => {
@@ -135,6 +145,9 @@ export default class EPGChannel extends PureComponent {
 			{ 
 				field: 'startTime', 
 				style: { width: 115, fontSize: 11  } , 
+				headerProps: {
+					style: { width: 115, height: 20, fontSize: 11, textAlign: 'left' }
+				},
 				label: 'Time' , 
 				print: (v, props, obj) => { 
 					let div = (<div style={{ position: 'relative', width: '100%', height: 18,  marginTop: -15, marginLeft: -23, padding: '2px 0px 0px 5px'}}>{moment.unix(v).format('ddd MMM Do')}</div>);
@@ -144,12 +157,46 @@ export default class EPGChannel extends PureComponent {
 			{ 
 				field: 'title',  
 				label: 'Program',
+				headerProps: {
+					style: { height: 20, fontSize: 11, textAlign: 'left' }
+				},
 				style: { fontSize: 11 },  
 				print: (v, props, obj) => { 
-					return <div>{v}<br /> { obj.episode }</div> 
-				}
+					//debug(obj)
+					let timer = <span />;
+					let series = <span />;
+					let recordings = <span />;
+					const isTimer = isObject( Find( this.props.timers, ( v ) => ( v.programId == obj.programId  ) ) );
+					if ( isTimer ) {
+						timer = (
+							<div style={{ marginBottom: 2, width: 15, height: 15, textAlign: 'left'}}>
+								<FontIcon className="material-icons"  color={Styles.Colors.red800} style={{cursor:'pointer', fontSize: 15}}  title="This episode will be recorded">radio_button_checked</FontIcon>
+							</div>
+						);
+					}
+				
+					let icons = <div style={{ float: 'left', width: 5, height: 50 }} />;
+					if (isTimer ) {
+						icons = (
+							<div style={{ marginRight: 5,  float: 'left', width: 15, height: 50, textAlign: 'center'}}>
+								{timer}
+							</div>
+						);
+					}
+					const isNew = (obj.repeat);
+					return (
+						<div style={{ position: 'relative', height: '100%' }}>
+							{ obj.iconPath ? <img src={obj.iconPath}  style={{ maxWidth: 48, float: 'left', margin: '0 5 0 0' }} /> : <span /> }
+							{icons}
+							{v}
+							<br /> 
+							{ obj.episode }  
+							
+						</div> 
+					);
+				},
 			},	
-			{ field: 'channelName',  label: 'Channel', style: { fontSize: 11 },  },
+			{ field: 'channelName',  label: 'Channel',  headerProps: { style: { height: 20, fontSize: 11, textAlign: 'left' }} },
 		];
 		return (
 			<Table 
@@ -164,7 +211,7 @@ export default class EPGChannel extends PureComponent {
 					style: { background: 'none', fontSize: 11 },
 					fixedHeader: false,
 					fixedFooter: true,
-					height: this.state.boxHeight - 72,
+					height: this.state.boxHeight - 78,
 					selectable: true ,
 					onRowSelection: this.changeFutureEpisode 
 				} }
@@ -254,19 +301,74 @@ export default class EPGChannel extends PureComponent {
 				fields={ [
 					{ 
 						field: 'startTime', 
-						style: { width: 115 } , 
+						style: { fontSize: 11, width: 115  }, 
+						headerProps: {
+							style: { height: 20, fontSize: 11, textAlign: 'left' }
+						},
 						label: 'Time' , 
 						print: (v, props, obj) => { 
 							let div = (<div style={{ position: 'relative', width: '100%', height: 18,  marginTop: -15, marginLeft: -23, padding: '2px 0px 0px 5px'}}>{moment.unix(v).format('ddd MMM Do')}</div>);
-							return <div>{div}{moment.unix(v).format('h:mm a')}</div> 
+							return <div>{div}{moment.unix(v).format('h:mm a')}</div>
 						} 
 					},
 					{ 
 						field: 'title',  
 						label: 'Program' ,
 						print: (v, props, obj) => { 
-							return <div>{v}<br /> { obj.episode }</div> 
-						}
+							//debug(obj)
+							let timer = <span />;
+							let series = <span />;
+							let recordings = <span />;
+							const isTimer = isObject( Find( this.props.timers, ( v ) => ( v.programId == obj.programId  ) ) );
+							const isSeries = isObject( Find( this.props.series, ( v ) => ( v.show == obj.title || v.programId == obj.programId  ) ) );
+							const isRecorded = isObject( Find( this.props.recordings, [ 'programId', obj.programId]  ) );
+							if ( isTimer ) {
+								timer = (
+									<div style={{ marginTop: 2, width: 12, height: 12, textAlign: 'left'}}>
+										<FontIcon className="material-icons"  color={Styles.Colors.red800} style={{cursor:'pointer', fontSize: 12}}  title="This progrram will be recorded">radio_button_checked</FontIcon>
+									</div>
+								);
+							}
+							if ( isSeries ) {
+								series = (
+									<div style={{  marginTop: 2, width: 12, height: 12, textAlign: 'left'}}>
+										<FontIcon className="material-icons"  color={Styles.Colors.blue500} style={{cursor:'pointer', fontSize: 12}}  title="You have a Series Pass enabled for this program">fiber_dvr</FontIcon>
+									</div>
+								);
+							}
+							if ( isRecorded ) {
+								recordings = (
+									<div style={{ marginTop: 2, width: 12, height: 12, textAlign: 'left'}}>
+										<FontIcon className="material-icons"  color={Styles.Colors.limeA400} style={{cursor:'pointer', fontSize: 12}}  title="This program is recorded">play_circle_filled</FontIcon>
+									</div>
+								);
+							}
+							let icons = <div style={{ float: 'left', width: 5, height: 50 }} />;
+							if ( isRecorded || isSeries || isTimer ) {
+								icons = (
+									<div style={{ marginRight: 5,  float: 'left', width: 15, height: 50, textAlign: 'center'}}>
+										{series} 
+										{timer}
+										{recordings}
+									</div>
+								);
+							}
+							const isNew = (obj.repeat);
+							return (
+								<div style={{ position: 'relative', height: '100%' }}>
+									{ obj.iconPath ? <img src={obj.iconPath}  style={{ maxWidth: 48, float: 'left', margin: '0 5 0 0' }} /> : <span /> }
+									{icons}
+									{v}
+									<br /> 
+									{ obj.episode }  
+									
+								</div> 
+							);
+						},
+						style: { fontSize: 11 }, 
+						headerProps: {
+							style: { height: 20, fontSize: 11, textAlign: 'left' }
+						},
 					},
 				] }
 			/> 
@@ -277,88 +379,28 @@ export default class EPGChannel extends PureComponent {
 		this.setState( { show: what } );
 	}
 	
-	renderScheduled ( program, list ) {
-		//debug('renderScheduled', program.title, this.props.timers, Filter( this.props.timers, ( t ) => { t.name.replace( '(R)', '' ).trim() == program.title.replace( '(R)', '' ).trim()  } ))
-		let fields = [
-			{ 
-				field: 'startTime', 
-				style: { width: 115, fontSize: 11  } , 
-				label: 'Time' , 
-				print: (v, props, obj) => { 
-					let div = (<div style={{ position: 'relative', width: '100%', height: 18,  marginTop: -15, marginLeft: -23, padding: '2px 0px 0px 5px'}}>{moment.unix(v).format('ddd MMM Do')}</div>);
-					return <div>{div}{moment.unix(v).format('h:mm a')}</div> 
-				} 
-			},
-			{ 
-				field: 'programId',  
-				label: 'Program',
-				style: { fontSize: 11 },  
-				print: (v, props, obj) => { 
-					const p = Find( this.state.futureEpisodes, b => ( b.programId == v ) ) || {}
-					return <div>{ p.episode || program.title }</div> 
-				}
-			},	
-			{ 
-				field: 'channelId',  
-				label: 'Channel', 
-				style: { fontSize: 11 },
-				print: (v, props, obj) => { 
-					const p = Find( this.props.channels, b => ( b.channelId == v ) ) || {}
-					return <div> { p.channelName }</div> 
-				}  
-			},
-		];
+	doRequestCommand ( command ) {
+		debug('doRequestComand', command);
+	}
+	
+	renderWatchScreen ( program, recorded ) {
+		/*	<Video source={'http://fire.snowpi.org:2777/alvin/play/hls/recentEpisodes/recentEpisodes.m3u8'} style={{ margin: 'auto'  }}  mimeType="video/mp4" autoPlay={true} poster={false}  onPlay={(e)=>{debug('Play',e)}} onError={(e)=>{debug('Error', e)}} mute={false} channel={{}} doRequestCommand={this.doRequestCommand} controls={true} />
+			*/
+		if ( !program.title ) {
+			return ( <span>waiting for the program information</span> );
+		}
+		return <span />
+		debug( program, recorded );
+		const vidBox = (
+			<div id="vid-box" style={{ position: 'relative', width: '100%' }} >
+				<video id="videoPlayer" controls >
+					<source src={recorded.url} type="video/mp4" />
+				</video>
+			</div>
+		); 
 		
-		return (
-			<Table 
-				fields={fields} 
-				list={ list }
-				tableProps={ { 
-					style: { background: 'none', fontSize: 11 },
-					fixedHeader: false,
-					fixedFooter: true,
-					height: this.state.boxHeight - 121,
-					selectable: true ,
-					onRowSelection: ( i ) => {
-						let programId = list[i].programId;
-						let channel = Find( this.props.channels, (v) => ( v.channelId == list[i].channelId ));
-						//debug(programId, list[i])
-						if( channel ) this.props.goTo({ path: '/tv/channel/' + channel.channel + '/' + programId, page: 'Program Info' } );
-					}
-				} }
-				
-				tableRowColumnProps={{
-					style: { fontSize: 11 },
-				}}
-				footerStyle={{
-						height: 24,
-						textAlign: 'left'
-				}}
-				tableRowProps={ { 
-					style: { cursor: 'pointer', fontSize: 11 },
-					displayBorder: false,
-					selectable: true
-				} }
-				tableHeaderColumnProps ={ {
-					style: {
-						height: 24,
-					}
-				} }
-				tableHeaderProps ={ {
-					adjustForCheckbox: false,
-				}}
-				tableFooterProps ={ {
-					adjustForCheckbox: false,
-				}}
-				tableFooterRowProps = { {
-					style: {
-						padding: 0,
-						height: 24,
-					}
-				} }
-				
-			 />
-		);	
+		return vidBox; 
+		
 	}
 	
 	renderRecordScreen ( ) {
@@ -368,6 +410,9 @@ export default class EPGChannel extends PureComponent {
 		if ( !program.title ) {
 			return ( <span>waiting for the program information</span> );
 		}
+		
+		const recorded = Find( this.props.recordings,  ( v ) => { return v.programId == program.programId  }  );
+		const isRecorded = isObject( recorded );
 		
 		const isTimer = isObject( Find( this.props.timers, ( v ) => { return v.programId == program.programId  } ) );
 		
@@ -381,7 +426,6 @@ export default class EPGChannel extends PureComponent {
 			return ( byS || byP );
 			  
 		} )
-		
 		const isSeries = isObject( seriesO );
 		
 		let timer = (
@@ -396,6 +440,20 @@ export default class EPGChannel extends PureComponent {
 				disabled={ program.endTime < moment().unix() }
 			/>
 		);
+		
+		if ( isRecorded ) {
+			timer = (
+				<FlatButton 
+					title={ "Watch This Episode" } 
+					backgroundColor={this.props.theme.baseTheme.palette.accent3Color}
+					hoverColor={Styles.Colors.limeA400}
+					style={{ float: 'right', position: 'relative', textAlign: 'left'   }} 
+					onClick={ e => ( this.show('watch') ) } 
+					icon={<FontIcon className="material-icons" children={'play_circle_filled'} />}
+					label={ " Watch Program " }
+				/>
+			);
+		}
 		
 		let series = (
 			<FlatButton 
@@ -412,21 +470,56 @@ export default class EPGChannel extends PureComponent {
 		
 		let list = Filter( this.props.timers, ( t ) => ( t.name.replace(/ *\([^)]*\) */g, "").trim() == program.title.replace(/ *\([^)]*\) */g, "").trim() ) );
 		
-		let innerList = (<div>
-			<h5 style={{ padding: 0, margin: '10 0 10 0' }} >Scheduled Recordings</h5>
-			{ program.title ? this.renderScheduled.call( this, program, list ) : <span /> }
+		let innerList = (<div style={{ background: ( this.state.recordShow !== 'recorded' ? Styles.ColorMe(5, this.props.bgcolor).bgcolor : 'none')  }}>
+			
+			{ this.state.recordShow === 'recorded' ?
+					<span />
+				:
+					list.length > 0 ? 
+						<RenderScheduled height={this.state.boxHeight - 127}  futureEpisodes={this.state.futureEpisodes} program={program} list={list} channels={this.props.channels} onRowSelection={( i ) => {
+								let programId = list[i].programId;
+								let channel = Find( this.props.channels, (v) => ( v.channelId == list[i].channelId ));
+								//debug(programId, list[i])
+								if( channel ) this.props.goTo({ path: '/tv/channel/' + channel.channel + '/' + programId, page: 'Program Info' } );
+						}} /> 
+					: 
+						<div style={{ padding: 10 }} children="No upcoming episodes are scheduled to be recorded." /> 
+			}
+		</div>);
+		
+		let records = Filter( this.props.recordings, ( t ) => ( t.show == program.title ) ); 
+		
+		let recordings = (<div style={{ background: ( this.state.recordShow === 'recorded' ? Styles.ColorMe(5, this.props.bgcolor).bgcolor : 'none')  }}>
+			
+			{ this.state.recordShow !== 'recorded' ?
+					<span />
+				:
+					records.length > 0 ? 
+						<RenderScheduled height={this.state.boxHeight - 127} program={program} list={records} channels={this.props.channels} futureEpisodes={this.state.futureEpisodes} onRowSelection={( i ) => {
+								let programId = records[i].programId;
+								let channel = Find( this.props.channels, (v) => ( v.channelId == records[i].channelId )); 
+								//debug(programId, list[i])
+								if( channel ) this.props.goTo({ path: '/tv/channel/' + channel.channel + '/' + programId, page: 'Program Info' } );
+						}} /> 
+					: 
+						<div  style={{ padding: 10 }}  children="No episodes are  recorded." />
+			}
 		</div>);
 		
 		return (<div style={{ paddingTop: 0 }}>
 			{timer}{series}
 			<div className="clearfix" style={{ paddingTop: 10 }} >
-					{ list.length > 0 ? innerList : <div style={{ textAlign: 'center' }}>No upcoming episodes are scheduled to be recorded.</div> }
+					<div style={{ padding: 5, margin: '10 0 0 0', width: '50%', float: 'left', cursor: 'pointer', background: ( this.state.recordShow !== 'recorded' ? Styles.ColorMe(5, this.props.bgcolor).bgcolor : 'none') }} onClick={()=>{this.setState({ recordShow: 'scheduled' })}}>Scheduled Recordings</div>
+					<div style={{ padding: 5, margin: '10 0 0 0', width: '50%', float: 'left', cursor: 'pointer', background: ( this.state.recordShow === 'recorded' ? Styles.ColorMe(5, this.props.bgcolor).bgcolor : 'none'), textAlign: 'left' }}  onClick={()=>{this.setState({ recordShow: 'recorded' })}}>Recorded Programs</div>
+					<div className="clearfix" />
+					{ innerList  }
+					{ recordings  }
 			</div>
 		</div>);
 	}
 	
 	renderProgram ( ) {
-		//debug( 'renderProgram', this.state.broadcastUid, this.props, Find( this.props.renderChannel.guide, ( v ) => ( v.broadcastUid == this.state.broadcastUid  ) ) );
+		debug( 'renderProgram', this.state.program, this.props.recordings, Find( this.props.recordings, [ 'programId', this.state.program.programId]  ));
 		let { programId, program } = this.state;
 		
 		if ( !programId ) {
@@ -434,16 +527,9 @@ export default class EPGChannel extends PureComponent {
 		} else if ( !program.title ) {
 			return ( <span>loading the program information</span> );
 		}
-		
-		let episode = <span />;
-		if ( program.episode ) {
-			episode = (
-				<div style={{ color: this.props.theme.baseTheme.palette.accent1Color, marginBottom: 5, overflow: 'hidden', fontSize: 14 }}>	
-					<div className="channelProgramTitle" children={ program.episode } />
-				</div>
-			);
-		}
-		
+				
+		let recorded = Find( this.props.recordings, [ 'programId', program.programId]  );
+		const isRecorded = isObject( recorded );
 		const isTimer = isObject( Find( this.props.timers, ( v ) => ( v.programId == program.programId  ) ) );
 		
 		const isSeries = isObject( Find( this.props.series, ( v ) => { 
@@ -454,22 +540,42 @@ export default class EPGChannel extends PureComponent {
 			const byP = ( v.programId == program.programId );
 			return ( byS || byP );
 			  
-		} ) );
+		} ) ); 
+		
+		let timerOrRecorded = ( isRecorded ) ?
+			(<IconButton title={ "Available to watch" } style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('watch') ) } ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.props.theme.baseTheme.palette.accent3Color} >play_circle_filled</FontIcon></IconButton>)
+		: 
+			( isTimer ) ?
+				(<IconButton title={"This episode will be recorded" } style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('record') ) } ><FontIcon className="material-icons" hoverColor={Styles.Colors.red400} style={{fontSize:'20px'}}  color={Styles.Colors.red800} >radio_button_checked</FontIcon></IconButton>)
+			:
+				(<IconButton title={ "Record Options" } style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('record') ) } ><FontIcon className="material-icons" hoverColor={Styles.Colors.red400} style={{fontSize:'20px'}}  color={this.state.show === 'record' ? Styles.Colors.limeA400 : this.props.theme.appBar.textColor || 'initial'} >radio_button_checked</FontIcon></IconButton>)
+
+		const isNew = (moment.unix(program.firstAired).add(1, 'd').format("dddd M/D/YYYY") == moment.unix(program.startTime).format("dddd M/D/YYYY") || moment.unix(program.firstAired).format("dddd M/D/YYYY") == moment.unix(program.startTime).format("dddd M/D/YYYY"));		
+		let episode = <span />;
+		if ( program.episode ) { 
+			episode = (
+				<div style={{ color: this.props.theme.baseTheme.palette.accent1Color, marginBottom: 5, overflow: 'hidden', fontSize: 14 }}>	
+					<div className="channelProgramTitle" >
+						{ !isNew ? ' (R) ' : '' } { program.episode   }
+					</div>
+				</div>
+			);
+		}
 		
 		return (<div>
 			
 			<div style={{ height: '50px', marginTop: 5,  overflow: 'hidden', fontSize: 16 }}>	
-				<div className="channelProgramTitle" children={ program.title } />
+				<div className="channelProgramTitle"  />
+				{ program.title }
 				{ episode }
 			</div>
 			
 			<div className="col-xs-1" style={{ marginTop: 0, padding: 0, height: this.state.boxHeight }}>
 				{ !isSeries ? <span /> : <IconButton title="This program has a Series Pass" style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('record') ) } ><FontIcon className="material-icons"  style={{fontSize:'20px'}}  color={Styles.Colors.blue500} >fiber_dvr</FontIcon></IconButton> }
-				<IconButton title={ isTimer ? "This episode will be recorded" : "Record Options" } style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('record') ) } ><FontIcon className="material-icons" hoverColor={Styles.Colors.red400} style={{fontSize:'20px'}}  color={isTimer ? Styles.Colors.red800 : this.state.show === 'record' ? Styles.Colors.limeA400 : this.props.theme.appBar.textColor || 'initial'} >radio_button_checked</FontIcon></IconButton>
+				{ timerOrRecorded }
 				<IconButton title="Plot" style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('plot') ) } ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.state.show === 'plot' ? Styles.Colors.limeA400 : this.props.theme.appBar.textColor || 'initial'} >description</FontIcon></IconButton>
 				<IconButton title="Cast" style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('cast') ) } ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.state.show === 'cast' ? Styles.Colors.limeA400 : this.props.theme.appBar.textColor || 'initial'} >people</FontIcon></IconButton>
 				<IconButton title="Other Showings" style={{ padding: 0, position: 'relative', textAlign: 'left'   }} onClick={ () => ( this.show('other') ) } ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.state.show === 'other' ? Styles.Colors.limeA400 : this.props.theme.appBar.textColor || 'initial'} >live_tv</FontIcon></IconButton>
-				
 				
 			</div>
 			<div className="col-xs-11" style={{ paddingTop: 6, paddingBottom: 0, height: this.state.boxHeight, overflow: 'auto' }}>
@@ -477,8 +583,11 @@ export default class EPGChannel extends PureComponent {
 				<div className="" style={{  overflow: 'auto', display: this.state.show === 'plot' ? 'block' : 'none' }}>
 					<span>{moment.unix(program.startTime).format("dddd LT")}</span>
 					<br />
-					{moment.unix(program.firstAired).add(1, 'd').format("dddd M/D/YYYY") == moment.unix(program.startTime).format("dddd M/D/YYYY") ? <FontIcon className="material-icons" color={this.props.theme.baseTheme.palette.accent3Color} style={{fontSize:'20px'}}   >fiber_new</FontIcon> : <span>First Aired: {moment.unix(program.firstAired).add(1, 'd').format("dddd M/D/YYYY LT")} </span>}
-					<div style={{ marginTop: 5 }} className="channelProgramPlot" children={ program.plot } />
+					{ isNew ? <FontIcon className="material-icons" color={this.props.theme.baseTheme.palette.accent3Color} style={{fontSize:'20px'}}   >fiber_new</FontIcon> : <span>First Aired: {moment.unix(program.firstAired).add(1, 'd').format("dddd M/D/YYYY LT")} </span>}
+					<div style={{ marginTop: 5 }} className="channelProgramPlot"  >
+						{ program.iconPath ? <img src={program.iconPath}  style={{ maxWidth: 100, float: 'left', margin: '5 10 5 0' }} /> : <span /> }
+						{ program.plot }
+					</div>
 				</div>
 				<div className="" style={{  overflow: 'auto', display: this.state.show === 'cast' ? 'block' : 'none' }}>
 					<div className="channelProgramPeopleHeader">Cast</div>
@@ -489,12 +598,17 @@ export default class EPGChannel extends PureComponent {
 					<div className="channelProgramWriter" children={ !program.writer ? 'no information provided' : program.writer.split(',').map((v) => ( <div children={<a href={"http://www.imdb.com/find?s=nm&exact=true&q=" + v.trim()} target="_blank" >{v}</a>} /> ) ) } />
 				</div>
 				<div className="" style={{  overflow: 'auto', display: this.state.show === 'other' ? 'block' : 'none' }}>					
-					<h5 style={{ padding: 0, margin: '7 0 10 0' }} >Upcoming Episodes</h5>
-					{ this.renderFutureEpisodes( program ) }
-					
+					<div style={{ padding: 5, margin: '7 0 0 0', background: Styles.ColorMe(5, this.props.bgcolor).bgcolor, width: '50%' }} >Upcoming Episodes</div>
+						<div style={{ padding: 0, background: Styles.ColorMe(5, this.props.bgcolor).bgcolor, width: '100%' }} >
+							{ this.state.show === 'other' ? this.renderFutureEpisodes( program ) : '' }
+						</div>
 				</div>
 				<div className="" style={{  overflow: 'auto', display: this.state.show === 'record' ? 'block' : 'none' }}>					
-					{ this.renderRecordScreen( program ) }
+					{ this.state.show === 'record' ? this.renderRecordScreen( program ) : '' }
+					
+				</div>
+				<div className="" style={{  overflow: 'auto', display: this.state.show === 'watch' ? 'block' : 'none' }}>					
+					{ this.state.show === 'watch' ? this.renderWatchScreen( program, recorded ) : '' }
 					
 				</div>
 			</div>
@@ -502,13 +616,16 @@ export default class EPGChannel extends PureComponent {
 	}
 	
 	render ( ) {
-		debug('render', this.props.renderChannel, this.state);
 		const channel = this.props.renderChannel;
 		const { program } = this.state;
+		const bgi = program.iconPath1 ? "url(" + program.iconPath + ") " : 'none';
+		debug('render', this.props.renderChannel, this.state, bgi);
 		return (
 			<div style={{ 
 				zIndex: 1500,
 				backgroundColor: this.props.bgcolor,  
+				backgroundImage:  bgi,
+				backgroundSize: 'cover',
 				position: 'absolute', 
 				top: 0, 
 				left: 0, 
@@ -529,7 +646,7 @@ export default class EPGChannel extends PureComponent {
 							flexShrink: '0'
 					}} >
 						<div className="col-xs-3" style={{ height: 40 }} >
-							<IconButton iconStyle={{fontSize: '36px'}} title="Menu" style={{ position: 'absolute', top: 5, left: 5, textAlign: 'left', marginLeft: 0, padding: 0, width: 40, height: 40,   }} onClick={this.props.goBack} ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'40px'}}  color={this.props.theme.appBar.textColor || 'initial'} >arrow_back</FontIcon></IconButton>
+							<IconButton iconStyle={{fontSize: '36px'}} title="Return to Guide" style={{ position: 'absolute', top: 5, left: 5, textAlign: 'left', marginLeft: 0, padding: 0, width: 40, height: 40,   }} onClick={this.props.goBack} ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'40px'}}  color={this.props.theme.appBar.textColor || 'initial'} >arrow_back</FontIcon></IconButton>
 						</div>
 						<div className="col-xs-6" />
 						<div className="col-xs-3" style={{ textAlign: 'right', padding: '10px 10px 0 0',  height: 40,  }}>
@@ -546,8 +663,8 @@ export default class EPGChannel extends PureComponent {
 					</div>
 					
 					<div  style={{ position: 'relative', height: this.state.wrapperHeight, overflow: 'hidden' }}>
-						<div  className="col-xs-12 col-md-6" style={{ padding: '0 15px' }}  children={ this.renderProgram() } />
-						<div  className="col-xs-12 col-md-6" style={{ height: '100%', padding: '0 15px' }}  >
+						<div  className="col-xs-12 col-sm-6" style={{ padding: '0 0 0 15px' }}  children={ this.renderProgram() } />
+						<div  className="col-xs-12 col-sm-6" style={{ height: '100%', padding: '0 5px' }}  >
 							<h5 style={{ padding: 0, marginBottom: 10 }} >Channel Guide</h5>
 							{ this.renderSchedule() }
 						</div>
@@ -676,59 +793,117 @@ export default class EPGChannel extends PureComponent {
 		
 		let { program, runType, anyChannel, anyTime } = this.state;
 		
+		let otherChannels = uniq(flatMap( this.state.futureEpisodes, o => o.channel));
+		
+		debug('otherchanels', otherChannels)
+		
 		Gab.emit('dialog open', {
-			title: "Add a Series Pass for "  + program.title,
+			title: program.title,
 			open: true,
 			closeText: false,
 			component: (
 				<div className="" > 
 
-					<div className="col-xs-12">
-						<select style={{ border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ runType: e.target.value}))} >
+					<div className="col-xs-12 col-sm-6" style={{ textAlign: 'right' }} >
+						<select defaultValue={this.state.runType} style={{ padding: 5, textAlign: 'right', border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ runType: Number(e.target.value)}))} >
 							<option value="1">Record New Episodes Only</option>
 							<option value="0">Record New and Repeat Episodes</option>
 							<option value="2">Record Live Showing Only</option>
 						</select>
 					</div>
-					<div className="clearfix" style={{ marginBottom: 10 }}  />
-					<div className="col-xs-12">
-						<select style={{ border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ anyChannel: e.target.value}))} >
-							<option value="1">Record on any channel</option>
-							<option value="0">Record on {this.props.renderChannel.channel} only</option>
+					
+					<div className="col-xs-12  col-sm-6" style={{ textAlign: 'right' }} >
+						<select defaultValue={this.state.anyChannel} style={{padding: 5,  textAlign: 'right', border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ anyChannel: e.target.value}))} >
+							<option value="-1">Record on any channel</option>
+							{<option value={this.props.renderChannel.channelId} > {this.props.renderChannel.channelName} </option>}
 						</select>
 					</div>
+					
 					<div className="clearfix" style={{ marginBottom: 10 }} />
-					<div className="col-xs-12">
-						<select style={{ border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ anyTime: e.target.value}))} >
+					
+					<div className="col-xs-12  col-sm-6" style={{ textAlign: 'right', }} >
+						<select defaultValue={this.state.anyTime}  style={{ padding: 5, textAlign: 'right', border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ anyTime: Number(e.target.value)}))} >
 							<option value="1">Record at any time</option>
 							<option value="0">Record at { moment.unix(this.state.program.startTime).format("h:mm a") } only.</option>
 						</select>
 					</div>
+					<div className="col-xs-12  col-sm-6" style={{ textAlign: 'right' }} >
+						<select defaultValue={this.state.priority} style={{ padding: 5, textAlign: 'right', border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ priority: Number(e.target.value)}))} >
+							<option value="2">Low Priority </option>
+							<option value="0" selected>Normal Priority</option>
+							<option value="1" selected>High Priority</option>
+						</select>
+					</div>
+					
+					<div className="clearfix" style={{ marginBottom: 10 }} />
+					
+					<div className="col-xs-12  col-sm-6" style={{ textAlign: 'right' }} >
+						
+						<input type="text" id="aa" defaultValue={0} style={{ padding: 5, marginRight: 10,  width: 30, textAlign: 'left',  border: 'none', borderBottom: '1px solid',  backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ marginStart: Number(e.target.value)}))} />
+						<label htmlFor="aa">Pre Padding </label>
+					</div>
+					<div className="col-xs-12  col-sm-6" style={{ textAlign: 'right' }} >
+						
+						<input type="text" id="bb" defaultValue={0} style={{ padding: 5, marginRight: 10, width: 30, textAlign: 'left', border: 'none', borderBottom: '1px solid',  backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ marginEnd: Number(e.target.value)}))} />
+						<label htmlFor="bb">Post Padding </label>	
+					</div>
+					
+					<div className="clearfix" style={{ marginBottom: 10 }} />
+					
+					<div className="col-xs-12  col-sm-6" style={{ textAlign: 'right' }} >
+						<select  defaultValue={this.state.lifetime} style={{padding: 5, textAlign: 'right',  border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ lifetime: e.target.value}))} >
+							<option vlaue="-4">Not Set</option>
+							<option value="-1" selected>Keep until space needed</option>
+							<option value="-2">Keep until I watch</option>
+							<option value="-3">Keep only latest recording</option>
+							<option value="0">Keep until I delete</option>
+							<option value="7">Keep for 1 week</option>
+						</select>
+					</div>
+					<div className="col-xs-12  col-sm-6" style={{ textAlign: 'right' }} >
+						<select defaultValue={this.state.maxRecordings} style={{ padding: 5, textAlign: 'right', border: 'none', backgroundColor: this.props.theme.baseTheme.palette.canvasColor }}  onChange={e => ( this.setState({ maxRecordings: Number(e.target.value)}))} >
+							<option value="-1" >Keep as many as possible </option>
+							<option value="1" >1 episode</option>
+							<option value="2" >2 episodes</option>
+							<option value="3" >3 episodes</option>
+							<option value="4" >4 episodes</option>
+							<option value="5" selected>5 episodes</option>
+							<option value="6" >6 episodes</option>
+							<option value="7" >7 episodes</option>
+							<option value="8" >8 episodes</option>
+							<option value="9" >9 episodes</option>
+							<option value="10" >10 episodes</option>
+						</select>
+					</div>
+					
 					<div className="clearfix" style={{ marginBottom: 20 }} />
+					
 					<div >
 						<FlatButton 
 							title=" Add Series Pass " 
 							//backgroundColor={Styles.Colors.blue500}
 							hoverColor={Styles.Colors.blue500}
-							style={{ float: 'left', position: 'relative', textAlign: 'left'   }} 
+							style={{ float: 'right', position: 'relative', textAlign: 'left'   }} 
 							onClick={  () => {
 								
 								let send = {
-									channelId: this.props.renderChannel.channelId, // Channel ID
 									startTime: program.startTime, // Start date and time of listing
 									endTime: program.endTime,  // End date and time of listing
 									title: program.title.replace(/ *\([^)]*\) */g, "").trim(), // name of listing
-									channel:  this.props.renderChannel.channel,
-									channelName:  this.props.renderChannel.channelName,
-									//priority: obj.priority || 0,  //XBMc Priotiry (not used)
-									//marginStart: obj.marginStart || 0, // pre padding in minutes
-									//marginEnd: obj.marginEnd || 0,  // post padding in minutes
-									isRepeating: 1,  // XBMC bIsRepeating (not used)
-									programId: program.programId,  // ScheduleEntry ID
-									isSeries: 1, 
+									//channel:  this.props.renderChannel.channel,
+									//channelName:  this.props.renderChannel.channelName,
+									priority: this.state.priority,  //priority
+									marginStart: this.state.marginStart, // pre padding in minutes 
+									marginEnd: this.state.marginEnd,  // post padding in minutes
+									isRepeating: 1,  // series bool
+									programId:  program.programId,  // ScheduleEntry ID
+									lifetime: this.state.lifetime,  //lifetime -1 default
 									runType: this.state.runType, // the type of episodes to record (0->all, 1->new, 2->live)
 									anyChannel: this.state.anyChannel, // whether to rec series from ANY channel 0/-1 true / false
-									anyTime: this.state.anyTime // whether to rec series at ANY time 0/-1 true / false
+									anyTime: this.state.anyTime, // whether to rec series at ANY time 0/-1 true / false
+									maxRecordings: this.state.maxRecordings, // whether to rec series at ANY time 0/-1 true / false 
+									//search: (this.state.anyChannel !== this.props.renderChannel.channelId  && this.state.anyChannel !== -1) ? program.title : 0,
+									//isKeyword:  (this.state.anyChannel !== this.props.renderChannel.channelId  && this.state.anyChannel !== -1) ? 1 : 0
 								}
 								debug('send', send, this.state)
 								// add a new timer
@@ -759,23 +934,23 @@ export default class EPGChannel extends PureComponent {
 		this.setState(nextState);
 	}
 	
-	deleteSeries ( series ) {
+	deleteSeries ( series ) { 
 		Gab.emit('confirm open', {
 			title:  'Series Pass for ' + series.name,
-			html: "Do you want to remove the Series Pass for " + series.name + "?",
+			html: "Do you want to remove the Series Pass for " + series.name + "?  This will also delete all scheduled recordings.",
 			answer: ( yesno) => { 
 				if ( yesno) {
 					Gab.emit('confirm open', { 
 						style: { backgroundColor: Styles.Colors.red300 },
 						title: 'This is Permanent',
 						open: true,
-						html: "Are you positive? This will permanently remove the Series Pass for "  + series.name,
+						html: "Are you positive? This will permanently remove the Series Pass for "  + series.name + ' and all scheduled recordings.  Recorded episodes will not be deleted.',
 						answer: ( yesno ) => { 
 							Gab.emit('confirm open', { open: false });
 							if ( yesno ) {
 								const send = {
 									title: series.showName, // name of listing
-									seriesId: series.seriesId,
+									timerId: series.timerId,
 									showName: series.showName,
 									show: series.show
 								}

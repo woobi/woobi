@@ -39,7 +39,7 @@ export class Table extends React.Component {
 				return (<TableRowColumn { ...this.props.tableRowColumnProps } style={field.style || {}} { ...field.props } >{print}</TableRowColumn>);
 			});
 			
-			return( <TableRow { ...this.props.tableRowProps }>
+			return( <TableRow selected={this.props.selected.indexOf(k) !== -1} { ...this.props.tableRowProps }>
 				{cols}
 			</TableRow>);
 		});
@@ -48,7 +48,7 @@ export class Table extends React.Component {
 			if(!isObject(field.headerProps)) {
 				field.headerProps = {};
 			}
-			return (<TableHeaderColumn  { ...this.props.tableHeaderColumnProps }  { ...field.headerProps } >{field.label}</TableHeaderColumn>);
+			return (<TableHeaderColumn  { ...this.props.tableHeaderColumnProps }  { ...field.headerProps }  >{field.label}</TableHeaderColumn>);
 		});
 		
 		let header = (<TableHeader { ...this.props.tableHeaderProps }	>
@@ -91,6 +91,7 @@ const standard = {
 Table.defaultProps = {
 	assets: {},
 	list: [],
+	selected: [],
 	theme: {}, 
 	style: {},
 	nextDay: false,

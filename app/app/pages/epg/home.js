@@ -60,7 +60,7 @@ export default class EPG extends PureComponent {
 			height: 400,
 			overscanColumnCount: 40,
 			overscanRowCount: 40,
-			rowHeight: 60,
+			rowHeight: 90,
 			rowHeaderHeight: 40,
 			rowCount: 300,
 			channelList: [],
@@ -73,6 +73,7 @@ export default class EPG extends PureComponent {
 			groupsLoaded: Object.keys(props.groups).length > 0 ? true : false,
 			seriesLoaded: props.series.length > 0 ? true : false,
 			timersLoaded: props.timers.length > 0 ? true : false,
+			recordingsLoaded: props.recordings.length > 0 ? true : false,
 			open: false,
 			get pixelsPerMinute ( ) {
 				return _this.state.columnWidth / _this.state.minutesPerColumn;
@@ -191,7 +192,7 @@ export default class EPG extends PureComponent {
 		.catch(e => {
 			Gab.emit('snackbar', {
 				style: 'danger',
-				html: data.error,
+				html:  e.message,
 				open: true,
 				onRequestClose: () => {}
 			});
@@ -231,7 +232,7 @@ export default class EPG extends PureComponent {
 		.catch(e => {
 			Gab.emit('snackbar', {
 				style: 'danger',
-				html: data.error,
+				html: e.message,
 				open: true,
 				onRequestClose: () => {}
 			});
@@ -271,7 +272,7 @@ export default class EPG extends PureComponent {
 		.catch(e => {
 			Gab.emit('snackbar', {
 				style: 'danger',
-				html: data.error,
+				html: e.message,
 				open: true,
 				onRequestClose: () => {}
 			});
@@ -558,30 +559,40 @@ export default class EPG extends PureComponent {
 	}
 	
 	_renderBodyCell( { index, isScrolling, key, style } ) {
-	const { rowHeight, columnWidth, channelList } = this.state;
+		const { rowHeight, columnWidth, channelList } = this.state;
 		let data = this.guideData[index];
 		const channel = Find( channelList, [ 'channel', data.channel] );
 		const channelIndex = findIndex( channelList, ['channel', data.channel] );
 		
+		const isNew = (moment.unix(data.firstAired).add(1, 'd').format("dddd M/D/YYYY") == moment.unix(data.startTime).format("dddd M/D/YYYY") || moment.unix(data.firstAired).format("dddd M/D/YYYY") == moment.unix(data.startTime).format("dddd M/D/YYYY"));
 		const isTimer = isObject( Find( this.props.timers, ( v ) => ( v.programId == data.programId  ) ) );
 		const isSeries = isObject( Find( this.props.series, ( v ) => ( v.show == data.title || v.programId == data.programId  ) ) );
+		const isRecorded = isObject( Find( this.props.recordings, [ 'programId', data.programId]  ) );
 		//debug('renderBodyCell', this.scrollLeft, style.left, this.scrollLeft - style.left);
 		
 		let timer = <span />;
 		let series = <span />;
+		let recordings = <span />;
 		
 		if ( isTimer ) {
 			timer = (
-				<div style={{ float: 'right', width: 15, height: 15, textAlign: 'center'}}>
+				
 					<FontIcon className="material-icons"  color={Styles.Colors.red800} style={{cursor:'pointer', fontSize: 15}}  title="This episode will be recorded">radio_button_checked</FontIcon>
-				</div>
+				
 			);
 		}
 		if ( isSeries ) {
 			series = (
-				<div style={{ float: 'right', marginLeft: 3, width: 15, height: 15, textAlign: 'center'}}>
+				
 					<FontIcon className="material-icons"  color={Styles.Colors.blue500} style={{cursor:'pointer', fontSize: 15}}  title="You have a Series Pass enabled for this program">fiber_dvr</FontIcon>
-				</div>
+				
+			);
+		}
+		if ( isRecorded ) {
+			recordings = (
+				
+					<FontIcon className="material-icons"  color={Styles.Colors.limeA400} style={{cursor:'pointer', fontSize: 15}}  title="This program is recorded">play_circle_filled</FontIcon>
+				
 			);
 		}
 		const bgColor = channelIndex % 2 == 0 ? 'none' :  'rgba(0, 0, 0, .1)';
@@ -618,9 +629,17 @@ export default class EPG extends PureComponent {
 			>
 				<div style={{  maxHeight: style.height / 2, width: style.width - 10, overflow: 'hidden', padding: '0 0', }} >{data.title} </div> 
 				<div style={{ maxHeight: style.height / 2, fontWeight: 400,  width: '100%', overflow: 'hidden', padding: ' 0', }} >{data.episode} </div>
-				<div style={{ position: 'absolute', bottom: 0, right: 0, width: 45, height: 15, textAlign: 'center'}}>
-					{series} 
+				<div style={{ position: 'absolute', top: 0, right: 18, width: 40, height: 15, textAlign: 'right'}}>
+					 {recordings}
+					 <span style={{ marginLeft: 3 }} />
 					{timer}
+					
+				</div>
+				<div style={{ position: 'absolute', top: 0, right: 0, width: 15, height: 80, textAlign: 'center'}}>
+					
+					{series}
+					{ isNew ? <FontIcon className="material-icons" color={this.props.theme.baseTheme.palette.accent3Color} style={{ fontSize:'15px'}}   >fiber_new</FontIcon> : <span /> }
+					
 				</div>
 			</div>
 		)
@@ -759,7 +778,24 @@ export default class EPG extends PureComponent {
 						</div>
 						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
 							<IconButton 
-								title="Series"
+								title="Recordings"
+								onClick={(e)=>{
+									e.preventDefault();
+									this.props.goTo({path: '/tv/recordings', page: 'Recordings'}, this.leftNavClose);
+								}} 
+							>
+								<FontIcon 
+									className="material-icons" 
+									hoverColor={Styles.Colors.limeA400} 
+									color={this.props.theme.appBar.buttonColor || 'initial'} 
+								> 
+									play_circle_filled
+								</FontIcon>
+							</IconButton>
+						</div>	
+						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
+							<IconButton 
+								title="Series Pass & Timers"
 								onClick={(e)=>{
 									e.preventDefault();
 									this.props.goTo({path: '/tv/series', page: 'Series'}, this.leftNavClose);
@@ -771,23 +807,6 @@ export default class EPG extends PureComponent {
 									color={this.props.theme.appBar.buttonColor || 'initial'} 
 								> 
 									fiber_dvr
-								</FontIcon>
-							</IconButton>
-						</div>	
-						<div style={{float:'left',width:'25%', textAlign: 'center'}}>
-							<IconButton 
-								title="Timers"
-								onClick={(e)=>{
-									e.preventDefault();
-									this.props.goTo({path: '/tv/timers', page: 'Timers'}, this.leftNavClose);
-								}} 
-							>
-								<FontIcon 
-									className="material-icons" 
-									hoverColor={Styles.Colors.limeA400} 
-									color={this.props.theme.appBar.buttonColor || 'initial'} 
-								> 
-									dvr
 								</FontIcon>
 							</IconButton>
 						</div>

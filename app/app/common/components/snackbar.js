@@ -21,7 +21,6 @@ class SnackbarExampleSimple extends React.Component {
 		this.cache = [];
 		
 		// binders
-		this.handleChangeDuration = this.handleChangeDuration.bind(this);
 		this.handleRequestClose = this.handleRequestClose.bind(this);
 		this.onRequestClose = this.onRequestClose.bind(this);
  		this.setProps = this.setProps.bind(this);
@@ -52,17 +51,7 @@ class SnackbarExampleSimple extends React.Component {
 		});
 	}
 
-	handleActionTouchTap() {
-		alert('We removed the event from your calendar.');
-	}
-
-	handleChangeDuration(event)  {
-		const value = event.target.value;
-		this.setState({
-			autoHideDuration: value.length > 0 ? parseInt(value) : 0,
-		});
-	}
-
+	
 	handleRequestClose() {
 		this.setProps({ open: false });
 	}

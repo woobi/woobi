@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "test": "mocha",
-    "start": "DEBUG=woobi:* node test.js",
+    "start": "ENV=production node test.js",
+    "dev": "DEBUG=woobi:* nodemon --watch lib test.js",
     "install": "jspm i"
   },
   "repository": {
