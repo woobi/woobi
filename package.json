@@ -1,6 +1,6 @@
 {
   "name": "woobi",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "stream media across a lan",
   "main": "woobi.js",
   "keywords": [
@@ -115,8 +115,6 @@
     "javascript-natural-sort": "^0.7.1",
     "json-safe-parse": "^0.0.2",
     "jspm": "",
-    "keystone": "keystonejs/keystone",
-    "keystone-live": "^3.7.2",
     "lodash": "",
     "method-override": "",
     "model-transform": "",
