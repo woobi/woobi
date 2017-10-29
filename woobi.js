@@ -21,7 +21,8 @@ var snowstreams = function() {
 		'video passthrough route': '/direct',
 		'video passthrough path': '/media',
 		'port': 7001,
-		'host': 'localhost'
+		'host': 'localhost',
+		'proxy api': '/woobi'
 	}
 	
 	this.version = require('./package.json').version;
@@ -95,7 +96,7 @@ var snowstreams = function() {
 				if(opts.proxy === true)  {
 					opts.proxy = {};
 				}
-				// start the server
+				// serve our webpages via our server or through a supplied express app
 				this.Stream.proxy.server(opts.proxy, (err, result) => {
 					if(err) console.log('ERROR', err);
 					finish.call(this);
@@ -166,7 +167,6 @@ _.extend(snowstreams.prototype, require('./lib/core/options')());
 // standalone server
 _.extend(snowstreams.prototype, require('./lib/core/createServer')());
 // keystone server
-_.extend(snowstreams.prototype, require('./lib/core/keystone')());
 
 snowstreams.prototype.addChannel = function(channel, opts) {
 		
