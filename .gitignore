@@ -36,7 +36,7 @@ jspm_packages
 video/*
 bin/*
 heap*
-media*
+media*/
 # Optional npm cache directory
 .npm
 test*

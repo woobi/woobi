@@ -130,11 +130,11 @@ export default class Series extends React.Component {
 			return (<div style={{ padding: '0 0px' }}>
 				<div style={{ position: 'absolute', top: 15, right: 0, width: 200, height: 50 }}>
 					
-					<FontIcon className="material-icons" title="Sort by Name" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'show'}, page: 'Series by name'}); } }>sort_by_alpha</FontIcon>
+					<FontIcon className="material-icons" title="Sort by Name" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/season-passes/', query: {sortSeriesBy: 'show'}, page: 'Season Passes'}); } }>sort_by_alpha</FontIcon>
 					<span> &nbsp; </span>
-					<FontIcon className="material-icons" title="Sort by time" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/series/', query: {sortSeriesBy: 'nextToAir'}, page: 'Series by next to air'}); } } >access_time</FontIcon>
+					<FontIcon className="material-icons" title="Sort by time" hoverColor={Styles.Colors.limeA400} color={sort === 'start' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/season-passes/', query: {sortSeriesBy: 'nextToAir'}, page: 'Season Passes'}); } } >access_time</FontIcon>
 					<span> &nbsp; </span>
-					<FontIcon className="material-icons" title="View All Timers" hoverColor={Styles.Colors.limeA400} color={'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/timers/', query: {sortTimersBy: this.props.location.query.sortSeriesBy}, page: 'Timers by next to air'}) } } >dvr</FontIcon>
+					<FontIcon className="material-icons" title="View Scheduled" hoverColor={Styles.Colors.limeA400} color={'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/scheduled/', query: {sortTimersBy: this.props.location.query.sortSeriesBy}, page: 'Scheduled'}) } } >dvr</FontIcon>
 					<span> &nbsp; </span>
 				</div>
 				{ret}

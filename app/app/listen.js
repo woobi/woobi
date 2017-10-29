@@ -54,6 +54,7 @@ export default (Component) => {
 				var x=w.innerWidth || e.clientWidth || g.clientWidth;
 				var y=w.innerHeight || e.clientHeight || g.clientHeight;
 				var desktop = x <= snowUI.breaks.xs.width ? 'xs' : x < snowUI.breaks.sm.width ? 'sm' : 'md';
+				var idesktop = x <= snowUI.breaks.xs.width ? 0 : x < snowUI.breaks.sm.width ? 1 : 2;
 				var contentWidth =  x * (!desktop ? 1 : desktop == 'md' ? 0.80 : 0.80);
 			} else {
 				var x = 1200;
@@ -66,6 +67,7 @@ export default (Component) => {
 				connected: false,
 				contentWidth,
 				desktop,
+				idesktop,
 				firstrun: !snowUI.serverRendered,
 				initialData: snowUI.loaded ? false : props.renderInitialData,
 				mounted: false,
@@ -161,10 +163,11 @@ export default (Component) => {
 			
 			// update desktop
 			Gab.on('resize', (e) => { 
-				var desktop = e.width <= snowUI.breaks.xs.width ? 'xs' : e.width < snowUI.breaks.sm.width ? 'sm' : 'md';
-				var contentWidth =  e.width * (!desktop ? 1 : desktop == 'md' ? 0.83 : 0.74);
-				debug('RESIZE #####', e, desktop);
-				this.setState({ desktop, contentWidth, window: e });
+				const desktop = e.width <= snowUI.breaks.xs.width ? 'xs' : e.width < snowUI.breaks.sm.width ? 'sm' : 'md';
+				const idesktop = e.width <= snowUI.breaks.xs.width ? 0 : e.width < snowUI.breaks.sm.width ? 1 : 2;
+				const contentWidth =  e.width * (!desktop ? 1 : desktop == 'md' ? 0.83 : 0.74);
+				debug('RESIZE #####', e, desktop, idesktop);
+				this.setState({ idesktop, desktop, contentWidth, window: e });
 			});
 			
 			if(snowUI.usesockets) {

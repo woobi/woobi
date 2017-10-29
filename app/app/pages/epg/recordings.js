@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import Debug from 'debug';
-import { sortBy } from 'lodash';
+import { uniq, sortBy } from 'lodash';
 import Gab from '../../common/gab';
 import Table from '../../common/components/table';
 import { DropDownMenu, FlatButton, FontIcon, IconButton, IconMenu } from 'material-ui';
@@ -29,7 +29,7 @@ export default class Recordings extends React.Component {
 	componentWillReceiveProps ( props ) {
 		debug('## componentWillReceiveProps  ## Recordings got props', props);
 		this._update = true;
-		this.setState({ selected: [] });
+		//this.setState({ selected: [] });
 	}	
 	
 	shouldComponentUpdate ( ) {
@@ -46,64 +46,39 @@ export default class Recordings extends React.Component {
 	};
 	
 	renderSchedule ( s ) {
-		let fields = [
-			{
-				field: 'recordingTime',
-				label: 'Date' ,
-				style: { fontSize: 11, width: 175 }, 
-				headerProps: {
-					style: { width: 175,  fontSize: 11, textAlign: 'left' }
-				},
-				print: (v, list, obj) => {
-					return (<span>{moment.unix(v).format('lll')}</span>) ;
-				} 
-			},
-			{ 
-				field: 'show',
-				label: 'Show' , 
-				style: { fontSize: 11 }, 
-				headerProps: {
-					style: {  fontSize: 11, textAlign: 'left' }
-				},
-				print: (v, list, obj) => {
-					return (<span>{v} <br /> {obj.title}</span>) ;
-				} 
-			},
-			{ 
-				field: 'channelName',
-				label: 'channel' , 
-				headerProps: {
-					style: {  fontSize: 11, textAlign: 'left' }
-				},
-				style: {  fontSize: 11 }, 
-			},
-		];
-		return (
-			<Table 
-				fields={fields} 
-				list={ s } 
-				selected={ this.state.selected }
-				tableProps= {{
-					fixedHeader: true,
-					fixedFooter: false,
-					selectable: true,
-					multiSelectable: true,
-					height: this.props.window.height - 80,
-					onRowSelection: (v) => {this._update = true;this.setState({ selected: v })}
-				}}
-				tableHeaderProps={ {
-					displaySelectAll: true,
-					enableSelectAll: true,
-					adjustForCheckbox: true,
-				}}
-				tableBodyProps={ {
-					stripedRows: true,
-					showRowHover: true,
-					deselectOnClickaway: false,
-					displayRowCheckbox: true,
-				}}
-			/>)
+		let rows = [];
+		let lastday = ''
+		s.forEach( ( r, k ) => {
+			let day = moment.unix(r.recordingTime).format("dddd MMMM Do");
+			if ( day != lastday ) {
+				lastday = day;
+				if ( rows.length === 0 ) {
+					rows.push(<div style={{ padding: 5, position: 'sticky', width: '100%', marginTop: 40,  top: 0, left: 0, backgroundColor: this.props.theme.baseTheme.palette.canvasColor, height: 35, fontSize: 18, fontWeight: 700, margin: '0 0 10 0' }} >{lastday}</div>);
+				} else {
+					rows.push(<div style={{ padding: 5, position: 'sticky', width: '100%', marginTop: 40,  top: 0, left: 0, backgroundColor: this.props.theme.baseTheme.palette.canvasColor, height: 35, fontSize: 18, fontWeight: 700, margin: '30 0 20 0' }} >{lastday}</div>);
+				}
+			}
 			
+			const tow = (<div 
+					onClick={( ) =>  {  
+						let { selected } = this.state;
+						if ( selected.indexOf(k) > -1 ) {
+							selected.splice(selected.indexOf(k), 1);
+						} else {
+							selected = uniq([ ...selected, k ])
+						}
+						this.setState({ selected }); 
+						this._update = true; 
+					}} 
+					style={{ background: ( this.state.selected.indexOf(k) < 0 ) ? 'none' : ColorMe( 15, this.props.theme.baseTheme.palette.canvasColor ).bgcolor, cursor: 'pointer', marginBottom: 5, padding: 5, borderBottom: '1px solid ' + ColorMe( 5, this.props.theme.baseTheme.palette.canvasColor ).bgcolor }} 
+				>
+					{moment.unix(r.recordingTime).format("LT")} - <span style={{ fontWeight: 700, fontSize: 16 }}>{r.show}</span> - {r.channelName} <br /><b>{r.title}</b> <br /> {r.plot}
+				</div>)
+			
+			rows.push(tow);
+		});
+		
+		return rows;
 	}
 	
 	render ( ) { 
@@ -118,34 +93,31 @@ export default class Recordings extends React.Component {
 			ret = sortBy( this.props.recordings, [ sort ] );
 			if ( up === 'desc' ) ret.reverse();
 
-			menu = (<div style={{ padding: '0 0px' }}>
-				<div style={{ position: 'absolute', top: 15, right: 0, width: 150, height: 50, zIndex: 1000 }}>
-					<FontIcon className="material-icons" title="Sort by Name" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/recordings/', query: {sortRecordingsBy: 'show', sortRecordingsDown: up === 'asc' ? 'desc' : 'asc' }, page: 'Recordings by name'}); } }>sort_by_alpha</FontIcon>
-					<span> &nbsp; </span>
-					<FontIcon className="material-icons" title="Sort by Recently Aired"  hoverColor={Styles.Colors.limeA400} color={sort === 'recordingTime' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/recordings/', query: {sortRecordingsBy: 'lastToAir', sortRecordingsDown: up === 'asc' ? 'desc' : 'asc' }, page: 'Recordings by recently aired'}); } } >access_time</FontIcon>
-				</div>
-				
+			menu = (<div style={{ padding: '0 0px' }}>			
 				{this.renderSchedule( ret )}
 				</div>
 			);
 		}
 		
-		return (<div style={{ padding: '0 0px',  maxHeight: this.props.window.height-80, overflow: 'hidden'  }}>
-			<div className="col-xs-8 col-sm-9"  >
-				{menu}
-			</div>
-			<div className="col-xs-4 col-sm-3" >
-				<FlatButton 
-					title={ "Delete Selected Programs" } 
+		let deletes = (<FlatButton 
+					title={ "Delete Selected Recordings" } 
 					backgroundColor={Styles.Colors.red800}
 					hoverColor={Styles.Colors.red400}
-					onClick={ e=>{ this.deleteRecordings( ret, this.state.selected )}  } 
+					onClick={ e=>{ this.deleteRecordings( ret, this.state.selected ) }  } 
 					icon={<FontIcon className="material-icons" children='delete_sweep' />}
-					label={ " Delete Selected Programs " }
-				/>
-				<div className="" style={{ maxHeight: this.props.window.height-110, overflow: 'auto' }}>
-					{this.state.selected.map(e => (<div style={{ padding: 5}}>{ret[e].show} - {ret[e].title}</div>))}
+					label={ " Delete Selected Recordings " }
+					style={{ float: 'right' }}
+				/>)
+		let h = ( this.state.selected.length > 0 ) ? 85 : 65
+		return (<div style={{ padding: '0 0px',  maxHeight: this.props.window.height-65, overflow: 'hidden'  }}>
+			<div style={{ position: 'absolute', top: 15, right: 0, width: 150, height: 50, zIndex: 1400 }}>
+					<FontIcon className="material-icons" title="Sort by Name" hoverColor={Styles.Colors.limeA400} color={sort === 'show' ? Styles.Colors.limeA400 : 'white' }  style={{cursor:'pointer'}} onClick={ () => { this.props.goTo({ path: '/tv/recordings/', query: {sortRecordingsBy: 'show', sortRecordingsDown: up === 'asc' ? 'desc' : 'asc' }, page: 'Recordings by name'}); } }>sort_by_alpha</FontIcon>
+					<span> &nbsp; </span>
+					<FontIcon className="material-icons" title="Sort by Recently Aired"  hoverColor={Styles.Colors.limeA400} color={sort === 'recordingTime' ? Styles.Colors.limeA400 : 'white' } style={{cursor:'pointer'}}  onClick={ () => { this.props.goTo({ path: '/tv/recordings/', query: {sortRecordingsBy: 'lastToAir', sortRecordingsDown: up === 'asc' ? 'desc' : 'asc' }, page: 'Recordings by recently aired'}); } } >access_time</FontIcon>
 				</div>
+			{this.state.selected.length > 0 ? deletes : <span />}
+			<div className="col-xs-12"  style={{ maxHeight: this.props.window.height - h, overflow: 'auto' }}>
+				{menu}
 			</div>
 		</div>);
 	}

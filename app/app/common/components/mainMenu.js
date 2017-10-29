@@ -148,6 +148,34 @@ export default class mainMenu extends React.Component {
 						style={{}}
 						href="/noscript/tv"
 					/>
+					
+					
+					<MenuItem 
+						primaryText="Scheduled" 
+						leftIcon={<FontIcon className="material-icons">fiber_dvr</FontIcon>} 
+						onClick={(e) => {
+							e.preventDefault(e);
+							this.props.goTo({
+								page: 'Scheduled',
+								path: '/tv/scheduled',
+							}, {}, () => { this.toggleDrawer(false, false) });
+						}}
+						style={{}}
+						href="/noscript/tv/scheduled"
+					/>
+					<MenuItem 
+						primaryText="Season Passes" 
+						leftIcon={<FontIcon className="material-icons">fiber_dvr</FontIcon>} 
+						onClick={(e) => {
+							e.preventDefault(e);
+							this.props.goTo({
+								page: 'Season Passes',
+								path: '/tv/season-passes',
+							}, {}, () => { this.toggleDrawer(false, false) });
+						}}
+						style={{}}
+						href="/noscript/tv/season-passes"
+					/>
 					<MenuItem 
 						primaryText="Recordings" 
 						leftIcon={<FontIcon className="material-icons">play_circle_filled</FontIcon>} 
@@ -161,6 +189,7 @@ export default class mainMenu extends React.Component {
 						style={{}}
 						href="/noscript/tv/recordings"
 					/>
+					
 					<MenuItem 
 						primaryText="TV Channels" 
 						leftIcon={<FontIcon className="material-icons">tv</FontIcon>} 
@@ -173,20 +202,6 @@ export default class mainMenu extends React.Component {
 						}}
 						style={{}}
 						href="/noscript/tv/channels"
-					/>
-					
-					<MenuItem 
-						primaryText="Scheduled" 
-						leftIcon={<FontIcon className="material-icons">fiber_dvr</FontIcon>} 
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'Series',
-								path: '/tv/series',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-						style={{}}
-						href="/noscript/tv/series"
 					/>
 					<Divider />
 					<MenuItem 

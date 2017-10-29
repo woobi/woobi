@@ -4,7 +4,7 @@ import Gab from '../../common/gab';
 import { Divider, FontIcon, IconButton, LinearProgress, MenuItem} from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
-import { isObject, isFunction, findIndex, find as Find, sortBy, map as Map, filter as Filter } from 'lodash';
+import { debounce, isObject, isFunction, findIndex, find as Find, sortBy, map as Map, filter as Filter } from 'lodash';
 import moment from 'moment';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Collection from 'react-virtualized/dist/commonjs/Collection';
@@ -64,7 +64,7 @@ export default class EPG extends PureComponent {
 			rowHeaderHeight: 40,
 			rowCount: 300,
 			channelList: [],
-			useGenreColors: false,
+			useGenreColors: true,
 			scrollToCell: undefined,
 			group: props.params.group ? props.params.group.trim() : 'All channels',
 			sortGuideBy: props.query.sortGuideBy ? props.query.sortGuideBy.trim() : 'channel',
@@ -88,6 +88,7 @@ export default class EPG extends PureComponent {
 		this.scrollTop = 0;
 		let startTime = moment().startOf('hour').subtract(30, 'm').unix() - moment().startOf('hour').subtract(this.props.guidePreHours, 'h').unix() ;
 		this.scrollLeft = startTime * this.state.pixelsPerSecond;
+		this._cachedKeyPress = '';
 		
 		this._channelList = this._channelList.bind(this);
 		this._cellSizeAndPositionGetter = this._cellSizeAndPositionGetter.bind(this);
@@ -103,6 +104,7 @@ export default class EPG extends PureComponent {
 		this.useGenreColors = this.useGenreColors.bind(this);
 		this.setTimer = this.setTimer.bind(this);
 		this.deleteTimer = this.deleteTimer.bind(this);
+		this.handleKeyPressDebouncing = this.handleKeyPressDebouncing.bind(this);
 		
 		this._update = true;
 				
@@ -111,10 +113,21 @@ export default class EPG extends PureComponent {
 	componentDidMount() {
 		debug('######### componentDidMount  ##  EPG HOME',  this.props, this.state);
 		this._channelList( { ...this.props, ...this.state } , ( err, ret ) => ( this.setState( { channelList: ret, height: document.documentElement.clientHeight - 40} ) ));
-		
+		if ( !this.props.episode ) {
+			document.removeEventListener( "keypress", this.handleKeyPress, false );
+			document.addEventListener( "keypress", this.handleKeyPress, false );
+			document.removeEventListener( "keypress", this.handleKeyPressDebouncing, false );
+			document.addEventListener( "keypress", this.handleKeyPressDebouncing, false );
+			
+		} else {
+			document.removeEventListener( "keypress", this.handleKeyPress, false );
+			document.removeEventListener( "keypress", this.handleKeyPressDebouncing, false );
+		}
 	}
 	
 	componentWillUnmount ( ) {
+		document.removeEventListener( "keypress", this.handleKeyPress, false );
+		document.removeEventListener( "keypress", this.handleKeyPressDebouncing, false );
 	}
 	
 	componentDidUpdate (prevProps, prevState) {
@@ -123,6 +136,7 @@ export default class EPG extends PureComponent {
 			if ( this.grid1 ) this.grid1.forceUpdate();
 			if ( this.collection ) this.collection.forceUpdate()
 		}
+		
 	}
 	
 	componentWillReceiveProps ( props ) {
@@ -152,6 +166,43 @@ export default class EPG extends PureComponent {
 		}
 		return true;
 	}
+	
+	handleKeyPress = ( event ) => {
+		this._cachedKeyPress = this._cachedKeyPress + event.key;
+		this.forceUpdate();
+		// debug( 'handleKeyPress', event.key, event.keyCode, this._cachedKeyPress );
+	}
+	
+	_bounced = ( ) => {
+		//debug( '_bounced', this._cachedKeyPress );
+		let found = findIndex(this.state.channelList, ( channel ) => {
+			//debug( channel.channel.substr( 0, this._cachedKeyPress.length), this._cachedKeyPress )
+			if( channel.channel.substr( 0, this._cachedKeyPress.length) == this._cachedKeyPress ) {
+				//debug( 'Found', channel.channel );
+				return true;
+			}
+			return false;
+		})
+		if ( found < 0 ) { 
+			found = findIndex(this.state.channelList, ( channel ) => {
+				//debug( channel.channel.substr( 0, this._cachedKeyPress.length), this._cachedKeyPress )
+				if ( channel.channelName.match(new RegExp(this._cachedKeyPress, "i")) ) {
+					return true;
+				}
+				return false;
+			})
+		}
+		this._cachedKeyPress = ''; 
+		
+		debug( 'GOTO', found );
+		
+		if ( found >= 0 ) {
+			this.scrollTop = found * this.state.rowHeight;
+		}
+		this.forceUpdate();
+	}
+	
+	handleKeyPressDebouncing = debounce(this._bounced, 750)
 	
 	useGenreColors () {
 		this.setState( { useGenreColors: !this.state.useGenreColors }, () => {
@@ -280,18 +331,24 @@ export default class EPG extends PureComponent {
 		
 	}
 	
+	/** ****************RENDER************************************* **/
 	render ( ) {		
 		if ( this.state.channelList.length < 1 ) {
+			
 			return (<div style={{ padding: 50, color: this.props.theme.baseTheme.palette.accent1Color }}>
 				Waiting for channel list to populate
 			</div>);
+			
 		} else if ( this.props.params.channel ) {
+			
 			return this.renderChannel();
+		
 		}
 		
 		return this.renderGuide();
 		
 	}
+	/** *****************END RENDER******************************* **/
 	
 	renderChannel ( ) {
 		const channel= Find( this.state.channelList, [ 'channel', this.props.params.channel ] );
@@ -302,6 +359,7 @@ export default class EPG extends PureComponent {
 	renderGuide ( ) { 
 
 		debug('## render  ##  EPG Home Loaded', this.props, this.state, this.guideData.length);		
+				
 		const {
 			columnCount,
 			rowHeaderHeight,
@@ -319,8 +377,14 @@ export default class EPG extends PureComponent {
 		
 		let hamburger =(<IconButton title="Guide Menu" style={{ position: 'relative', textAlign: 'left', marginLeft: 0, padding: 0, width: 40, height: 40,   }} onClick={this.handleLeftNav} ><FontIcon className="material-icons" hoverColor={Styles.Colors.limeA400} style={{fontSize:'20px'}}  color={this.props.theme.appBar.textColor || 'initial'} >menu</FontIcon></IconButton>);
 		
+		let changeChannel = this._cachedKeyPress ?
+			( <div style={{ position: 'absolute', top: '15%', left: '15%', fontSize: 124, color: this.props.theme.baseTheme.palette.accent3Color, zIndex: 1300 }} children={this._cachedKeyPress} />)
+		:
+			( <span /> )
+		
 		return (
-			<div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: `rgb(${TC.r},${TC.g},${TC.b})` }} >
+			<div  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: `rgb(${TC.r},${TC.g},${TC.b})` }} >
+				{changeChannel}
 				<div style={{ position: 'fixed', top: 0, left: 0, paddingLeft: 5, zIndex: 1300 }} children={hamburger} />
 				{this.menu()}
 				<ScrollSync>
@@ -537,12 +601,14 @@ export default class EPG extends PureComponent {
 	
 	_cellSizeAndPositionGetter({ index }) {
 		
-		const data = this.guideData[index];
+		let data = this.guideData[index];
 		const { columnCount, pixelsPerSecond, rowHeight, channelList } = this.state;
 		const channelIndex = findIndex( channelList, ['channel', data.channel] );
 		
 		let startTime = moment().startOf('hour').subtract(this.props.guidePreHours, 'h').unix();
-		
+		if ( data.startTime == 0 ) {
+			data.startTime = startTime;
+		}
 		//debug( '_cellSizeAndPositionGetter', data, channelIndex, now.unix(), pixelsPerSecond );
 		
 		const end = moment().add( ( this.props.numberOfGuideDays ), 'd' ).unix();
@@ -559,12 +625,14 @@ export default class EPG extends PureComponent {
 	}
 	
 	_renderBodyCell( { index, isScrolling, key, style } ) {
+		
 		const { rowHeight, columnWidth, channelList } = this.state;
 		let data = this.guideData[index];
 		const channel = Find( channelList, [ 'channel', data.channel] );
-		const channelIndex = findIndex( channelList, ['channel', data.channel] );
+		const channelIndex = findIndex( channelList, ['channel', data.channel] ); 
 		
-		const isNew = (moment.unix(data.firstAired).add(1, 'd').format("dddd M/D/YYYY") == moment.unix(data.startTime).format("dddd M/D/YYYY") || moment.unix(data.firstAired).format("dddd M/D/YYYY") == moment.unix(data.startTime).format("dddd M/D/YYYY"));
+		const isNew = ( (moment.unix(data.firstAired).add(1, 'd').format("dddd M/D/YYYY") == moment.unix(data.startTime).format("dddd M/D/YYYY") || moment.unix(data.firstAired).format("dddd M/D/YYYY") == moment.unix(data.startTime).format("dddd M/D/YYYY")) );
+		
 		const isTimer = isObject( Find( this.props.timers, ( v ) => ( v.programId == data.programId  ) ) );
 		const isSeries = isObject( Find( this.props.series, ( v ) => ( v.show == data.title || v.programId == data.programId  ) ) );
 		const isRecorded = isObject( Find( this.props.recordings, [ 'programId', data.programId]  ) );
@@ -685,7 +753,10 @@ export default class EPG extends PureComponent {
 	}
 	
 	_renderChannelCell ({ columnIndex, key, rowIndex, style }) {
-				
+		
+		const { channelList, rowHeight } = this.state;
+		const { channels } = this.props;		
+
 		const rowClass =
 			rowIndex % 2 === 0
 				? columnIndex % 2 === 0 ? {} : {backgroundColor: 'rgba(0, 0, 0, .1)'}
@@ -705,9 +776,6 @@ export default class EPG extends PureComponent {
 			  fontSize: 18,
 			  ...style
 		};
-		
-		const { channelList } = this.state;
-		const { channels } = this.props;
 		
 		if ( columnIndex === 0 ) {
 			const channel = Find( channels, [ 'channel', channelList[rowIndex].channel ] );
@@ -798,7 +866,7 @@ export default class EPG extends PureComponent {
 								title="Series Pass & Timers"
 								onClick={(e)=>{
 									e.preventDefault();
-									this.props.goTo({path: '/tv/series', page: 'Series'}, this.leftNavClose);
+									this.props.goTo({path: '/tv/scheduled', page: 'Scheduled'}, this.leftNavClose);
 								}} 
 							>
 								<FontIcon 

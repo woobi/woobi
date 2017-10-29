@@ -33,7 +33,7 @@ export default class EPG extends React.Component {
 			series: [],
 			timers: [],
 			recordings: [],
-			numberOfGuideDays: 3,
+			numberOfGuideDays: 1,
 			guidePreHours: 24,
 		};
 		
@@ -120,7 +120,8 @@ export default class EPG extends React.Component {
 			debug('### getRecordings ###', data);
 			this._update = true;
 			this.setState({
-				recordings: data.recordings
+				recordings: data.recordings,
+				recordingsLoaded: true,
 			});
 		})
 		.catch(error => {
@@ -167,7 +168,8 @@ export default class EPG extends React.Component {
 				});
 			}
 			this.setState({
-				timers: data.timers
+				timers: data.timers,
+				timersLoaded: true,
 			});
 		})
 		.catch(error => {
@@ -184,7 +186,8 @@ export default class EPG extends React.Component {
 			debug('### getChannelGroups ###', data);
 			this._update = true;
 			this.setState({
-				groups: data.groups
+				groups: data.groups,
+				groupsLoaded: true
 			});
 		})
 		.catch(error => {
@@ -204,6 +207,7 @@ export default class EPG extends React.Component {
 			this._update = true;
 			this.setState({
 				entries: data.entries.groups,
+				guideLoaded: true,
 			});
 		})
 		.catch(error => {
@@ -219,7 +223,8 @@ export default class EPG extends React.Component {
 			debug('### getTVChannels ###', data);
 			this._update = true;
 			this.setState({
-				channels: data.channels
+				channels: data.channels,
+				channelsLoaded: true,
 			});
 		})
 		.catch(error => {
@@ -235,7 +240,8 @@ export default class EPG extends React.Component {
 			debug('### getSeries data ###', data);
 			this._update = true;
 			this.setState({
-				series: data.series
+				series: data.series,
+				seriesLoaded: true,
 			});
 		})
 		.catch(error => {
@@ -245,18 +251,11 @@ export default class EPG extends React.Component {
 	
 	render() {
 		
-		let state = {
-			guideLoaded: Object.keys(this.state.entries).length > 0 ? true : false,
-			channelsLoaded: this.state.channels.length > 0 ? true : false,
-			groupsLoaded: Object.keys(this.state.groups).length > 0 ? true : false,
-			seriesLoaded: this.state.series.length > 0 ? true : false,
-			timersLoaded: this.state.timers.length > 0 ? true : false,
-			recordingsLoaded: this.state.recordings.length > 0 ? true : false,
-		};
+		let state = this.state
 		
 		debug('## render  ##  EPG ', state, this.state);
 		
-		if ( !state.recordingsLoaded || !state.guideLoaded || !state.channelsLoaded ||  !state.groupsLoaded ||  !state.seriesLoaded ||  !state.timersLoaded ) {
+		if ( !state.recordingsLoaded || !state.guideLoaded || !state.channelsLoaded ||  !state.groupsLoaded  ) {
 			debug('## render  ##  EPG Loading', this.props, this.state);
 			return (
 				<div style={{ padding: 50, color: this.props.theme.baseTheme.palette.accent1Color }}>
