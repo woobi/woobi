@@ -148,7 +148,7 @@ export default class Show extends React.Component {
 			progress: true,
 			metadata: show
 		}
-		Gab.rawRequest('/alvin/unshift/' + channel.channel + '/file/' + encodeURIComponent(JSON.stringify(config)), false)
+		Gab.rawRequest(snowUI.api.uri + '/unshift/' + channel.channel + '/file/' + encodeURIComponent(JSON.stringify(config)), false)
 		.then(data => {
 			//Gab.emit('snackbar', { open: false });
 			
@@ -219,7 +219,7 @@ export default class Show extends React.Component {
 				passthrough: false,
 			}
 		}
-		Gab.rawRequest('/alvin/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false)
+		Gab.rawRequest(snowUI.api.uri + '/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false)
 		.then(data => {
 			//Gab.emit('snackbar', { open: false });
 			if(data.success) {

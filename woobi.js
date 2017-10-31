@@ -5,6 +5,9 @@ var async = require('async');
 var Adapter = require('./lib/core/adapter');
 var fs = require('fs-extra');
 var sanitize = require('sanitize-filename');
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
+var Broadcast;
 
 var moduleRoot = (function(_rootPath) {
 	var parts = _rootPath.split(path.sep);
@@ -12,17 +15,25 @@ var moduleRoot = (function(_rootPath) {
 	return parts.join(path.sep);
 })(module.paths[0]);
 
-var snowstreams = function() {
+var Woobi = function() {
+	
+	EventEmitter.call(this);
+	
 	this._options = {
-		'name': 'woobi',
+		name: 'woobi',
 		'module root': moduleRoot,
 		'media passthrough route': '/media',
 		'media passthrough path': '/media',
 		'video passthrough route': '/direct',
 		'video passthrough path': '/media',
-		'port': 7001,
-		'host': 'localhost',
-		'proxy api': '/woobi'
+		port: 7001,
+		proxy: false,
+		host: 'localhost',
+		'proxy api': '/woobi',
+		env: process.env.ENV || 'production',
+		artStringReplace: function(art){ return art; },
+		videoStringReplace: function(art) { return art; },
+		'keep open': false
 	}
 	
 	this.version = require('./package.json').version;
@@ -44,10 +55,17 @@ var snowstreams = function() {
 	this.Channel =  require('./lib/channel.js')(this);
 	this.Presets =  require('./lib/presets.js')(this);
 	
+	Broadcast = this;
+	
+	return this;
 }
- 
- snowstreams.prototype.init = function (opts, callback) {
-	return new Promise ((resolve, reject) => {
+
+// attach the event emitter
+util.inherits(Woobi, EventEmitter);
+
+Woobi.prototype.init = function (opts, callback) {
+	
+	return new Promise ((resolve) => {
 		if(!_.isArray(opts.adapters)) {
 			console.log('No adapter configs found! ');
 			//process.exit();
@@ -58,10 +76,15 @@ var snowstreams = function() {
 		
 		Object.assign(this._options, opts);
 		
+		debug('init! ', opts);
+		
 		this.channelPort = opts.channelPort || 13000;
 		this.host = opts.host ? this.set('host', opts.host || 'localhost').get('host') : this.get('host');
-		this.port = opts.proxy.port? this.set('port', opts.proxy.port || 7001).get('port') : this.get('port');
-		
+		if ( typeof opts.proxy === 'object' ) {
+			this.port = opts.proxy.port? this.set('port', opts.proxy.port || 7001).get('port') : this.get('port');
+		} else {
+			this.port = this.get('port');
+		}
 		this.uri = this.host + ':' + this.port;
 		
 		this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
@@ -92,22 +115,24 @@ var snowstreams = function() {
 				file: path.join(Broadcast.get('module root'), 'lib','assets','river.mp4'),
 			}];
 			
-			if(opts.proxy) {
-				if(opts.proxy === true)  {
+			if ( opts.proxy ) {
+				debug('got opts.proxt', opts.proxy)
+				if ( opts.proxy === true )  {
 					opts.proxy = {};
 				}
 				// serve our webpages via our server or through a supplied express app
 				this.Stream.proxy.server(opts.proxy, (err, result) => {
 					if(err) console.log('ERROR', err);
-					finish.call(this);
+					this.set( 'keep open', true );
+					finish.call( this );
 				});
 			} else {
-				 finish.call(this);
+				 finish.call( this );
 			}
 			
 		});
 	
-		function finish() {
+		function finish ( ) {
 			
 			if(opts.adapters.length === 0) {
 				opts.adapters = [];
@@ -147,28 +172,31 @@ var snowstreams = function() {
 							callback();
 						}
 						resolve();
+						return; 
 					}
 				} 
 			);
-		};
+		}
 	}); //end promise
 }
 
 // send socket notifications
-snowstreams.prototype.notify = function(emitter, data) {
-	debug(emitter, data)
-	process.nextTick(() => {
-		this.lodge.emit(emitter, data);
-	});
+Woobi.prototype.notify = function(emitter, data) {
+	//debug(emitter, data)
+	if ( this.lodge ) {
+		process.nextTick(() => {
+			this.lodge.emit(emitter, data);
+		});
+	}
+	this.emit( emitter, data );
 }
 
 // options and utils
-_.extend(snowstreams.prototype, require('./lib/core/options')());
+_.extend(Woobi.prototype, require('./lib/core/options')());
 // standalone server
-_.extend(snowstreams.prototype, require('./lib/core/createServer')());
-// keystone server
+_.extend(Woobi.prototype, require('./lib/core/createServer')());
 
-snowstreams.prototype.addChannel = function(channel, opts) {
+Woobi.prototype.addChannel = function(channel, opts) {
 		
 	return new Promise((resolve, reject) => { 
 		
@@ -192,7 +220,7 @@ snowstreams.prototype.addChannel = function(channel, opts) {
 	});
 }
 
-snowstreams.prototype.addProgram = function(program, opts, callback) {
+Woobi.prototype.addProgram = function(program, opts, callback) {
 	opts.name = program;
 	return this.programs[program] = new this.Source.Program(opts, (err, data) => {
 		if(_.isFunction(callback)) {
@@ -204,23 +232,23 @@ snowstreams.prototype.addProgram = function(program, opts, callback) {
 	
 }
 
-snowstreams.prototype.randomName = function(pre) {
+Woobi.prototype.randomName = function(pre) {
 	return sanitize((pre || '') + (+new Date).toString(36).slice(-15)).replace(/\s/g, "");;
 }
 
-var Broadcast = new snowstreams();
-
-Object.defineProperty(Broadcast, 'filler', {
+Object.defineProperty(Woobi, 'filler', {
     get: () => { 
 		let num = Date.now();
-		return Broadcast.fillers[0];
+		return Woobi.fillers[0];
 	}
 });
 
+
+
 /**
- * The exports object is an instance of snowstreams.
+ * The exports object is an instance of Woobi.
  *
  * @api public
  */
 
-module.exports = Broadcast;
+module.exports = Woobi;

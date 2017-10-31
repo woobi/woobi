@@ -42,7 +42,7 @@ var snowUI = {
 		}
 	},
 	api: {
-		uri: '/alvin/'
+		uri: '/woobi'
 	},
 	serverRendered: true
 };
@@ -114,13 +114,11 @@ snowUI.fadeIn = function(speed, me, callback) {
 }
 
 snowUI.artStringReplace = function(art) {
-	return art.replace('smb://SAM', '/media');
+	return art;
 }
 
 snowUI.videoStringReplace = function(art) {
-	return art.replace('smb://SAM', '/direct');
-	//return art.replace('smb://SAM', '/media');
-
+	return art;
 }
 
 // sticky menu

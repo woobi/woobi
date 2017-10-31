@@ -4930,7 +4930,7 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 				_createClass(Home, [{
 					key: 'componentDidMount',
 					value: function componentDidMount() {
-						debug('######### componentDidMount  ##  Home', this.props);
+						debug('######### componentDidMount  ##  Stations Home', this.props);
 						if (!this._skipMount) {
 							this.getChannels();
 						}
@@ -4977,12 +4977,12 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 						this.props.Request({
 							action: 'channels'
 						}).then(function (data) {
-							debug('### got channels ###', data);
+							debug('### got Stations ###', data);
 							_this.setState({
 								channels: data.channels
 							});
 						})['catch'](function (error) {
-							debug('ERROR from channels', error);
+							debug('ERROR from Stations', error);
 						});
 					}
 				}, {
@@ -5003,11 +5003,11 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 					value: function removeSavedConfig(c) {
 						Gab.emit('snackbar', {
 							style: 'warning',
-							html: 'Removing channel ' + c.name,
+							html: 'Removing station ' + c.name,
 							open: true,
 							onRequestClose: function onRequestClose() {}
 						});
-						Gab.rawRequest('/alvin/remove/channel/' + c._id, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/remove/channel/' + c._id, false).then(function (data) {
 							if (data.success) {
 								Gab.emit('snackbar', {
 									style: 'success',
@@ -5037,11 +5037,11 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 					value: function startChannel(c) {
 						Gab.emit('snackbar', {
 							style: 'warning',
-							html: 'Starting channel ' + c.name,
+							html: 'Starting station ' + c.name,
 							open: true,
 							onRequestClose: function onRequestClose() {}
 						});
-						Gab.rawRequest('/alvin/start/channel/' + c.name + '/?config=' + c.config, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/start/channel/' + c.name + '/?config=' + c.config, false).then(function (data) {
 							if (data.success) {
 								Gab.emit('snackbar', {
 									style: 'success',
@@ -5074,10 +5074,10 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 						return React.createElement(
 							'div',
 							{ style: { padding: '10px ' } },
-							React.createElement(FlatButton, { label: "Add Channel", onClick: function () {
+							React.createElement(FlatButton, { label: "Add Station", onClick: function () {
 									_this2.props.goTo({
-										path: '/channels/add',
-										page: 'Add Channel'
+										path: '/stations/add',
+										page: 'Add Station'
 									});
 								} }),
 							this.state.saved.map(function (r, i) {
@@ -5086,8 +5086,8 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 									{ className: 'clearfix', style: { background: ColorMe(i % 2 === 0 ? 10 : 20, _this2.props.theme.palette.canvasColor).bgcolor, color: ColorMe(i % 2 === 0 ? 10 : 20, _this2.props.theme.palette.canvasColor).color } },
 									React.createElement('div', { title: 'Edit', style: { float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer' }, children: React.createElement(FontIcon, { className: 'material-icons', children: 'edit', color: _this2.props.theme.palette.alternateTextColor }), onClick: function () {
 											_this2.props.goTo({
-												path: '/channels/update/' + i,
-												page: 'Update Channel'
+												path: '/stations/update/' + i,
+												page: 'Update Station'
 											});
 										} }),
 									React.createElement('div', { title: 'Delete', style: { float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer' }, children: React.createElement(FontIcon, { className: 'material-icons', children: 'delete_forever', color: Styles.Colors.orangeA400 }), onClick: function () {
@@ -5132,16 +5132,16 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 						return React.createElement(
 							'div',
 							null,
-							React.createElement(FlatButton, { label: "View Channels", onClick: function () {
+							React.createElement(FlatButton, { label: "View Stations", onClick: function () {
 									_this3.props.goTo({
-										path: '/channels/',
-										page: 'Channels'
+										path: '/stations/',
+										page: 'Stations'
 									});
 								} }),
-							React.createElement(FlatButton, { label: "Manage Channels", onClick: function () {
+							React.createElement(FlatButton, { label: "Manage Stations", onClick: function () {
 									_this3.props.goTo({
-										path: '/channels/manage',
-										page: 'Manage Channels'
+										path: '/stations/manage',
+										page: 'Manage Stations'
 									});
 								} })
 						);
@@ -5151,7 +5151,7 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 					value: function render() {
 						var _this4 = this;
 
-						debug('## render  ##  Channels Home render', this.props, this.state);
+						debug('## render  ##  Stations Home render', this.props, this.state);
 						var ret = [React.createElement('span', null)];
 						if (this.state.channels.length > 0) {
 							ret = this.state.channels.map(function (c, i) {
@@ -5220,7 +5220,7 @@ $__System.register('42', ['3', '4', '5', '6', '7', '8', '9', '32', '34', '41', '
 						action: 'channels'
 					}
 				};
-				console.log('### RUN getInitialData Channels HOME ###', params);
+				console.log('### RUN getInitialData Stations HOME ###', params);
 				return ret;
 			};
 		}
@@ -19928,7 +19928,7 @@ $__System.register('8d', ['3', '4', '5', '6', '7', '8', '9', '34', '35', '37', '
 							progress: true,
 							metadata: show
 						};
-						Gab.rawRequest('/alvin/unshift/' + channel.channel + '/file/' + encodeURIComponent(JSON.stringify(config)), false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/unshift/' + channel.channel + '/file/' + encodeURIComponent(JSON.stringify(config)), false).then(function (data) {
 							//Gab.emit('snackbar', { open: false });
 
 							if (data.success) {
@@ -19999,7 +19999,7 @@ $__System.register('8d', ['3', '4', '5', '6', '7', '8', '9', '34', '35', '37', '
 								passthrough: false
 							}
 						};
-						Gab.rawRequest('/alvin/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
 							//Gab.emit('snackbar', { open: false });
 							if (data.success) {
 								Gab.emit('snackbar', {
@@ -20715,7 +20715,7 @@ $__System.register('90', ['3', '4', '5', '6', '7', '8', '9', '34', '35', '37', '
 								passthrough: false
 							}
 						};
-						Gab.rawRequest('/alvin/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
 							if (data.success) {
 								Gab.emit('snackbar', {
 									style: 'success',
@@ -21870,7 +21870,7 @@ $__System.register('95', ['3', '4', '5', '6', '7', '8', '9', '34', '35', '37', '
 								passthrough: false
 							}
 						};
-						Gab.rawRequest('/alvin/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
 							if (data.success) {
 								Gab.emit('snackbar', {
 									style: 'success',
@@ -22319,7 +22319,7 @@ $__System.register('38', ['3', '4', '5', '6', '7', '8', '9', '34', 'a', 'e', 'c'
 						});
 						Gab.emit('dialog2', { open: false });
 						Gab.emit(this.emitter, { action: 'stop' });
-						Gab.rawRequest('/alvin/kill/channel/' + this.props.channel.channel, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/kill/channel/' + this.props.channel.channel, false).then(function (data) {
 							//Gab.emit('snackbar', { open: false });
 							if (data.success) {
 								Gab.emit('snackbar', {
@@ -22355,7 +22355,7 @@ $__System.register('38', ['3', '4', '5', '6', '7', '8', '9', '34', 'a', 'e', 'c'
 						var _this2 = this;
 
 						Gab.emit('dialog2', { open: false });
-						Gab.rawRequest('/alvin/jump/' + this.props.channel.channel + '/' + num, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/jump/' + this.props.channel.channel + '/' + num, false).then(function (data) {
 							//Gab.emit('snackbar', { open: false });
 
 							if (data.success) {
@@ -22407,7 +22407,7 @@ $__System.register('38', ['3', '4', '5', '6', '7', '8', '9', '34', 'a', 'e', 'c'
 												_this3.doRequestCommand({
 													success: 'Playing ' + _this3.props.channel.prev.name,
 													error: 'Failed to play ' + _this3.props.channel.prev.name,
-													link: '/alvin/unshift/' + _this3.props.channel.channel + '/history/' + _this3._history.value
+													link: snowUI.api.uri + '/unshift/' + _this3.props.channel.channel + '/history/' + _this3._history.value
 												});
 											}
 										},
@@ -22469,7 +22469,7 @@ $__System.register('38', ['3', '4', '5', '6', '7', '8', '9', '34', 'a', 'e', 'c'
 												_this4.doRequestCommand({
 													success: 'Playing ' + _this4.props.channel.sources[_this4._nextsource.value].name,
 													error: 'Failed to play ' + _this4.props.channel.sources[_this4._nextsource.value].name,
-													link: '/alvin/jump/' + _this4.props.channel.channel + '/' + _this4._nextsource.value
+													link: snowUI.api.uri + '/jump/' + _this4.props.channel.channel + '/' + _this4._nextsource.value
 												});
 											}
 										},
@@ -24178,7 +24178,7 @@ $__System.register('a5', ['3', '4', '5', '6', '7', '8', '9', '34', '35', '37', '
 							progress: true,
 							metadata: show
 						};
-						Gab.rawRequest('/alvin/unshift/' + channel.channel + '/file/' + encodeURIComponent(JSON.stringify(config)), false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/unshift/' + channel.channel + '/file/' + encodeURIComponent(JSON.stringify(config)), false).then(function (data) {
 							//Gab.emit('snackbar', { open: false });
 
 							if (data.success) {
@@ -24234,7 +24234,7 @@ $__System.register('a5', ['3', '4', '5', '6', '7', '8', '9', '34', '35', '37', '
 								passthrough: false
 							}
 						};
-						Gab.rawRequest('/alvin/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
+						Gab.rawRequest(snowUI.api.uri + '/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false).then(function (data) {
 							//Gab.emit('snackbar', { open: false });
 							if (data.success) {
 								Gab.emit('snackbar', {
@@ -35918,7 +35918,7 @@ $__System.register('163', ['4', '5', '6', '7', '8', '9', '160', 'a', 'c'], funct
 								}),
 								React.createElement(Divider, null),
 								React.createElement(MenuItem, {
-									primaryText: 'Local Files',
+									primaryText: 'On Demand',
 									rightIcon: React.createElement(ArrowDropRight, null),
 									menuItems: [React.createElement(MenuItem, {
 										primaryText: 'All Shows',
@@ -35996,7 +35996,7 @@ $__System.register('163', ['4', '5', '6', '7', '8', '9', '160', 'a', 'c'], funct
 								}),
 								React.createElement(Divider, null),
 								React.createElement(MenuItem, {
-									primaryText: 'Channels',
+									primaryText: 'Stations',
 									leftIcon: React.createElement(
 										FontIcon,
 										{ className: 'material-icons' },
@@ -36005,8 +36005,8 @@ $__System.register('163', ['4', '5', '6', '7', '8', '9', '160', 'a', 'c'], funct
 									onClick: function (e) {
 										e.preventDefault(e);
 										_this.props.goTo({
-											page: 'Channels',
-											path: '/channels'
+											page: 'Stations',
+											path: '/stations'
 										}, {}, function () {
 											_this.toggleDrawer(false, false);
 										});
@@ -91836,6 +91836,10 @@ $__System.register('3be', ['2', '6', '37', '43', '44', '93', '94', 'b', 'd', '8a
     replaceState({ nextPathname: nextState.location.pathname }, '/tv');
   }
 
+  function sendToStations(nextState, replaceState) {
+    replaceState({ nextPathname: nextState.location.pathname }, '/stations');
+  }
+
   return {
     setters: [function (_) {
       Home = _['default'];
@@ -91874,9 +91878,10 @@ $__System.register('3be', ['2', '6', '37', '43', '44', '93', '94', 'b', 'd', '8a
       Routes.push({ path: 'status', component: Status });
       Routes.push({ path: '404', component: FourZeroFour });Routes.push({ path: 'lost', onEnter: sendTo404 });Routes.push({ path: 'disconnected', onEnter: sendToStatus });Routes.push({ path: '/home', onEnter: sendToChannels });
       Routes.push({ path: '/', onEnter: sendToChannels });
+      Routes.push({ path: '/channels', onEnter: sendToStations });
 
       Routes.push({
-        path: 'channels',
+        path: 'stations',
         component: Channel,
         indexRoute: { component: Channels.Home },
         catchAll: { component: Channels.Home },

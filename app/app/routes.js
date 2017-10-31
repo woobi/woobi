@@ -36,11 +36,16 @@ function sendToChannels(nextState, replaceState) {
 	replaceState({ nextPathname: nextState.location.pathname }, '/tv')
 }
 
+function sendToStations(nextState, replaceState) {
+	replaceState({ nextPathname: nextState.location.pathname }, '/stations')
+}
+
 Routes.push({ path: '/home', onEnter: sendToChannels });
 Routes.push({ path: '/', onEnter: sendToChannels });
+Routes.push({ path: '/channels', onEnter: sendToStations });
 
 Routes.push({
-    path: 'channels', 
+    path: 'stations', 
     component: Channel,
     indexRoute: { component: Channels.Home },
     catchAll: { component: Channels.Home },

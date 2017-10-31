@@ -205,7 +205,7 @@ export default class mainMenu extends React.Component {
 					/>
 					<Divider />
 					<MenuItem 
-						primaryText="Local Files"
+						primaryText="On Demand"
 						rightIcon={<ArrowDropRight />}
 						menuItems={[
 								<MenuItem 
@@ -266,13 +266,13 @@ export default class mainMenu extends React.Component {
 					<Divider />
 					
 					<MenuItem
-						primaryText="Channels"
+						primaryText="Stations"
 						leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
 						onClick={(e) => {
 							e.preventDefault(e);
 							this.props.goTo({
-								page: 'Channels',
-								path: '/channels',
+								page: 'Stations',
+								path: '/stations',
 							}, {}, () => { this.toggleDrawer(false, false) });
 						}}
 					/>

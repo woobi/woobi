@@ -1,9 +1,10 @@
 Woobi Media Streams
 ==================
-LAN media server, IPTV broadcaster, and media converter.  
+EPG ui, LAN media server, IPTV broadcaster, and media converter.  
 - Stream the same media to multiple locations at once using multicast or unicast/http.
 - Stream your desktop to gaming/live servers.
-- Use a tv tuner to stream OTA tv to all connected devices.  
+- Use a tv tuner to stream tv to all connected devices.  
+- EPG with DVR controls via adapter.  
 
 
 ## Contents
@@ -55,13 +56,11 @@ var Woobi = require('woobi');
 Woobi.init( {
 	channelPort: 13000,
 	host: 'studio',
-	loadSaved: true,
+	loadSaved: false,
 	proxy: {
 		port: 2777,
 		nodeadmin: false,
 		host: '0.0.0.0',
-		keystone: true, // required to save channel configs
-		auth: false, // set to true once you create a new user @ /keystone
 	},
 	adapters:  [
 		/* the included media adapter is for a mysql database setup */

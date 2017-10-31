@@ -34,7 +34,7 @@ export default class Home extends React.Component {
 	}
 	
 	componentDidMount() {
-		debug('######### componentDidMount  ##  Home',  this.props);
+		debug('######### componentDidMount  ##  Stations Home',  this.props);
 		if(!this._skipMount) {
 			this.getChannels();
 		}
@@ -75,13 +75,13 @@ export default class Home extends React.Component {
 			action: 'channels'
 		})
 		.then(data => {
-			debug('### got channels ###', data);
+			debug('### got Stations ###', data);
 			this.setState({
 				channels: data.channels
 			});
 		})
 		.catch(error => {
-			debug('ERROR from channels', error)
+			debug('ERROR from Stations', error)
 		});
 	}
 	
@@ -98,11 +98,11 @@ export default class Home extends React.Component {
 	removeSavedConfig(c) {
 		Gab.emit('snackbar', {
 			style: 'warning',
-			html: 'Removing channel ' + c.name,
+			html: 'Removing station ' + c.name,
 			open: true,
 			onRequestClose: () => {}
 		});
-		Gab.rawRequest('/alvin/remove/channel/' + c._id, false)
+		Gab.rawRequest(snowUI.api.uri + '/remove/channel/' + c._id, false)
 		.then(data => {
 			if(data.success) {
 				Gab.emit('snackbar', {
@@ -133,11 +133,11 @@ export default class Home extends React.Component {
 	startChannel(c) {
 		Gab.emit('snackbar', {
 			style: 'warning',
-			html: 'Starting channel ' + c.name,
+			html: 'Starting station ' + c.name,
 			open: true,
 			onRequestClose: () => {}
 		});
-		Gab.rawRequest('/alvin/start/channel/' + c.name + '/?config=' + c.config, false)
+		Gab.rawRequest(snowUI.api.uri + '/start/channel/' + c.name + '/?config=' + c.config, false)
 		.then(data => {
 			if(data.success) {
 				Gab.emit('snackbar', {
@@ -167,18 +167,18 @@ export default class Home extends React.Component {
 	
 	manageChannel() {
 		return (<div style={{ padding: '10px ' }}>
-			<FlatButton  label={"Add Channel"} onClick={()=>{
+			<FlatButton  label={"Add Station"} onClick={()=>{
 				this.props.goTo({
-					path: '/channels/add',
-					page: 'Add Channel'
+					path: '/stations/add',
+					page: 'Add Station'
 				});
 			}} />
 			{this.state.saved.map((r, i) => {
 				return (<div className="clearfix" style={{ background: ColorMe((i%2 === 0 ? 10: 20), this.props.theme.palette.canvasColor).bgcolor, color: ColorMe((i%2 === 0 ? 10: 20), this.props.theme.palette.canvasColor).color}}>
 					<div title="Edit" style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children={<FontIcon className="material-icons" children="edit" color={this.props.theme.palette.alternateTextColor} />} onClick={() => {
 						this.props.goTo({
-							path: '/channels/update/' + i,
-							page: 'Update Channel'
+							path: '/stations/update/' + i,
+							page: 'Update Station'
 						});
 					}}/>
 					<div title="Delete" style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children=<FontIcon className="material-icons" children="delete_forever" color={Styles.Colors.orangeA400} /> onClick={() => {
@@ -219,22 +219,22 @@ export default class Home extends React.Component {
 	}
 	
 	goToChannel() {
-		return (<div><FlatButton  label={"View Channels"} onClick={()=>{
+		return (<div><FlatButton  label={"View Stations"} onClick={()=>{
 			this.props.goTo({
-				path: '/channels/',
-				page: 'Channels'
+				path: '/stations/',
+				page: 'Stations'
 			});
-		}} /><FlatButton  label={"Manage Channels"} onClick={()=>{
+		}} /><FlatButton  label={"Manage Stations"} onClick={()=>{
 			this.props.goTo({
-				path: '/channels/manage',
-				page: 'Manage Channels'
+				path: '/stations/manage',
+				page: 'Manage Stations'
 			});
 		}} /></div>)	
 			
 	}
 	
 	render() { 
-		debug('## render  ##  Channels Home render', this.props, this.state);
+		debug('## render  ##  Stations Home render', this.props, this.state);
 		let ret = [<span />];
 		if (this.state.channels.length > 0) {
 			ret =  this.state.channels.map((c, i) => {
@@ -286,6 +286,6 @@ Home.getInitialData = function(params) {
 			action: 'channels'
 		}
 	}
-	console.log('### RUN getInitialData Channels HOME ###',  params);
+	console.log('### RUN getInitialData Stations HOME ###',  params);
 	return ret
 }

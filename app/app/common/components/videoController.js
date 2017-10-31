@@ -65,7 +65,7 @@ export default class VideoController extends React.Component {
 		});
 		Gab.emit('dialog2', { open: false });
 		Gab.emit(this.emitter, { action: 'stop' });
-		Gab.rawRequest('/alvin/kill/channel/' + this.props.channel.channel, false)
+		Gab.rawRequest(snowUI.api.uri + '/kill/channel/' + this.props.channel.channel, false)
 		.then(data => {
 			//Gab.emit('snackbar', { open: false });
 			if(data.success) {
@@ -101,7 +101,7 @@ export default class VideoController extends React.Component {
 	
 	playOnChannel(num) {
 		Gab.emit('dialog2', { open: false });
-		Gab.rawRequest('/alvin/jump/' + this.props.channel.channel +  '/' + num, false)
+		Gab.rawRequest(snowUI.api.uri + '/jump/' + this.props.channel.channel +  '/' + num, false)
 		.then(data => {
 			//Gab.emit('snackbar', { open: false });
 			
@@ -152,7 +152,7 @@ export default class VideoController extends React.Component {
 								this.doRequestCommand({
 									success: 'Playing ' + this.props.channel.prev.name,
 									error: 'Failed to play ' + this.props.channel.prev.name,
-									link: '/alvin/unshift/' + this.props.channel.channel + '/history/' +  this._history.value
+									link: snowUI.api.uri + '/unshift/' + this.props.channel.channel + '/history/' +  this._history.value
 								}); 
 							}
 						},
@@ -191,7 +191,7 @@ export default class VideoController extends React.Component {
 								this.doRequestCommand({
 									success: 'Playing ' + this.props.channel.sources[this._nextsource.value].name,
 									error: 'Failed to play ' + this.props.channel.sources[this._nextsource.value].name,
-									link: '/alvin/jump/' + this.props.channel.channel + '/' + this._nextsource.value
+									link: snowUI.api.uri + '/jump/' + this.props.channel.channel + '/' + this._nextsource.value
 								}); 
 							} 
 						},

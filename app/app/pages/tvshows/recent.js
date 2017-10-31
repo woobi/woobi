@@ -155,7 +155,7 @@ export default class RecentEpisodes extends React.Component {
 				passthrough: false,
 			}
 		}
-		Gab.rawRequest('/alvin/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false)
+		Gab.rawRequest(snowUI.api.uri + '/new/channel/?config=' + encodeURIComponent(JSON.stringify(config)) + '&keep=' + keep + '&autostart=' + autostart + '&start=' + start, false)
 		.then(data => {			
 			if(data.success) {
 				Gab.emit('snackbar', {
