@@ -105,7 +105,7 @@
     "errorhandler": "^1.4.3",
     "express": "",
     "express-less": "",
-    "express-session": "",
+    "express-session": "^1.15.6",
     "file-size": "^1.0.0",
     "find-remove": "^1.0.0",
     "fixed-data-table": "^0.6.4",
@@ -136,6 +136,7 @@
     "send-seekable": "^1.0.4",
     "socket.io": "",
     "superagent": "",
+    "tailing-stream": "^0.2.0",
     "throttle": "^1.0.3"
   },
   "devDependencies": {

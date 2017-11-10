@@ -22,6 +22,7 @@ var Woobi = function() {
 	this._options = {
 		name: 'woobi',
 		'module root': moduleRoot,
+		moduleRoot: moduleRoot,
 		'media passthrough route': '/media',
 		'media passthrough path': '/media',
 		'video passthrough route': '/direct',
@@ -33,17 +34,19 @@ var Woobi = function() {
 		env: process.env.ENV || 'production',
 		artStringReplace: function(art){ return art; },
 		videoStringReplace: function(art) { return art; },
-		'keep open': false
+		'keep open': false,
+		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe'
 	}
 	
 	this.version = require('./package.json').version;
 	
-	this.Channels = this.channels = {};
+	this.channels = {};
 	this.servers = {};
 	this.programs = {};
 	this.proxies = [];
 	this.streams = {};
 	this.libs = {};
+	this.nextSocketId = 0;
 	
 	// source and stream libs
 	this.Source = this.import('lib/source');
@@ -67,9 +70,7 @@ Woobi.prototype.init = function (opts, callback) {
 	
 	return new Promise ((resolve) => {
 		if(!_.isArray(opts.adapters)) {
-			console.log('No adapter configs found! ');
-			//process.exit();
-			//return false;
+			debug('No adapter configs found!');
 			opts.adapters = [];
 		}
 		debug('init! ');
@@ -80,43 +81,46 @@ Woobi.prototype.init = function (opts, callback) {
 		
 		this.channelPort = opts.channelPort || 13000;
 		this.host = opts.host ? this.set('host', opts.host || 'localhost').get('host') : this.get('host');
+		
 		if ( typeof opts.proxy === 'object' ) {
 			this.port = opts.proxy.port? this.set('port', opts.proxy.port || 7001).get('port') : this.get('port');
 		} else {
 			this.port = this.get('port');
 		}
+		
 		this.uri = this.host + ':' + this.port;
-		
+		// where to save files
 		this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
-		fs.emptyDir(path.join(this.mediaPath,'channels'), (err) => {
-			if(err) debug('Error emptuing / creating mediaPath dir for channels', err);
+		this.dvrPath = opts.dvrPath || path.join(this.mediaPath, 'dvr');
 		
-			this.fillers = [
-				/*{name: 'River', 
-				file: path.join(Broadcast.get('module root'), 'lib/assets/waterfall.mp4'),
+		fs.ensureDir(path.join(this.mediaPath,'channels'), (err) => {
+			if(err) debug('Error creating mediaPath dir for channels', err);
+		
+			this.fillers = [{
+				name: 'Camera', 
+				image: true,
+				inputOptions: '',
 				videoFilters: {
 					filter: 'drawtext',
 					options: {
-						fontfile: '/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
-						text: 'TestText',
+						//fontfile: '/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
+						text: 'Woobi waits...',
 						fontcolor: 'white',
-						fontsize: 24,
+						fontsize: 100,
 						box: 1,
-						boxcolor: 'black@0.75',
-						boxborderw: 5,
+						boxcolor: 'black@0.5',
+						boxborderw: 25,
 						x: '(w-text_w)/2',
 						y: '(h-text_h)/2'
 					}
 				},
-				onlyOptions: []
-			},*/
-			{
-				name: 'River', 
-				file: path.join(Broadcast.get('module root'), 'lib','assets','river.mp4'),
+				file: path.join(Broadcast.get('module root'), 'lib','assets','fill.jpg'),
 			}];
 			
+			this.filler = this.fillers[0];
+			
 			if ( opts.proxy ) {
-				debug('got opts.proxt', opts.proxy)
+				debug('got opts.proxy', opts.proxy)
 				if ( opts.proxy === true )  {
 					opts.proxy = {};
 				}
@@ -202,19 +206,20 @@ Woobi.prototype.addChannel = function(channel, opts) {
 		
 		debug('Add Channel ' + channel);
 		
-		if (this.Channels[channel]) {
+		if (this.channels[channel]) {
 			return reject('Channel exists');
 		}
-		this.Channels[channel] = new this.Channel(channel, opts, (err, c) => {
-			this.Channels[channel] = c;
+		this.channels[channel] = new this.Channel(channel, opts, (err, c) => {
+			this.channels[channel] = c;
 			
 			if(err) return reject(err);
 			
 			debug('Added Channel ' + channel); 
+			if ( Broadcast._options.proxy ) {
+				Broadcast.notify('channels', Broadcast.socketListeners.channels());
+			}
 			
-			Broadcast.notify('channels', Broadcast.socketListeners.channels());
-			
-			return resolve(this.Channels[channel]);
+			return resolve(this.channels[channel]);
 		
 		});
 	});
@@ -236,12 +241,6 @@ Woobi.prototype.randomName = function(pre) {
 	return sanitize((pre || '') + (+new Date).toString(36).slice(-15)).replace(/\s/g, "");;
 }
 
-Object.defineProperty(Woobi, 'filler', {
-    get: () => { 
-		let num = Date.now();
-		return Woobi.fillers[0];
-	}
-});
 
 
 
