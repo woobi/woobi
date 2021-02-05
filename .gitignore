@@ -37,9 +37,16 @@ video/*
 bin/*
 heap*
 media*/
+local/*
+.yarn*
+package-lock.json
+.pnp.js
+yarn.lock
+
 # Optional npm cache directory
 .npm
 test*
+
 
 # Optional REPL history
 .node_repl_history

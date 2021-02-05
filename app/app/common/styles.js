@@ -9,7 +9,7 @@ export let WOOBI  = deep( {
 		primary2Color: colors.blue300,
 		textColor: colors.blue50,
 		alternateTextColor: colors.lightBlue500,
-		//primary1Color: 'initial',
+		primary1Color: '#28292b',
 		canvasColor: '#001933',
 		//bodyColor: 'initial',
 		//contentColor: 'initial',
@@ -72,32 +72,38 @@ export let NITELITE  = deep( {
 	}
 }, darkBaseTheme);
 
+// orange for real
 export let NITELITE2  = deep( {
 	palette: {
 		//bodyColor: 'initial',
 		//contentColor: 'initial',
 		//primary1Color: 'initial',
+		primary1Color: '#28292b',
 		primary2Color: '#77B5D0',
-		textColor: colors.orange700,
-		accent1Color: colors.orange700,
-		accent2Color: colors.orange500,
+		textColor: colors.grey300,
+		accent1Color: colors.limeA400,
+		accent2Color: colors.grey900,
 		accent3Color: colors.orange300,
-		alternateTextColor: colors.indigo300,
+		alternateTextColor: colors.limeA400,
 	},
 	snackbar: {
 		textColor: '#222',
 		
 	},
 	appBar: {
-		textColor: colors.orange900,
-		buttonColor: colors.orangeA700,
+		textColor: colors.limeA400,
+		buttonColor: colors.limeA200,
 		//color: colors.indigo800,
 	},
 	flatButton: {
-		textColor: colors.orange700,
+		textColor: colors.limeA400,
+	},
+	raisedButton: {
+		textColor: colors.grey900,
+		//buttonColor: colors.indigo900,
 	},
 	menuItem: {
-		textColor: colors.orange700,
+		textColor: colors.limeA400,
 	},
 	searchBar: {
 		//large: 'initial',
@@ -166,6 +172,7 @@ export let GRAPHITE  = deep( {
 		//bodyColor: 'initial',
 		//contentColor: 'initial',
 		//primary1Color: 'initial',
+		primary1Color: '#28292b',
 		primary3Color: colors.deepPurple200,
 		primary2Color: colors.deepPurple300,
 		textColor: colors.deepPurple200,
@@ -193,6 +200,7 @@ export let NIGHT  = deep( {
 		//bodyColor: 'initial',
 		//contentColor: 'initial',
 		//primary1Color: 'initial',
+		primary1Color: '#28292b',
 		primary2Color: '#0277BD',
 		textColor: ColorMe(30, colors.indigoA200).bgcolor,
 		accent1Color: colors.indigo900,
@@ -309,6 +317,7 @@ export let DEFAULT  = deep( {
 	palette: {
 		//bodyColor: 'initial',
 		//contentColor: 'initial'
+		primary1Color: '#28292b',
 	},
 	snackbar: {
 		textColor: '#222',
@@ -326,6 +335,7 @@ export let DARK  = deep( {
 	palette: {
 		//bodyColor: 'initial',
 		//contentColor: 'initial'
+		primary1Color: '#28292b',
 	},
 	searchBar: {
 		//large: 'initial',

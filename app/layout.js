@@ -26,7 +26,7 @@ export default class Layout extends React.Component {
 	}
 	
 	renderBody() {
-		return (<body class="dark-theme">
+		return (<body class="dark-theme default">
 			<div id="body">
 			  <div id="confirm-modal"></div>
 			  <div id="react-hot-reload" dangerouslySetInnerHTML={{__html: this.props.component}} />

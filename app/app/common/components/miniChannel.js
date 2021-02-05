@@ -152,7 +152,7 @@ export default class miniChannel extends React.Component {
 								this.doRequestCommand({
 									success: 'Program ' + s.name + ' cycled to front.',
 									error: 'Failed to push program ' + s.name + '.',
-									link: history ?  '/alvin/unshift/' + c.channel + '/file/' +  encodeURIComponent(JSON.stringify({ name: s.name, progress: true, file: s.metadata.file, metadata: s.metadata })) : '/alvin/jump/' + c.channel + '/' +  row	
+									link: history ?  snowUI.api.uri + '/unshift/' + c.channel + '/file/' +  encodeURIComponent(JSON.stringify({ name: s.name, progress: true, file: s.metadata.file, metadata: s.metadata })) : snowUI.api.uri + '/jump/' + c.channel + '/' +  row	
 								}); 
 							}
 							//Gab.emit('dialog open', { open: true });
@@ -176,7 +176,7 @@ export default class miniChannel extends React.Component {
 										this.doRequestCommand({
 											success: 'Source  ' + s.name + ' removed from queue.',
 											error: 'Failed to remove source  ' + s.name + ' from queue.',
-											link: '/alvin/shift/' + c.channel + '/index/' +  s.position
+											link: snowUI.api.uri + '/shift/' + c.channel + '/index/' +  s.position
 										}); 
 									} else {
 										Gab.emit('dialog open', { open: true });
@@ -292,10 +292,10 @@ export default class miniChannel extends React.Component {
 		
 	powerButtons(c) {
 		let powerButtons = [];
-		let newC = { name: 'RebootChannel', label: 'REBOOT CHANNEL', link: '/alvin/restart/channel/' + c.channel , success: 'Channel ' + c.channel + ' restarting fresh. ', error: 'Could not restart ' + c.channel };
-		let newC2 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=no', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel };
-		let newC3 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=yes', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel, onSuccess: () => {} };
-		let newStop = { name: 'KILL', label: 'REMOVE CHANNEL', link: '/alvin/kill/channel/' + c.channel, success: 'Channel ' + c.channel + ' stopping. ', error: 'Could not stop ' + c.channel };
+		let newC = { name: 'RebootChannel', label: 'REBOOT CHANNEL', link: snowUI.api.uri + '/restart/channel/' + c.channel , success: 'Channel ' + c.channel + ' restarting fresh. ', error: 'Could not restart ' + c.channel };
+		let newC2 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: snowUI.api.uri + '/restart/channel/' + c.channel + '?passthrough=no', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel };
+		let newC3 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: snowUI.api.uri + '/restart/channel/' + c.channel + '?passthrough=yes', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel, onSuccess: () => {} };
+		let newStop = { name: 'KILL', label: 'REMOVE CHANNEL', link: snowUI.api.uri + '/kill/channel/' + c.channel, success: 'Channel ' + c.channel + ' stopping. ', error: 'Could not stop ' + c.channel };
 		const buttonStyle = {
 			margin: '30 0 0 12',
 			borderRadius: 0,
@@ -305,7 +305,7 @@ export default class miniChannel extends React.Component {
 			margin: '30 12 0 0',
 			borderRadius: 0,
 			float: 'left',
-			color: 'white',
+			
 		};
 		powerButtons.unshift(<IconButton key={newStop.name} label={newStop.label} title={newStop.label} onClick={()=>{
 			Gab.emit('dialog open', {
@@ -334,7 +334,7 @@ export default class miniChannel extends React.Component {
 							html: 'Are you sure you want to stop and remove this channel completely.  Continue?'
 						})
 					}} />
-					<RaisedButton style={buttonStyle} key="clodes"  secondary={true}  label="Cancel" onClick={(e) => {
+					<RaisedButton style={buttonStyle} key="clodes"  secondary={false}  label="Cancel" onClick={(e) => {
 						e.preventDefault();						
 						Gab.emit('dialog open', { open: false });
 					}} />
@@ -353,15 +353,13 @@ export default class miniChannel extends React.Component {
 				noText: 'Cancel',
 				component: (<div>
 					<p>Do you want to reboot this channel?<br />All feeds will be lost and start over.</p><p>  If you are having issues with audio or video you can try rebooting with transcoding enabled.</p>
-					<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Reboot Channel" onClick={(e) => {
-						
-						
+					<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Reboot Channel" onClick={(e) => {
 						e.preventDefault();
 						Gab.emit('dialog open', { open: false });
-						if (c.channel.sources.length < 2) {
-							this.doRequestCommand(newC);
-							return;
-						}
+						//if (c.channel.sources.length < 2) {
+						//	this.doRequestCommand(newC);
+						//	return;
+						//}
 						Gab.emit('dialog2 open', {
 							title: newC.label +  "",
 							open: true,
@@ -370,12 +368,12 @@ export default class miniChannel extends React.Component {
 							},
 							component: (<div>
 								<p>This will stop the channel and reboot.  </p><p>You can start with a clean queue or keep your current one.</p>
-								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0,  }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0,  }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand(newC);	
 								}} />
-								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand({ ...newC, link: newC.link + '?keepQueue=yes' });	
@@ -434,12 +432,12 @@ export default class miniChannel extends React.Component {
 							},
 							component: (<div>
 								<p>This will stop the channel and reboot using the video as is. </p><p>  You can start with a clean queue or keep your current one.</p>
-								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand(newC3);	
 								}} />
-								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand({ ...newC3, link: newC3.link + '&keepQueue=yes' });	
@@ -503,6 +501,7 @@ export default class miniChannel extends React.Component {
 				poster = c.playing.metadata.thumb;
 		}
 		if(c.playing.metadata.art) {
+			debug('Get Art', c.playing.metadata.art)
 			var asset = Find(c.playing.metadata.art, { type: 'fanart' });
 			if(asset) art = encodeURI(snowUI.artStringReplace(asset.url));
 			var asset2 = Find(c.playing.metadata.art, { type: 'banner' });
@@ -512,6 +511,8 @@ export default class miniChannel extends React.Component {
 				banner = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')no-repeat center 15%";
 				bgSize = '100%';
 			}
+
+			debug('Got Art?', 'art:', art, 'asset:', asset, 'asset2:', asset2, 'banner:', banner)
 		}
 		
 		let meta = {};
@@ -548,10 +549,10 @@ export default class miniChannel extends React.Component {
 		
 		return (<div   style={{paddingRight:0, paddingLeft:0, marginBottom: 15 }}>
 				
-			<Card zDepth={1} containerStyle={{ paddingBottom: 0 }} style={{ background: "url('" + art + "')no-repeat", backgroundPosition: '50%  75', backgroundSize: '100% auto' }}>
+			<Card zDepth={1} containerStyle={{ paddingBottom: 0 }} style={{ background: "url('" + art + "')no-repeat", backgroundPosition: 'top left', backgroundSize: 'cover' }}>
 				
 				<CardHeader
-					style={{ overflow: 'hidden', background: this.props.theme.palette.canvasColor, opacity: '.90' }}
+					style={{ overflow: 'hidden', background: this.props.theme.palette.canvasColor, opacity: '.95' }}
 					subtitle={<span style={{  }}>{c.channel}</span>}
 					title={<span >On Air: <b>{c.playing.name}</b></span>}
 					avatar={<FontIcon style={{fontSize:'42px'}} className="material-icons" color={ColorMe(10, this.props.theme.baseTheme.palette.canvasColor).bgcolor}  >dvr</FontIcon>}
@@ -562,7 +563,7 @@ export default class miniChannel extends React.Component {
 					<CardMedia style={{ overflow: 'hidden', background: 'transparent' }}>
 						<div id="vid-box" style={{ position: 'relative', width: '100%' }} >
 							<Video source={c.links.hls || c.link} style={{ margin: 'auto'  }} poster={false}  mute={false} channel={c} doRequestCommand={this.doRequestCommand} controls={false} />
-							<div style={{ textAlign: 'center', width: '100%', background: this.props.theme.palette.canvasColor, opacity: '.875' }} >
+							<div style={{ textAlign: 'center', width: '100%' }} >
 								<VideoController 
 									channel={this.state.channel} 
 									style={{
@@ -579,7 +580,7 @@ export default class miniChannel extends React.Component {
 					 <Tabs
 						onChange={this.handleChange}
 						value={this.state.slideIndex}
-						style={{ background: this.props.theme.palette.canvasColor, opacity: '.80' }}
+						style={{ background: this.props.theme.palette.canvasColor, opacity: '.85' }}
 					>
 						<Tab label="Links" value={0} icon={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >link</FontIcon>} />
 						<Tab label="Queue" value={1} icon={<FontIcon style={{}} className="material-icons" color={Styles.Colors.blueGrey600} hoverColor={Styles.Colors.blueGrey600} >subscriptions</FontIcon>} />
@@ -591,7 +592,7 @@ export default class miniChannel extends React.Component {
 					<SwipeableViews
 						onChangeIndex={this.handleChange}
 						index={this.state.slideIndex}
-						style={{ background: this.props.theme.palette.canvasColor }}
+						style={{ background: this.props.theme.palette.canvasColor, opacity: '.95' }}
 					>
 						<div style={styles.slide}>
 							<Card zDepth={0}>
@@ -616,11 +617,11 @@ export default class miniChannel extends React.Component {
 						<div>
 							<Card zDepth={0}>
 								<CardHeader 
-									subtitle={<p><img src={poster} width="80" height="45"  style={{ float: 'left', margin: 10 }} />{meta.description}</p>}
-									title={<span><VideoProgress channel={c.channel} Sockets={this.props.Sockets} data={c.playing} /><br /><b>{c.playing.name}</b></span>}
+									subtitle={<p style={{ fontSize: '18px', paddingTop: 10  }}><img src={poster} width="320" height="165"  style={{ float: 'left', marginRight: 20, fontSize: '18px'  }} />{meta.description}</p>}
+									title={<span style={{ fontSize: '18px', paddingTop: 10  }}><b>{c.playing.name}</b><br /><VideoProgress channel={c.channel} Sockets={this.props.Sockets} data={c.playing} /></span>}
 									actAsExpander={true}
 									showExpandableButton={true}
-									style={{ overflow: 'hidden'  }}
+									style={{ overflow: 'hidden' }}
 								/>
 								<CardText expandable={true}>		
 									

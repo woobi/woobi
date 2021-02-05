@@ -17,7 +17,7 @@ export default class VideoController extends React.Component {
 		this.source = props.source ? props.source : this.props.channel.link;
 		
 		this._update = false;
-		this.buttonStyle = { margin: '0 auto',  width: 36, height: 36, padding: 0};
+		this.buttonStyle = { fontSize: '18px', margin: '0 auto',  width: 40, height: 40, padding: 0};
 	}
 	
 	doRequestCommand(link) {
@@ -201,9 +201,9 @@ export default class VideoController extends React.Component {
 						component: (<div>
 							<p>Select the source to play.  The current source will be stopped and your selection started.</p>
 							<p>The queue will cycle as normal.  It may take a couple minutes for your player to catch up.</p>
-							<select ref={(input) => this._nextsource = input} >
+							<select ref={(input) => this._nextsource = input} style={{border:'none',backgroundColor:'#ef6c00',color:'#fff',padding:10}} >
 								{this.props.channel.sources.filter((f,i) => (i>0)).map((c, i) => {
-									return (<option value={i+1}>{c.name}</option>);
+									return (<option value={i+1} style={{padding:10}}>{c.name}</option>);
 								})}
 							</select>
 							
@@ -230,9 +230,9 @@ export default class VideoController extends React.Component {
 	
 	restartButton() {
 		let c = this.props.channel;
-		let newC = { name: 'RebootChannel', label: 'REBOOT CHANNEL', link: '/alvin/restart/channel/' + c.channel , success: 'Channel ' + c.channel + ' restarting fresh. ', error: 'Could not restart ' + c.channel };
-		let newC2 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=no', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel };
-		let newC3 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: '/alvin/restart/channel/' + c.channel + '?passthrough=yes', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel, onSuccess: () => {} };
+		let newC = { name: 'RebootChannel', label: 'REBOOT CHANNEL', link: snowUI.api.uri + '/restart/channel/' + c.channel , success: 'Channel ' + c.channel + ' restarting fresh. ', error: 'Could not restart ' + c.channel };
+		let newC2 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: snowUI.api.uri + '/restart/channel/' + c.channel + '?passthrough=no', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel };
+		let newC3 = { name: 'ModifyChannel', label: 'MODIFY CHANNEL', link: snowUI.api.uri + '/restart/channel/' + c.channel + '?passthrough=yes', success: 'Channel ' + c.channel + ' restarting with current source list.', error: 'Could not restart ' + c.channel, onSuccess: () => {} };
 		const buttonStyle = {
 			margin: '30 0 0 12',
 			borderRadius: 0,
@@ -254,7 +254,7 @@ export default class VideoController extends React.Component {
 				noText: 'Cancel',
 				component: (<div>
 					<p>Do you want to reboot this channel?<br />All feeds will be lost and start over.</p><p>  If you are having issues with audio or video you can try rebooting with transcoding enabled.</p>
-					<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Reboot Channel" onClick={(e) => {
+					<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Reboot Channel" onClick={(e) => {
 						
 						
 						e.preventDefault();
@@ -271,12 +271,12 @@ export default class VideoController extends React.Component {
 							},
 							component: (<div>
 								<p>This will stop the channel and reboot.  </p><p>You can start with a clean queue or keep your current one.</p>
-								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0,  }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0,  }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand(newC);	
 								}} />
-								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand({ ...newC, link: newC.link + '?keepQueue=yes' });	
@@ -309,12 +309,12 @@ export default class VideoController extends React.Component {
 							},
 							component: (<div>
 								<p>This will stop the channel and reboot. <br />The HLS stream will be transcoded with <code>-codec:v libx264</code> and <code>-codec:a  aac</code> and format as <code>mpegts</code>.  </p><p>You can start with a clean queue or keep your current one.</p>
-								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand(newC2);	
 								}} />
-								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand({ ...newC2, link: newC2.link + '&keepQueue=yes' });	
@@ -343,12 +343,12 @@ export default class VideoController extends React.Component {
 							},
 							component: (<div>
 								<p>This will stop the channel and reboot using the video as is. </p><p>  You can start with a clean queue or keep your current one.</p>
-								<RaisedButton style={buttonStyleP} key="fresh"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="fresh"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Start Fresh" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand(newC3);	
 								}} />
-								<RaisedButton style={buttonStyleP} key="stale"  secondary={true} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
+								<RaisedButton style={buttonStyleP} key="stale"  secondary={false} buttonStyle={{ borderRadius: 0 }}  overlayStyle={{ borderRadius: 0 }}  label="Keep Queue" onClick={(e) => {
 									e.preventDefault();
 									Gab.emit('dialog2 open', { open: false });
 									this.doRequestCommand({ ...newC3, link: newC3.link + '&keepQueue=yes' });	
@@ -370,7 +370,7 @@ export default class VideoController extends React.Component {
 	}
 	
 	killButton() {
-		return (<IconButton title="Kill Channel" style={this.buttonStyle} key="kill"  secondary={true} onClick={(e) => { 
+		return (<IconButton title="Kill Channel" style={this.buttonStyle} key="kill"  secondary={false} onClick={(e) => { 
 			e.preventDefault();
 				Gab.emit('confirm open', {
 					title: "Kill Channel?",
@@ -391,7 +391,7 @@ export default class VideoController extends React.Component {
 	}
 	
 	destroyButton() {
-		return (<IconButton title="Destroy Player" style={this.buttonStyle} key="destroy"  secondary={true} onClick={(e) => { 
+		return (<IconButton title="Destroy Player" style={this.buttonStyle} key="destroy"  secondary={false} onClick={(e) => { 
 			e.preventDefault();
 				Gab.emit('confirm open', {
 					title: "Destroy Player?",
@@ -412,7 +412,7 @@ export default class VideoController extends React.Component {
 	}
 	
 	reloadButton() {
-		return (<IconButton title="Reload Player" style={this.buttonStyle} key="reload"  secondary={true} onClick={(e) => { 
+		return (<IconButton title="Reload Player" style={this.buttonStyle} key="reload"  secondary={false} onClick={(e) => { 
 			e.preventDefault();
 				Gab.emit('confirm open', {
 					title: "Reload Player?",
@@ -433,7 +433,7 @@ export default class VideoController extends React.Component {
 	}
 	
 	stopButton() {
-		return (<IconButton title="Stop Playing" style={this.buttonStyle} key="stop"  secondary={true} onClick={(e) => { this.run('stop') }} >
+		return (<IconButton title="Stop Playing" style={this.buttonStyle} key="stop"  secondary={false} onClick={(e) => { this.run('stop') }} >
 			<FontIcon style={{ }} className="material-icons" color={Styles.Colors.blue600} hoverColor={Styles.Colors.blue600} >stop</FontIcon>
 		</IconButton>);
 	}

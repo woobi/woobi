@@ -1,7 +1,7 @@
 import React from 'react';
 import Debug from 'debug';
 import Gab from '../../common/gab';
-import { Card, CardActions, CardHeader, CardText, FontIcon, IconButton, RaisedButton} from 'material-ui';
+import { Card, CardActions, CardMedia, CardTitle, CardHeader, CardText, FontIcon, IconButton, RaisedButton} from 'material-ui';
 import { Styles } from '../../common/styles';
 import { ColorMe } from '../../common/utils';
 import { find as Find } from 'lodash';
@@ -204,7 +204,7 @@ export default class Movies extends React.Component {
 		return (<RaisedButton 
 			style={{ margin: '5 10 0 0',	borderRadius: 0 }} 
 			key="create"  
-			secondary={true} 
+			secondary={false} 
 			buttonStyle={{ borderRadius: 0, color: 'white' }}  
 			overlayStyle={{ borderRadius: 0 }}  
 			label="Create Channel" 
@@ -220,7 +220,7 @@ export default class Movies extends React.Component {
 					component: (<div>
 						<p>This will create a HLS stream with encoding enabled, so Ffmpeg may use some CPU.</p>
 						
-						<RaisedButton style={{ margin: '10 10 0 0',	borderRadius: 0 }} key="play"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel"  onClick={() => {
+						<RaisedButton style={{ margin: '10 10 0 0',	borderRadius: 0 }} key="play"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel"  onClick={() => {
 							Gab.emit('dialog2', { open: false });
 							Gab.emit('snackbar', {
 								style: 'warning',
@@ -314,13 +314,13 @@ export default class Movies extends React.Component {
 	}
 	
 	fanartButton() {
-		return (<IconButton title="Fanart View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'absolute', top: 15, right: 10 }} key="fanart"  secondary={true} onClick={(e) => { this.props.appState({ movieImages: true }) }} >
+		return (<IconButton title="Fanart View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'absolute', top: 15, right: 10 }} key="fanart"  secondary={false} onClick={(e) => { this.props.appState({ movieImages: true }) }} >
 			<FontIcon style={{ }} className="material-icons" color={this.state.movieImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_stream</FontIcon>
 		</IconButton>);
 	}
 	
 	posterButton() {
-		return (<IconButton title="Poster View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'absolute', top: 15, right: 40 }} key="view"  secondary={true} onClick={(e) => { this.props.appState({ movieImages: false }) }} >
+		return (<IconButton title="Poster View" style={{ zIndex: 1100, margin: '0 auto', width: false, height: false, padding: 0, position: 'absolute', top: 15, right: 40 }} key="view"  secondary={false} onClick={(e) => { this.props.appState({ movieImages: false }) }} >
 			<FontIcon style={{ }} className="material-icons" color={!this.state.movieImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_column</FontIcon>
 		</IconButton>);
 	}
@@ -335,32 +335,37 @@ export default class Movies extends React.Component {
 	}
 	
 	render() { 
-		//debug('## render  ##  Channels Home render', this.props, this.state);
+		debug('## render  ##  Channels Home render', this.props, this.state);
 		let ret = <span >Loading Movies</span>;
 		if (this.state.shows.length > -1) {
 			ret =  this.state.shows.map((c, i) => {
-				let art = 'initial';
-				let banner = 'initial';
+				debug('show', c);
+				let art = encodeURI('/images/fanart.gif');
+				let banner = encodeURI('/images/fanart.gif');
 				let bgSize = 'cover';
 				if(c.art) {
 					var asset = Find(c.art, { type: 'fanart' });
-					if(asset && this.state.movieImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "') left top / 100% repeat-y fixed";
+					if(asset && this.state.movieImages) art = encodeURI(snowUI.artStringReplace(asset.url));
 					var asset2 = Find(c.art, { type: 'poster' });
-					if(asset2 && !this.state.movieImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "') no-repeat right top";
+					if(asset2 && !this.state.movieImages) art = encodeURI(snowUI.artStringReplace(asset2.url));
 				}
-				return (<div  className={this.state.movieImages ? "col-xs-12 " : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
-					<div style={{ margin: 0, cursor: 'pointer', height: !this.state.movieImages ? 275 : 200, background: art, backgroundSize: 'cover'}}  onClick={(e) => {
+				debug('art', art)
+				return (<div  className={this.state.movieImages ? "col-sm-4 " : "col-sm-4 col-sm-3 col-md-2"} style={{ padding: 0 }} >
+					<div style={{cursor: 'pointer'}}  onClick={(e) => {
 						e.preventDefault();
 						this.props.goTo({
 							page: c.name,
 							path: '/library/movies/movie/' + c.imdb
 						});
 					}} > 
-						<Card zDepth={1}  style={{ opacity: this.state.movieImages ? '.85' : '.75' }}>
-							<CardHeader
-								title={<div style={{ fontWeight: 400, fontSize: 16 }}>{this.state.movieImages ? c.name : ''}</div>}
-								style={{ height: 40 }}
-							/>
+						<Card zDepth={1}  style={{ minHeight: 400, maxHeight: 500 }}>
+							<CardMedia overlay={<CardTitle subtitle={ c.file }  />} >
+								<img src={art} alt="" />
+							</CardMedia>
+							<CardTitle style={{ paddingTop: 10 }} title={ c.title } subtitle={ c.genre } />
+							<CardText>
+								{ c.description }	
+							</CardText>
 						</Card>
 					</div>
 				</div>)

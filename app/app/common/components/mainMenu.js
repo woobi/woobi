@@ -135,79 +135,19 @@ export default class mainMenu extends React.Component {
 						
 						
 					<div className="clearfix" style={{ height: 10 }} />
-					<MenuItem 
-						primaryText="Guide" 
-						leftIcon={<FontIcon className="material-icons">view_list</FontIcon>} 
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'Episode Program Guide',
-								path: '/tv/guide',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-						style={{}}
-						href="/noscript/tv"
-					/>
-					
-					
-					<MenuItem 
-						primaryText="Scheduled" 
-						leftIcon={<FontIcon className="material-icons">fiber_dvr</FontIcon>} 
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'Scheduled',
-								path: '/tv/scheduled',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-						style={{}}
-						href="/noscript/tv/scheduled"
-					/>
-					<MenuItem 
-						primaryText="Season Passes" 
-						leftIcon={<FontIcon className="material-icons">fiber_dvr</FontIcon>} 
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'Season Passes',
-								path: '/tv/season-passes',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-						style={{}}
-						href="/noscript/tv/season-passes"
-					/>
-					<MenuItem 
-						primaryText="Recordings" 
-						leftIcon={<FontIcon className="material-icons">play_circle_filled</FontIcon>} 
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'Recordings',
-								path: '/tv/recordings',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-						style={{}}
-						href="/noscript/tv/recordings"
-					/>
-					
-					<MenuItem 
-						primaryText="TV Channels" 
-						leftIcon={<FontIcon className="material-icons">tv</FontIcon>} 
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'TV Channels',
-								path: '/tv/channels',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-						style={{}}
-						href="/noscript/tv/channels"
-					/>
-					<Divider />
-					<MenuItem 
-						primaryText="On Demand"
-						rightIcon={<ArrowDropRight />}
-						menuItems={[
+						<MenuItem
+							primaryText="Channels"
+							leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
+							onClick={(e) => {
+								e.preventDefault(e);
+								this.props.goTo({
+									page: 'Stations',
+									path: '/stations',
+								}, {}, () => { this.toggleDrawer(false, false) });
+							}}
+						/>
+						<Divider />	
+						
 								<MenuItem 
 								primaryText="All Shows" 
 								leftIcon={<FontIcon className="material-icons">tv</FontIcon>} 
@@ -220,7 +160,7 @@ export default class mainMenu extends React.Component {
 								}}
 								style={{}}
 								href="/noscript/library/tv"
-							/>,
+							/>
 							<MenuItem 
 								primaryText="Recent Shows" 
 								leftIcon={<FontIcon className="material-icons">queue_play_next</FontIcon>} 
@@ -233,7 +173,8 @@ export default class mainMenu extends React.Component {
 								}}
 								style={{}}
 								href="/noscript/library/tv/recent"
-							/>,					
+							/>
+							<Divider />				
 							<MenuItem 
 								primaryText="All Movies" 
 								leftIcon={<FontIcon className="material-icons">local_movies</FontIcon>} 
@@ -246,7 +187,7 @@ export default class mainMenu extends React.Component {
 								}}
 								style={{}}
 								href="/noscript/library/movies"
-							/>,
+							/>
 							<MenuItem 
 								primaryText="Recent Movies" 
 								leftIcon={<FontIcon className="material-icons">slow_motion_video</FontIcon>} 
@@ -260,23 +201,11 @@ export default class mainMenu extends React.Component {
 								style={{}}
 								href="/noscript/library/movies/recent"
 							/>			
-						]}
-					/>
+						
 					
 					<Divider />
 					
-					<MenuItem
-						primaryText="Stations"
-						leftIcon={<FontIcon className="material-icons">line_style</FontIcon>} 
-						onClick={(e) => {
-							e.preventDefault(e);
-							this.props.goTo({
-								page: 'Stations',
-								path: '/stations',
-							}, {}, () => { this.toggleDrawer(false, false) });
-						}}
-					/>
-					<Divider />			
+							
 				</div>
 			</Drawer>
 		);

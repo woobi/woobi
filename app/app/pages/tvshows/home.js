@@ -104,22 +104,28 @@ export default class TVShows extends React.Component {
 					var asset = Find(c.art, { type: 'fanart' });
 					if(asset && this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')left top / 100% no-repeat fixed";
 					var asset2 = Find(c.art, { type: 'poster' });
-					if(asset2 && !this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "')  no-repeat right top";
+					if(asset2 && !this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "')  left top / 100% auto no-repeat";
 				}
-				return (<div  className={this.state.tvImages ? "col-xs-12 col-sm-6 col-md-4" : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
-					<div style={{ margin: 0, cursor: 'pointer', height: !this.state.tvImages ? 285 : 200, background: art, backgroundSize: 'cover'}}  onClick={(e) => {
+				let cellH = !this.state.tvImages ? 380 : 250;
+				return (<div  className={this.state.tvImages ? "col-xs-12 col-sm-6 col-md-4 col-lg-6" : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
+					<div style={{ margin: 0, cursor: 'pointer', height: cellH, background: art, backgroundSize: 'cover', display: 'table', width: '100%', textAlign: 'center' }}  onClick={(e) => {
 						e.preventDefault();
 						this.props.goTo({
 							page: c.name,
 							path: '/library/tv/' + c.imdb
 						});
 					}} > 
-						<Card zDepth={1}  style={{ opacity: this.state.tvImages ? '.75' : '0' }}>
-							<CardHeader
-								title={this.state.tvImages ? c.name : ''}
-								style={{ height: 40 }}
-							/>
-						</Card>
+
+						<span style={{
+							display: 'table-cell',
+							verticalAlign: 'middle',
+							padding: '10px',
+							color: '#fff',
+							fontSize: 36
+						}}> 
+							{ c.name }
+						</span>
+
 					</div>
 				</div>)
 			});

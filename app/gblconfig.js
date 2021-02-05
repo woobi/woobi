@@ -18,8 +18,8 @@ String.prototype.format = function () {
 var snowUI = {
 	name: 'Woobi',
 	materialStyle: {},
-	defaultTheme: 'blue',
-	__currentTheme: 'blue',
+	defaultTheme: 'nitelite2',
+	__currentTheme: 'nitelite2',
 	__lastTheme: false,
 	__userTheme: false,
 	__state: {},
@@ -44,7 +44,7 @@ var snowUI = {
 	api: {
 		uri: '/woobi'
 	},
-	serverRendered: true
+	serverRendered: false
 };
 
 /* run code on start and end lifecycles */
@@ -114,12 +114,18 @@ snowUI.fadeIn = function(speed, me, callback) {
 }
 
 snowUI.artStringReplace = function(art) {
-	return art;
+	console.log('Art');
+	console.log(art);
+	art = art.replace('Z:', '/media');
+	return art.replace(/\\/g, '/');
 }
 
+
 snowUI.videoStringReplace = function(art) {
-	return art;
+	art = art.replace('Z:\\', '/direct');
+	return art.replace(/\\/g, '/');
 }
+
 
 // sticky menu
 snowUI.unstickyMenu = function() {

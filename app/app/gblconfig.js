@@ -13,16 +13,16 @@ Number.prototype.clip = function(numbers) {
 var snowUI = {
 	name: 'The Lodge',
 	materialStyle: {},
-	defaultTheme: 'night',
-	__currentTheme: 'night',
+	defaultTheme: 'nightlite2',
+	__currentTheme: 'nightlite2',
 	__lastTheme: false,
 	__userTheme: false,
 	__state: {},
 	namespace: '/lodge',
 	shortenTitle: false,
 	usesockets: true,
-	port: 7001,
-	host: 'studio',
+	port: 7000,
+	host: 'snow.inq.email',
 	homepage: '/',
 	breaks: {
 		xs: {
@@ -39,9 +39,9 @@ var snowUI = {
 		}
 	},
 	api: {
-		uri: '/alvin/'
+		uri: '/woobi/'
 	},
-	serverRendered: true
+	serverRendered: false
 };
 
 /* run code on start and end lifecycles */
@@ -111,11 +111,15 @@ snowUI.fadeIn = function(speed, me, callback) {
 }
 
 snowUI.artStringReplace = function(art) {
-	return art.replace('smb://VIZIO', '/media');
+	console.log('Art');
+	console.log(art);
+	art = art.replace('Z:', '/media');
+	return art.replace(/\\/g, '/');
 }
 
 snowUI.videoStringReplace = function(art) {
-	return art.replace('smb://VIZIO', '/direct');
+	art = art.replace('Z:', '/direct');
+	return art.replace(/\\/g, '/');
 }
 
 // sticky menu

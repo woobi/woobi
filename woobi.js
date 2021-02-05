@@ -26,14 +26,21 @@ var Woobi = function() {
 		'media passthrough route': '/media',
 		'media passthrough path': '/media',
 		'video passthrough route': '/direct',
-		'video passthrough path': '/media',
-		port: 7001,
+		'video passthrough path': '/direct',
+		port: 8337,
 		proxy: false,
 		host: 'localhost',
 		'proxy api': '/woobi',
 		env: process.env.ENV || 'production',
-		artStringReplace: function(art){ return art; },
-		videoStringReplace: function(art) { return art; },
+		artStringReplace: function(art) {
+			//console.log(art);
+			art = art.replace('Z:', 'http://localhost:8337/woobi/media');
+			return art.replace(/\\/g, '/');
+		},
+		videoStringReplace: function(art) {
+			art = art.replace('Z:', 'http://localhost:8337/woobi/direct');
+			return art.replace(/\\/g, '/');
+		},
 		'keep open': false,
 		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe'
 	}
@@ -68,7 +75,7 @@ util.inherits(Woobi, EventEmitter);
 
 Woobi.prototype.init = function (opts, callback) {
 	
-	return new Promise ((resolve) => {
+	return new Promise ((resolve, reject) => {
 		if(!_.isArray(opts.adapters)) {
 			debug('No adapter configs found!');
 			opts.adapters = [];
@@ -97,20 +104,20 @@ Woobi.prototype.init = function (opts, callback) {
 			if(err) debug('Error creating mediaPath dir for channels', err);
 		
 			this.fillers = [{
-				name: 'Camera', 
+				name: 'woobi', 
 				image: true,
 				inputOptions: '',
 				videoFilters: {
 					filter: 'drawtext',
 					options: {
 						//fontfile: '/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
-						text: 'Woobi waits...',
+						text: 'woobi will continue streaming soon',
 						fontcolor: 'white',
 						fontsize: 100,
 						box: 1,
-						boxcolor: 'black@0.5',
+						boxcolor: 'black@0.25',
 						boxborderw: 25,
-						x: '(w-text_w)/2',
+						x: '(w-text_w)',
 						y: '(h-text_h)/2'
 					}
 				},
@@ -118,7 +125,7 @@ Woobi.prototype.init = function (opts, callback) {
 			}];
 			
 			this.filler = this.fillers[0];
-			
+			this.apad = path.join(Broadcast.get('module root'), 'lib','assets','bg1.mp3')
 			if ( opts.proxy ) {
 				debug('got opts.proxy', opts.proxy)
 				if ( opts.proxy === true )  {
@@ -145,6 +152,7 @@ Woobi.prototype.init = function (opts, callback) {
 			// set the correct library adapters
 			async.forEach(opts.adapters,
 				(v, next) => {
+					debug(v);
 					if(v.name) {
 						this.libs[v.name] = Adapter(this, v, (err, adapted) => {
 							debug(v.name + ' Adapter configured');

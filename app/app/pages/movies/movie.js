@@ -334,19 +334,19 @@ export default class Show extends React.Component {
 		Gab.emit('dialog open', {
 			component: (<div>
 				<p>{s.filename}</p>
-				{!this.state.channel ? <span /> : <RaisedButton style={buttonStyleP} key="play"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Play" onClick={e => {
+				{!this.state.channel ? <span /> : <RaisedButton style={buttonStyleP} key="play"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Play" onClick={e => {
 						Gab.emit('dialog', { open: false });
 						this.pushToChannel(this.state.channel, s);	
 				}} />}
-				{this.state.channel ? <span /> : <RaisedButton style={buttonStyleP} key="play"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Play" onClick={e => {
+				{this.state.channel ? <span /> : <RaisedButton style={buttonStyleP} key="play"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Play" onClick={e => {
 						Gab.emit('dialog', { open: false });
 						this._update = true;
 						this._autoPlay = true;
 						this.setState({
-							play: encodeURI(snowUI.videoStringReplace(s.file)),
+							play: snowUI.videoStringReplace(s.file),
 						});	
 				}} />}
-				{!this.state.channels ? <span /> : <RaisedButton style={buttonStyleP} key="addto"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Push" onClick={e => {
+				{!this.state.channels ? <span /> : <RaisedButton style={buttonStyleP} key="addto"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Push" onClick={e => {
 						Gab.emit('dialog', { open: false });
 						Gab.emit('dialog2', {
 							title: s.name +  "",
@@ -368,7 +368,7 @@ export default class Show extends React.Component {
 							</div>)
 						});
 				}} />}
-				{this.state.channel ? <span /> : <RaisedButton style={buttonStyleP} key="create"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Channel" onClick={(e) => {
+				{this.state.channel ? <span /> : <RaisedButton style={buttonStyleP} key="create"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Channel" onClick={(e) => {
 					e.preventDefault();
 					Gab.emit('dialog', { open: false });
 					Gab.emit('dialog2', {
@@ -386,7 +386,7 @@ export default class Show extends React.Component {
 						component: (<div>
 							<p>Some files can not be streamed directly.  You can create a channel to convert those files so they can be viewed everywhere.  This will create a HLS stream with encoding enabled, so Ffmpeg may use some CPU.</p>
 							
-							<RaisedButton style={buttonStyleP} key="play"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel"  onClick={() => {
+							<RaisedButton style={buttonStyleP} key="play"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel"  onClick={() => {
 								Gab.emit('dialog2', { open: false });
 								Gab.emit('snackbar', {
 									style: 'warning',
@@ -513,7 +513,7 @@ export default class Show extends React.Component {
 		return (<RaisedButton 
 			style={{ margin: '10 10 0 0',	borderRadius: 0 }} 
 			key="play"  
-			secondary={true} 
+			secondary={false} 
 			buttonStyle={{ borderRadius: 0, color: 'white' }}  
 			label="Play Options" 
 			onClick={this.dialog.bind(this)} 

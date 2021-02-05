@@ -200,7 +200,7 @@ export default class RecentEpisodes extends React.Component {
 		return (<RaisedButton 
 			style={{ margin: '5 10 0 0',	borderRadius: 0 }} 
 			key="create"  
-			secondary={true} 
+			secondary={false} 
 			buttonStyle={{ borderRadius: 0, color: 'white' }}  
 			overlayStyle={{ borderRadius: 0 }}  
 			label="Create Channel" 
@@ -216,7 +216,7 @@ export default class RecentEpisodes extends React.Component {
 					component: (<div>
 						<p>This will create a HLS stream with encoding enabled, so Ffmpeg may use some CPU.</p>
 						
-						<RaisedButton style={{ margin: '10 10 0 0',	borderRadius: 0 }} key="play"  secondary={true} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel"  onClick={() => {
+						<RaisedButton style={{ margin: '10 10 0 0',	borderRadius: 0 }} key="play"  secondary={false} buttonStyle={{ borderRadius: 0, color: 'white' }}  overlayStyle={{ borderRadius: 0 }}  label="Create Channel"  onClick={() => {
 							Gab.emit('dialog2', { open: false });
 							Gab.emit('snackbar', {
 								style: 'warning',
@@ -313,13 +313,13 @@ export default class RecentEpisodes extends React.Component {
 	}
 	
 	fanartButton() {
-		return (<IconButton title="Fanart View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 10 }} key="fanart"  secondary={true} onClick={(e) => { this.props.appState({ tvImages: true }) }} >
+		return (<IconButton title="Fanart View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 10 }} key="fanart"  secondary={false} onClick={(e) => { this.props.appState({ tvImages: true }) }} >
 			<FontIcon style={{ }} className="material-icons" color={this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_stream</FontIcon>
 		</IconButton>);
 	}
 	
 	posterButton() {
-		return (<IconButton title="Poster View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 40 }} key="view"  secondary={true} onClick={(e) => { this.props.appState({ tvImages: false }) }} >
+		return (<IconButton title="Poster View" style={{ zIndex: 1101, margin: '0 auto', width: false, height: false, padding: 0, position: 'fixed', top: 15, right: 40 }} key="view"  secondary={false} onClick={(e) => { this.props.appState({ tvImages: false }) }} >
 			<FontIcon style={{ }} className="material-icons" color={!this.state.tvImages ? Styles.Colors.lightGreenA700 : Styles.Colors.blue600}  >view_column</FontIcon>
 		</IconButton>);
 	}
@@ -345,22 +345,48 @@ export default class RecentEpisodes extends React.Component {
 					var asset = Find(c.art, { type: 'fanart' });
 					if(asset && this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset.url)) + "')center top / 100% no-repeat fixed";
 					var asset2 = Find(c.art, { type: 'poster' });
-					if(asset2 && !this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "')  no-repeat right top";
+					if(asset2 && !this.state.tvImages) art = "url('" + encodeURI(snowUI.artStringReplace(asset2.url)) + "')  no-repeat right top / 100% auto";
 				}
+
+				let descBug = { height: 80, overflow: 'hidden', position: 'absolute', bottom: '0%', left: '0%', width: '100%', background: '#fff', opacity: '.80', color: '#121212', paddingTop: 10, paddingLeft: 10, paddingRight: 10, fontWeight: 'bold', fontSize: 14 }
+
+				let epBug = { height: 24, padding: 0, overflow: 'hidden', position: 'absolute', bottom: 85, right: 10, width: '100', fontWeight: 'bold'}
+
+				let title = { height: 65, padding: '5 0 0 12' }
+
+				if (this.state.tvImages) { //posters
+					descBug = { height: 45, overflow: 'hidden', position: 'absolute', bottom: '0%', left: '0%', width: '100%', background: '#fff', opacity: '.80', color: '#121212', paddingTop: 5, paddingLeft: 15, paddingRight: 5, fontWeight: 'bold', fontSize: 14 }
+					
+					epBug = { height: 24, padding: 0, overflow: 'hidden', position: 'absolute', top: 60, left: 10, width: '100', fontWeight: 'bold'}
+
+					title = { height: 50, padding: '5 0 0 12' }
+
+				}
+
 				return (<div  className={this.state.tvImages ? "col-xs-12" : "col-xs-6 col-sm-3 col-md-2"} style={{ padding: 0 }} >
-					<div style={{ margin: 0, cursor: 'pointer', height: !this.state.tvImages ? 285 : 200, background: art, backgroundSize: 'cover'}}  onClick={(e) => {
+					<div style={{ margin: 0, cursor: 'pointer', height: !this.state.tvImages ? 350 : 275, background: art, position: 'relative'}}  onClick={(e) => {
 						e.preventDefault();
 						this.props.goTo({
 							page: c.name,
 							path: '/library/tv/episode/' + c.idShow + '/' + c.episodeID
 						});
 					}} > 
-						<Card zDepth={1}  style={{ opacity: this.state.tvImages ? '.85' : '.85' }}>
+						<Card zDepth={1}  style={{ background: '#a5bf48', opacity: this.state.tvImages ? '.97' : '.97' }}>
 							<CardHeader
-								title={<div style={{ fontWeight: 400, fontSize: 16 }}>{this.state.tvImages ? c.name : ''}</div>}
-								style={{ height: 40 }}
+								title={<div style={{ color: '#2b2b2b', fontSize: 14 }}> { c.show } </div>}
+								style={title}
+								subtitle={<div style={{ color: '#2b2b2b', fontSize: 14 }}> { c.title }</div>}
 							/>
+							
 						</Card>
+					
+						<div className={"descBug"} style={descBug}>{ c.description }</div>
+						<div className={"epBug"} style={epBug}>
+							<div className={"s"} style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, background: '#2b2b2b', color: '#c6ff00', float: 'left', width: '20px'}}>s</div>
+							<div className={"sn"} style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, background: '#c6ff00', color: '#2b2b2b', float: 'left', width: '30px'}}>{ c.season }</div>
+							<div className={"e"} style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, background: '#2b2b2b', color: '#c6ff00', float: 'left', width: '20px'}}>e</div>
+							<div className={"en"} style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, background: '#c6ff00', color: '#2b2b2b', float: 'left', width: '30px'}}>{ c.episode }</div>
+						</div>
 					</div>
 				</div>)
 				
@@ -377,7 +403,7 @@ export default class RecentEpisodes extends React.Component {
 			<div style={{ padding: '0px 0px' }}>
 				<Card   zDepth={1}>
 					<CardHeader
-						style={{ overflow: 'hidden', position: 'relative' }}
+						style={{  overflow: 'hidden', position: 'relative' }}
 						title={sub}
 						subtitle={tit}
 						avatar={<FontIcon style={{fontSize:'42px'}} className="material-icons" color={ColorMe(5, this.props.theme.baseTheme.palette.accent1Color).color}  >live_tv</FontIcon>}

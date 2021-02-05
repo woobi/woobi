@@ -181,7 +181,7 @@ export default class Home extends React.Component {
 							page: 'Update Station'
 						});
 					}}/>
-					<div title="Delete" style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children=<FontIcon className="material-icons" children="delete_forever" color={Styles.Colors.orangeA400} /> onClick={() => {
+					<div title="Delete" style={{ float: 'left', width: 35, margin: 5, padding: 5, cursor: 'pointer'  }} children={<FontIcon className="material-icons" children="delete_forever" color={Styles.Colors.orangeA400} />} onClick={() => {
 						Gab.emit('confirm open', {
 							html: 'Remove Saved Config ' + r.name + '?',
 							answer: ( yesno ) => { 
@@ -268,6 +268,11 @@ export default class Home extends React.Component {
 					return false;
 				}
 			});
+			/*return (<div>
+				<div style={{ padding: '10px ' }} children={list} />
+				<div style={{ padding: '10px ' }} children={list2}  />
+			</div>);
+			*/
 			return (<div>
 				<div style={{ padding: '10px ' }} className="col-sm-6" children={list} />
 				<div style={{ padding: '10px ' }} className="col-sm-6" children={list2}  />
