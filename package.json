@@ -137,7 +137,8 @@
     "socket.io": "^2.4.0",
     "superagent": "",
     "tailing-stream": "^0.2.0",
-    "throttle": "^1.0.3"
+    "throttle": "^1.0.3",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "babel": "",

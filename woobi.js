@@ -7,6 +7,7 @@ var fs = require('fs-extra');
 var sanitize = require('sanitize-filename');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+
 var Broadcast;
 
 var moduleRoot = (function(_rootPath) {
@@ -42,7 +43,10 @@ var Woobi = function() {
 			return art.replace(/\\/g, '/');
 		},
 		'keep open': false,
-		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe'
+		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe',
+		wobbleConfigPath: path.join(moduleRoot, 'wobbles'),
+		wobbles: 'wobbles',
+		wobble: 'wobble',
 	}
 	
 	this.version = require('./package.json').version;
@@ -100,8 +104,13 @@ Woobi.prototype.init = function (opts, callback) {
 		this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
 		this.dvrPath = opts.dvrPath || path.join(this.mediaPath, 'dvr');
 		
-		fs.ensureDir(path.join(this.mediaPath,'channels'), (err) => {
-			if(err) debug('Error creating mediaPath dir for channels', err);
+		this.wobbleConfigPath = this._options.wobbleConfigPath
+		this.wobbles = this._options.wobbles
+		this.wobble = this._options.wobble
+
+
+		fs.ensureDir(path.join(this.mediaPath, this.wobbles), (err) => {
+			if(err) debug('Error creating mediaPath dir for wobbles', err);
 		
 			this.fillers = [{
 				name: 'woobi', 
@@ -191,6 +200,14 @@ Woobi.prototype.init = function (opts, callback) {
 		}
 	}); //end promise
 }
+
+// use camelCase for ids and filenames
+Woobi.prototype.camelCaseSanitize = function camelCase(str) { 
+	return sanitize(str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) 
+	{ 
+		return index == 0 ? word.toLowerCase() : word.toUpperCase(); 
+	}).replace(/\s+/g, '')); 
+} 
 
 // send socket notifications
 Woobi.prototype.notify = function(emitter, data) {
