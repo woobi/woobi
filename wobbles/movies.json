@@ -1,0 +1,702 @@
+{
+  "files": [
+    {
+      "name": "Blue Chips (1994)",
+      "file": "Z:\\Movies\\Blue Chips (1994)\\Blue Chips (1994).mkv",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 1,
+        "userrating": null,
+        "filename": "Blue Chips (1994).mkv",
+        "path": "Z:\\Movies\\Blue Chips (1994)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Blue Chips (1994)/Blue Chips (1994).mkv",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Blue Chips (1994)/Blue Chips (1994).mkv",
+        "file": "Z:\\Movies\\Blue Chips (1994)\\Blue Chips (1994).mkv",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2016-01-08 19:58:14",
+        "movie": "Blue Chips (1994)",
+        "name": "Blue Chips (1994)",
+        "title": "Blue Chips (1994)",
+        "genre": "",
+        "director": "",
+        "producer": "",
+        "premiered": "0",
+        "originCountry": "",
+        "rating": null,
+        "resumeTimeInSeconds": 0,
+        "totalTimeInSeconds": 6455.552,
+        "imdb": "-1",
+        "year": null,
+        "blurb": "",
+        "description": "",
+        "art": [
+          {
+            "art_id": 216,
+            "media_id": 1,
+            "media_type": "movie",
+            "type": "thumb",
+            "url": "Z:\\Movies\\Blue Chips (1994)\\Blue Chips (1994)-thumb.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Coyote Ugly",
+      "file": "Z:\\Movies\\Coyote Ugly (2000)\\Coyote Ugly (2000).mkv",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 13,
+        "userrating": null,
+        "filename": "Coyote Ugly (2000).mkv",
+        "path": "Z:\\Movies\\Coyote Ugly (2000)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Coyote Ugly (2000)/Coyote Ugly (2000).mkv",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Coyote Ugly (2000)/Coyote Ugly (2000).mkv",
+        "file": "Z:\\Movies\\Coyote Ugly (2000)\\Coyote Ugly (2000).mkv",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 07:00:35",
+        "movie": "Coyote Ugly",
+        "name": "Coyote Ugly",
+        "title": "Coyote Ugly",
+        "genre": "Comedy / Drama / Music / Romance",
+        "director": "Gina Wendkos",
+        "producer": "David McNally",
+        "premiered": "2000-07-30",
+        "originCountry": "United States of America",
+        "rating": 6.2,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "56",
+        "year": null,
+        "blurb": "This party never ends.",
+        "description": "Graced with a velvet voice, 21-year-old Violet Sanford heads to New York to pursue her dream of becoming a songwriter only to find her aspirations sidelined by the accolades and notoriety she receives at her \"day\" job as a barmaid at Coyote Ugly. The \"Coyotes\" as they are affectionately called tantalize customers and the media alike with their outrageous antics, making Coyote Ugly the watering hole for guys on the prowl.",
+        "art": [
+          {
+            "art_id": 767,
+            "media_id": 13,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/9i0dfKzf6p76PVxlHFDZOHvwnLY.jpg"
+          },
+          {
+            "art_id": 768,
+            "media_id": 13,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/p3nIrS9rkdVmMmgKAWtGsmAnhGV.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Captain Marvel",
+      "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) 1080p.m4v",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 19,
+        "userrating": null,
+        "filename": "Captain Marvel (2019) 1080p.m4v",
+        "path": "Z:\\Movies\\Captain Marvel (2019)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Captain Marvel (2019)/Captain Marvel (2019) 1080p.m4v",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Captain Marvel (2019)/Captain Marvel (2019) 1080p.m4v",
+        "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) 1080p.m4v",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 14:45:26",
+        "movie": "Captain Marvel",
+        "name": "Captain Marvel",
+        "title": "Captain Marvel",
+        "genre": "Action / Adventure / Science Fiction",
+        "director": "Ryan Fleck / Anna Boden / Geneva Robertson-Dworet",
+        "producer": "Ryan Fleck / Anna Boden",
+        "premiered": "2019-03-06",
+        "originCountry": "United States of America",
+        "rating": 7,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "72",
+        "year": null,
+        "blurb": "Higher. Further. Faster.",
+        "description": "The story follows Carol Danvers as she becomes one of the universe’s most powerful heroes when Earth is caught in the middle of a galactic war between two alien races. Set in the 1990s, Captain Marvel is an all-new adventure from a previously unseen period in the history of the Marvel Cinematic Universe.",
+        "art": [
+          {
+            "art_id": 851,
+            "media_id": 19,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/w2PMyoyLU22YvrGK3smVM9fW1jj.jpg"
+          },
+          {
+            "art_id": 852,
+            "media_id": 19,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/AtsgWhDnHTq68L0lLsUrCnM7TjG.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Chef",
+      "file": "Z:\\Movies\\Chef (2014)\\Chef (2014).m4v",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 23,
+        "userrating": null,
+        "filename": "Chef (2014).m4v",
+        "path": "Z:\\Movies\\Chef (2014)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Chef (2014)/Chef (2014).m4v",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Chef (2014)/Chef (2014).m4v",
+        "file": "Z:\\Movies\\Chef (2014)\\Chef (2014).m4v",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-04 10:48:20",
+        "movie": "Chef",
+        "name": "Chef",
+        "title": "Chef",
+        "genre": "Comedy",
+        "director": "Jon Favreau",
+        "producer": "Jon Favreau",
+        "premiered": "2014-05-08",
+        "originCountry": "United States of America",
+        "rating": 7.1,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "80",
+        "year": null,
+        "blurb": "Starting from scratch never tasted so good.",
+        "description": "When Chef Carl Casper suddenly quits his job at a prominent Los Angeles restaurant after refusing to compromise his creative integrity for its controlling owner, he is left to figure out what's next. Finding himself in Miami, he teams up with his ex-wife, his friend and his son to launch a food truck. Taking to the road, Chef Carl goes back to his roots to reignite his passion for the kitchen -- and zest for life and love.",
+        "art": [
+          {
+            "art_id": 1015,
+            "media_id": 23,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "Z:\\Movies\\Chef (2014)\\fanart.jpg"
+          },
+          {
+            "art_id": 1016,
+            "media_id": 23,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "Z:\\Movies\\Chef (2014)\\poster.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Breach",
+      "file": "Z:\\Movies\\Breach (2020)\\Breach (2020).mkv",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 22,
+        "userrating": null,
+        "filename": "Breach (2020).mkv",
+        "path": "Z:\\Movies\\Breach (2020)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Breach (2020)/Breach (2020).mkv",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Breach (2020)/Breach (2020).mkv",
+        "file": "Z:\\Movies\\Breach (2020)\\Breach (2020).mkv",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-04 10:51:45",
+        "movie": "Breach",
+        "name": "Breach",
+        "title": "Breach",
+        "genre": "Science Fiction / Action",
+        "director": "Corey Large / Edward Drake",
+        "producer": "John Suits",
+        "premiered": "2020-12-17",
+        "originCountry": "Canada",
+        "rating": 5,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "78",
+        "year": null,
+        "blurb": "Deep in space they are not alone.",
+        "description": "A hardened mechanic must stay awake and maintain an interstellar ark fleeing the dying planet Earth with a few thousand lucky souls on board... the last of humanity. Unfortunately, humans are not the only passengers. A shapeshifting alien creature has taken residence, its only goal is to kill as many people as possible. The crew must think quickly to stop this menace before it destroys mankind.",
+        "art": [
+          {
+            "art_id": 1013,
+            "media_id": 22,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/nz8xWrTKZzA5A7FgxaM4kfAoO1W.jpg"
+          },
+          {
+            "art_id": 1014,
+            "media_id": 22,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/13B6onhL6FzSN2KaNeQeMML05pS.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Personal Shopper",
+      "file": "Z:\\Movies\\Personal Shopper (2018)\\Personal_Shopper(2018).m4v",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 5,
+        "userrating": null,
+        "filename": "Personal_Shopper(2018).m4v",
+        "path": "Z:\\Movies\\Personal Shopper (2018)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Personal Shopper (2018)/Personal_Shopper(2018).m4v",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Personal Shopper (2018)/Personal_Shopper(2018).m4v",
+        "file": "Z:\\Movies\\Personal Shopper (2018)\\Personal_Shopper(2018).m4v",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-01 18:33:49",
+        "movie": "Personal Shopper",
+        "name": "Personal Shopper",
+        "title": "Personal Shopper",
+        "genre": "Drama / Mystery / Thriller",
+        "director": "Olivier Assayas",
+        "producer": "Olivier Assayas",
+        "premiered": "2016-10-19",
+        "originCountry": "Belgium",
+        "rating": 5.9,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "41",
+        "year": null,
+        "blurb": "",
+        "description": "A personal shopper in Paris refuses to leave the city until she makes contact with her twin brother who previously died there. Her life becomes more complicated when a mysterious person contacts her via text message.",
+        "art": [
+          {
+            "art_id": 506,
+            "media_id": 5,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/i46GYmtFfumxJrBAuvk72twBJ3C.jpg"
+          },
+          {
+            "art_id": 507,
+            "media_id": 5,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/6X7RXmJytCtKX8d5gnRg6kBgFCc.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Emma.",
+      "file": "Z:\\Movies\\Emma. (2020)\\Emma (2020).mp4",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 17,
+        "userrating": null,
+        "filename": "Emma (2020).mp4",
+        "path": "Z:\\Movies\\Emma. (2020)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Emma. (2020)/Emma (2020).mp4",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Emma. (2020)/Emma (2020).mp4",
+        "file": "Z:\\Movies\\Emma. (2020)\\Emma (2020).mp4",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 12:41:28",
+        "movie": "Emma.",
+        "name": "Emma.",
+        "title": "Emma.",
+        "genre": "Comedy / Drama / Romance",
+        "director": "Jane Austen / Eleanor Catton",
+        "producer": "Autumn de Wilde",
+        "premiered": "2020-02-13",
+        "originCountry": "United Kingdom",
+        "rating": 6.7,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "64",
+        "year": null,
+        "blurb": "Love knows best.",
+        "description": "In 1800s England, a well-meaning but selfish young woman meddles in the love lives of her friends.",
+        "art": [
+          {
+            "art_id": 813,
+            "media_id": 17,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "Z:\\Movies\\Emma. (2020)\\fanart.jpg"
+          },
+          {
+            "art_id": 814,
+            "media_id": 17,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "Z:\\Movies\\Emma. (2020)\\poster.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "The Hunger Games: Mockingjay - Part 2",
+      "file": "Z:\\Movies\\The Hunger Games Mockingjay Part 2 (2015)\\The Hunger Games- Mockingjay - Part 2 (2015) WEBDL-1080p.mkv",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 7,
+        "userrating": null,
+        "filename": "The Hunger Games- Mockingjay - Part 2 (2015) WEBDL-1080p.mkv",
+        "path": "Z:\\Movies\\The Hunger Games Mockingjay Part 2 (2015)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games Mockingjay Part 2 (2015)/The Hunger Games- Mockingjay - Part 2 (2015) WEBDL-1080p.mkv",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games Mockingjay Part 2 (2015)/The Hunger Games- Mockingjay - Part 2 (2015) WEBDL-1080p.mkv",
+        "file": "Z:\\Movies\\The Hunger Games Mockingjay Part 2 (2015)\\The Hunger Games- Mockingjay - Part 2 (2015) WEBDL-1080p.mkv",
+        "playCount": null,
+        "lastPlayed": "2021-02-03 02:20:00",
+        "dateAdded": "2021-02-02 10:41:18",
+        "movie": "The Hunger Games: Mockingjay - Part 2",
+        "name": "The Hunger Games: Mockingjay - Part 2",
+        "title": "The Hunger Games: Mockingjay - Part 2",
+        "genre": "Action / Adventure / Science Fiction",
+        "director": "Danny Strong / Peter Craig / Suzanne Collins",
+        "producer": "Francis Lawrence",
+        "premiered": "2015-11-18",
+        "originCountry": "Germany",
+        "rating": 6.9,
+        "resumeTimeInSeconds": 1176.585,
+        "totalTimeInSeconds": 8214.707,
+        "imdb": "44",
+        "year": null,
+        "blurb": "The fire will burn forever.",
+        "description": "With the nation of Panem in a full scale war, Katniss confronts President Snow in the final showdown. Teamed with a group of her closest friends – including Gale, Finnick, and Peeta – Katniss goes off on a mission with the unit from District 13 as they risk their lives to stage an assassination attempt on President Snow who has become increasingly obsessed with destroying her. The mortal traps, enemies, and moral choices that await Katniss will challenge her more than any arena she faced in The Hunger Games.",
+        "art": [
+          {
+            "art_id": 556,
+            "media_id": 7,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/vPToLA075RgDEKllFYAq5BaMxKU.jpg"
+          },
+          {
+            "art_id": 557,
+            "media_id": 7,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/lImKHDfExAulp16grYm8zD5eONE.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Captain Marvel",
+      "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) UHD.mkv",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 24,
+        "userrating": null,
+        "filename": "Captain Marvel (2019) UHD.mkv",
+        "path": "Z:\\Movies\\Captain Marvel (2019)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Captain Marvel (2019)/Captain Marvel (2019) UHD.mkv",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Captain Marvel (2019)/Captain Marvel (2019) UHD.mkv",
+        "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) UHD.mkv",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 10:55:14",
+        "movie": "Captain Marvel",
+        "name": "Captain Marvel",
+        "title": "Captain Marvel",
+        "genre": "Action / Adventure / Science Fiction",
+        "director": "Ryan Fleck / Anna Boden / Geneva Robertson-Dworet",
+        "producer": "Ryan Fleck / Anna Boden",
+        "premiered": "2019-03-06",
+        "originCountry": "United States of America",
+        "rating": 7,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "82",
+        "year": null,
+        "blurb": "Higher. Further. Faster.",
+        "description": "The story follows Carol Danvers as she becomes one of the universe’s most powerful heroes when Earth is caught in the middle of a galactic war between two alien races. Set in the 1990s, Captain Marvel is an all-new adventure from a previously unseen period in the history of the Marvel Cinematic Universe.",
+        "art": [
+          {
+            "art_id": 1017,
+            "media_id": 24,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/w2PMyoyLU22YvrGK3smVM9fW1jj.jpg"
+          },
+          {
+            "art_id": 1018,
+            "media_id": 24,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/AtsgWhDnHTq68L0lLsUrCnM7TjG.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "The Hunger Games: Mockingjay - Part 1",
+      "file": "Z:\\Movies\\The Hunger Games- Mockingjay - Part 1 (2014)\\The Hunger Games - Mockingjay - Part 1 (2014).mkv",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 20,
+        "userrating": null,
+        "filename": "The Hunger Games - Mockingjay - Part 1 (2014).mkv",
+        "path": "Z:\\Movies\\The Hunger Games- Mockingjay - Part 1 (2014)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games- Mockingjay - Part 1 (2014)/The Hunger Games - Mockingjay - Part 1 (2014).mkv",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games- Mockingjay - Part 1 (2014)/The Hunger Games - Mockingjay - Part 1 (2014).mkv",
+        "file": "Z:\\Movies\\The Hunger Games- Mockingjay - Part 1 (2014)\\The Hunger Games - Mockingjay - Part 1 (2014).mkv",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 14:48:51",
+        "movie": "The Hunger Games: Mockingjay - Part 1",
+        "name": "The Hunger Games: Mockingjay - Part 1",
+        "title": "The Hunger Games: Mockingjay - Part 1",
+        "genre": "Science Fiction / Adventure / Thriller",
+        "director": "Danny Strong / Peter Craig / Suzanne Collins",
+        "producer": "Francis Lawrence",
+        "premiered": "2014-11-19",
+        "originCountry": "United States of America",
+        "rating": 6.8,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "74",
+        "year": null,
+        "blurb": "Fire burns brighter in the darkness",
+        "description": "Katniss Everdeen reluctantly becomes the symbol of a mass rebellion against the autocratic Capitol.",
+        "art": [
+          {
+            "art_id": 868,
+            "media_id": 20,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/rYsdoUqkltpKZQWwCWXf55csXvL.jpg"
+          },
+          {
+            "art_id": 869,
+            "media_id": 20,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/ezHakxJHVXdPI6h3TKssEwXYtsg.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Wonder Woman 1984",
+      "file": "Z:\\Movies\\Wonder Woman 1984 (2020)\\Wonder Woman 1984 (2020).m4v",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 21,
+        "userrating": null,
+        "filename": "Wonder Woman 1984 (2020).m4v",
+        "path": "Z:\\Movies\\Wonder Woman 1984 (2020)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Wonder Woman 1984 (2020)/Wonder Woman 1984 (2020).m4v",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Wonder Woman 1984 (2020)/Wonder Woman 1984 (2020).m4v",
+        "file": "Z:\\Movies\\Wonder Woman 1984 (2020)\\Wonder Woman 1984 (2020).m4v",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 14:48:05",
+        "movie": "Wonder Woman 1984",
+        "name": "Wonder Woman 1984",
+        "title": "Wonder Woman 1984",
+        "genre": "Fantasy / Action / Adventure",
+        "director": "Patty Jenkins / Dave Callaham / Geoff Johns",
+        "producer": "Patty Jenkins",
+        "premiered": "2020-12-16",
+        "originCountry": "United States of America",
+        "rating": 7,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "76",
+        "year": null,
+        "blurb": "A new era of wonder begins.",
+        "description": "Wonder Woman comes into conflict with the Soviet Union during the Cold War in the 1980s and finds a formidable foe by the name of the Cheetah.",
+        "art": [
+          {
+            "art_id": 1011,
+            "media_id": 21,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/srYya1ZlI97Au4jUYAktDe3avyA.jpg"
+          },
+          {
+            "art_id": 1012,
+            "media_id": 21,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Ready Player One",
+      "file": "Z:\\Movies\\Ready Player One (2018)\\Ready Player One (2018).mkv",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 3,
+        "userrating": null,
+        "filename": "Ready Player One (2018).mkv",
+        "path": "Z:\\Movies\\Ready Player One (2018)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/Ready Player One (2018)/Ready Player One (2018).mkv",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/Ready Player One (2018)/Ready Player One (2018).mkv",
+        "file": "Z:\\Movies\\Ready Player One (2018)\\Ready Player One (2018).mkv",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2018-06-17 19:05:40",
+        "movie": "Ready Player One",
+        "name": "Ready Player One",
+        "title": "Ready Player One",
+        "genre": "Science Fiction / Adventure / Action",
+        "director": "Zak Penn / Ernest Cline / Ernest Cline",
+        "producer": "Steven Spielberg",
+        "premiered": "2018-03-28",
+        "originCountry": "United States of America",
+        "rating": 7.6,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "37",
+        "year": null,
+        "blurb": "A better reality awaits.",
+        "description": "When the creator of a popular video game system dies, a virtual contest is created to compete for his fortune.",
+        "art": [
+          {
+            "art_id": 315,
+            "media_id": 3,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/q7fXcrDPJcf6t3rzutaNwTzuKP1.jpg"
+          },
+          {
+            "art_id": 316,
+            "media_id": 3,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/pU1ULUq8D3iRxl1fdX2lZIzdHuI.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "The Hunger Games",
+      "file": "Z:\\Movies\\The Hunger Games (2012)\\The Hunger Games (2012).m4v",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 14,
+        "userrating": null,
+        "filename": "The Hunger Games (2012).m4v",
+        "path": "Z:\\Movies\\The Hunger Games (2012)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games (2012)/The Hunger Games (2012).m4v",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games (2012)/The Hunger Games (2012).m4v",
+        "file": "Z:\\Movies\\The Hunger Games (2012)\\The Hunger Games (2012).m4v",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 11:08:24",
+        "movie": "The Hunger Games",
+        "name": "The Hunger Games",
+        "title": "The Hunger Games",
+        "genre": "Science Fiction / Adventure / Fantasy",
+        "director": "Billy Ray / Gary Ross / Suzanne Collins / Suzanne Collins",
+        "producer": "Gary Ross",
+        "premiered": "2012-03-12",
+        "originCountry": "United States of America",
+        "rating": 7.2,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "58",
+        "year": null,
+        "blurb": "May The Odds Be Ever In Your Favor.",
+        "description": "Every year in the ruins of what was once North America, the nation of Panem forces each of its twelve districts to send a teenage boy and girl to compete in the Hunger Games.  Part twisted entertainment, part government intimidation tactic, the Hunger Games are a nationally televised event in which “Tributes” must fight with one another until one survivor remains.  Pitted against highly-trained Tributes who have prepared for these Games their entire lives, Katniss is forced to rely upon her sharp instincts as well as the mentorship of drunken former victor Haymitch Abernathy.  If she’s ever to return home to District 12, Katniss must make impossible choices in the arena that weigh survival against humanity and life against love. The world will be watching.",
+        "art": [
+          {
+            "art_id": 769,
+            "media_id": 14,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "https://image.tmdb.org/t/p/original/lo5cbqXvUwtfnl4K8ySiM6FWCu9.jpg"
+          },
+          {
+            "art_id": 770,
+            "media_id": 14,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "https://image.tmdb.org/t/p/original/iQK0pkTQC60XR3Zlu2pp8kujoqW.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "name": "The Hunger Games: Catching Fire",
+      "file": "Z:\\Movies\\The Hunger Games- Catching Fire (2013)\\The Hunger Games - Catching Fire (2013).m4v",
+      "muxAudio": true,
+      "progress": true,
+      "metadata": {
+        "idMovie": 18,
+        "userrating": null,
+        "filename": "The Hunger Games - Catching Fire (2013).m4v",
+        "path": "Z:\\Movies\\The Hunger Games- Catching Fire (2013)\\",
+        "direct": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games- Catching Fire (2013)/The Hunger Games - Catching Fire (2013).m4v",
+        "link": "http://snow.inq.email:8337/woobi/direct/Movies/The Hunger Games- Catching Fire (2013)/The Hunger Games - Catching Fire (2013).m4v",
+        "file": "Z:\\Movies\\The Hunger Games- Catching Fire (2013)\\The Hunger Games - Catching Fire (2013).m4v",
+        "playCount": null,
+        "lastPlayed": null,
+        "dateAdded": "2021-02-03 14:06:15",
+        "movie": "The Hunger Games: Catching Fire",
+        "name": "The Hunger Games: Catching Fire",
+        "title": "The Hunger Games: Catching Fire",
+        "genre": "Adventure / Action / Science Fiction",
+        "director": "Michael Arndt / Simon Beaufoy / Suzanne Collins",
+        "producer": "Francis Lawrence",
+        "premiered": "2013-11-15",
+        "originCountry": "United States of America",
+        "rating": 7.5,
+        "resumeTimeInSeconds": null,
+        "totalTimeInSeconds": null,
+        "imdb": "71",
+        "year": null,
+        "blurb": "Every revolution begins with a spark.",
+        "description": "Katniss Everdeen has returned home safe after winning the 74th Annual Hunger Games along with fellow tribute Peeta Mellark. Winning means that they must turn around and leave their family and close friends, embarking on a \"Victor's Tour\" of the districts. Along the way Katniss senses that a rebellion is simmering, but the Capitol is still very much in control as President Snow prepares the 75th Annual Hunger Games (The Quarter Quell) - a competition that could change Panem forever.",
+        "art": [
+          {
+            "art_id": 849,
+            "media_id": 18,
+            "media_type": "movie",
+            "type": "fanart",
+            "url": "Z:\\Movies\\The Hunger Games- Catching Fire (2013)\\fanart.jpg"
+          },
+          {
+            "art_id": 850,
+            "media_id": 18,
+            "media_type": "movie",
+            "type": "poster",
+            "url": "Z:\\Movies\\The Hunger Games- Catching Fire (2013)\\poster.jpg"
+          }
+        ]
+      }
+    }
+  ],
+  "loop": true,
+  "noTransition": true,
+  "hls": {
+    "type": "hls",
+    "name": "Movies",
+    "passthrough": true,
+    "muxAudio": false,
+    "muxVideo": false
+  },
+  "assets": [
+    {
+      "type": "udpStream",
+      "port": 13337,
+      "host": "0.0.0.0",
+      "name": "streamMovies"
+    }
+  ],
+  "channel": "Movies",
+  "id": "movies"
+}

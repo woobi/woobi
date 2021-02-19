@@ -1,0 +1,78 @@
+{
+  "files": [
+    {
+      "name": "Captain Marvel",
+      "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) 1080p.m4v",
+      "progress": true,
+      "muxAudio": true,
+      "metadata": {
+        "name": "Captain Marvel",
+        "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) 1080p.m4v",
+        "path": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) 1080p.m4v"
+      }
+    },
+    {
+      "name": "Captain Marvel",
+      "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) UHD.mkv",
+      "progress": true,
+      "muxAudio": true,
+      "metadata": {
+        "name": "Captain Marvel",
+        "file": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) UHD.mkv",
+        "path": "Z:\\Movies\\Captain Marvel (2019)\\Captain Marvel (2019) UHD.mkv"
+      }
+    },
+    {
+      "name": "Chef",
+      "file": "Z:\\Movies\\Chef (2014)\\Chef (2014).m4v",
+      "progress": true,
+      "muxAudio": true,
+      "metadata": {
+        "name": "Chef",
+        "file": "Z:\\Movies\\Chef (2014)\\Chef (2014).m4v",
+        "path": "Z:\\Movies\\Chef (2014)\\Chef (2014).m4v"
+      }
+    },
+    {
+      "name": "Coyote Ugly",
+      "file": "Z:\\Movies\\Coyote Ugly (2000)\\Coyote Ugly (2000).mkv",
+      "progress": true,
+      "muxAudio": true,
+      "metadata": {
+        "name": "Coyote Ugly",
+        "file": "Z:\\Movies\\Coyote Ugly (2000)\\Coyote Ugly (2000).mkv",
+        "path": "Z:\\Movies\\Coyote Ugly (2000)\\Coyote Ugly (2000).mkv"
+      }
+    },
+    {
+      "name": "Emma.",
+      "file": "Z:\\Movies\\Emma. (2020)\\Emma (2020).mp4",
+      "progress": true,
+      "muxAudio": true,
+      "metadata": {
+        "name": "Emma.",
+        "file": "Z:\\Movies\\Emma. (2020)\\Emma (2020).mp4",
+        "path": "Z:\\Movies\\Emma. (2020)\\Emma (2020).mp4"
+      }
+    }
+  ],
+  "loop": true,
+  "noTransition": true,
+  "hls": {
+    "type": "hls",
+    "name": "Chill",
+    "passthrough": true,
+    "muxAudio": false,
+    "muxVideo": false
+  },
+  "assets": [
+    {
+      "type": "udpStream",
+      "port": 13334,
+      "host": "0.0.0.0",
+      "name": "streamEmma"
+    }
+  ],
+  "channel": "Chill",
+  "id": "chill"
+}
