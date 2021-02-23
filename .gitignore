@@ -37,6 +37,7 @@ video/*
 bin/*
 heap*
 media*/
+wobbles/*
 local/*
 .yarn*
 wobbles/*
