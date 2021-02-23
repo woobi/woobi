@@ -39,6 +39,7 @@ heap*
 media*/
 local/*
 .yarn*
+wobbles/*
 package-lock.json
 .pnp.js
 yarn.lock
