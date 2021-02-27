@@ -33,6 +33,7 @@ build*
 # Dependency directories
 node_modules
 jspm_packages
+/test
 video/*
 bin/*
 heap*

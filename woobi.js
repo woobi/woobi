@@ -1,4 +1,6 @@
+require('dotenv').config()
 var debug = require('debug')('woobi:main');
+//debug.log = console.info.bind(console);
 var _ = require('lodash');
 var path = require('path');
 var async = require('async');
@@ -20,6 +22,9 @@ var Woobi = function() {
 	
 	EventEmitter.call(this);
 	
+	
+	this.debug = debug;
+
 	this._options = {
 		name: 'woobi',
 		'module root': moduleRoot,
@@ -44,7 +49,6 @@ var Woobi = function() {
 		},
 		'keep open': false,
 		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe',
-		wobbleConfigPath: path.join(moduleRoot, 'wobbles'),
 		wobbles: 'wobbles',
 		wobble: 'wobble',
 	}
@@ -103,13 +107,11 @@ Woobi.prototype.init = function (opts, callback) {
 		// where to save files
 		this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
 		this.dvrPath = opts.dvrPath || path.join(this.mediaPath, 'dvr');
-		
-		this.wobbleConfigPath = this._options.wobbleConfigPath
 		this.wobbles = this._options.wobbles
 		this.wobble = this._options.wobble
-
-
-		fs.ensureDir(path.join(this.mediaPath, this.wobbles), (err) => {
+		this.wobblePath = path.join(this.mediaPath, this.wobbles)
+		
+		fs.ensureDir(this.wobblePath, (err) => {
 			if(err) debug('Error creating mediaPath dir for wobbles', err);
 		
 			this.fillers = [{
