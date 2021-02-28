@@ -40,10 +40,13 @@ var Woobi = function() {
 		env: process.env.ENV || 'production',
 		artStringReplace: function(art) {
 			//console.log(art);
+			if(!art) return '';
+
 			art = art.replace('Z:', 'http://localhost:8337/woobi/media');
 			return art.replace(/\\/g, '/');
 		},
 		videoStringReplace: function(art) {
+			if(!art) return '';
 			art = art.replace('Z:', 'http://localhost:8337/woobi/direct');
 			return art.replace(/\\/g, '/');
 		},
@@ -228,7 +231,9 @@ _.extend(Woobi.prototype, require('./lib/core/options')());
 _.extend(Woobi.prototype, require('./lib/core/createServer')());
 
 Woobi.prototype.addChannel = function(channel, opts) {
-		
+	
+	channel = this.camelCaseSanitize(channel);
+	
 	return new Promise((resolve, reject) => { 
 		
 		debug('Add Channel ' + channel);
