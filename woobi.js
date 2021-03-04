@@ -149,7 +149,7 @@ Woobi.prototype.init = function (opts, callback) {
 						y: '(h-text_h)-10'
 					}
 				},
-				file: path.join(Broadcast.get('module root'), 'lib','assets','river60.mp4'),
+				file: path.join(Broadcast.get('module root'), 'lib','assets','river.mp4'),
 			}];
 			// filler vid used to go between programs
 			// text can be changed to the program name
