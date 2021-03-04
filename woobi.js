@@ -54,8 +54,8 @@ var Woobi = function() {
 		},
 		'keep open': false,
 		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe',
-		wobbles: 'channels',
-		wobble: 'channel',
+		channels: 'channels',
+		channel: 'channel',
 	}
 	
 	this.version = require('./package.json').version;
@@ -120,8 +120,8 @@ Woobi.prototype.init = function (opts, callback) {
 		this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
 		this.dvrPath = opts.dvrPath || path.join(this.mediaPath, 'dvr');
 		this.proxyRoot = this._options['proxy api'];
-		this.wobbles = this._options.wobbles
-		this.wobble = this._options.wobble
+		this.wobbles = this._options.channels
+		this.wobble = this._options.channel
 		this.wobblePath = path.join(this.mediaPath, this.wobbles)
 		
 		fs.ensureDir(this.wobblePath, (err) => {
@@ -143,13 +143,13 @@ Woobi.prototype.init = function (opts, callback) {
 						box: 1,
 						boxcolor: 'black',
 						boxborderw: 25,
-						//boxw: 1000,
-						//boxh: 200,
+						//w: 'w',
+						//h: 200,
 						x: '(w-text_w)/2',
-						y: '(h-text_h)-50'
+						y: '(h-text_h)-10'
 					}
 				},
-				file: path.join(Broadcast.get('module root'), 'lib','assets','river.mp4'),
+				file: path.join(Broadcast.get('module root'), 'lib','assets','river60.mp4'),
 			}];
 			// filler vid used to go between programs
 			// text can be changed to the program name
@@ -200,22 +200,29 @@ Woobi.prototype.init = function (opts, callback) {
 				(err) => {
 					//debug('Init finished');
 					if (opts.loadSaved === true) {
-						this.libs._mongo.ChannelConfig.model.find({ autostart: true }).lean().exec((err, docs) => {
-							debug('start saved channels', err);
-							if (docs) {
-								docs.forEach(c => {
-									let channel = JSON.parse(c.config);
-									this.addChannel(c.name, channel)
-									.catch(e => {
-										debug('error starting', e);
-									});
-								});
-							} 
-							if(_.isFunction(callback)) {
-								callback();
-							}
-							resolve();
-						});
+						debug('start saved channels');
+						let filenames = fs.readdirSync(Broadcast.wobblePath);
+						filenames.filter(r => path.extname(r) == '.json').forEach(file => { 
+							let channel = fs.readJsonSync(path.join( Broadcast.wobblePath, file), { throws: false })
+							//debug(channel)
+							let clone = { ...channel };
+							delete clone.files;
+							delete clone.currentSources;
+							delete clone.currentHistory;
+							this.addChannel(channel.channel, {
+								...clone,
+								files: channel.currentSources || channel.files
+							})
+							.catch(e => {
+								debug('error starting', e);
+							}); 
+						}); 
+						
+						if(_.isFunction(callback)) {
+							callback();
+						}
+						return resolve();
+						
 					} else {
 						if (_.isFunction(callback)) {
 							callback();
