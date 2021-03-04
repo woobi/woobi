@@ -45,6 +45,7 @@ wobbles/*
 package-lock.json
 .pnp.js
 yarn.lock
+docs
 
 # Optional npm cache directory
 .npm
