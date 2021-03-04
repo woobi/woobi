@@ -12,6 +12,8 @@ var util = require('util');
 
 var Broadcast;
 
+process.setMaxListeners(125);
+
 var moduleRoot = (function(_rootPath) {
 	var parts = _rootPath.split(path.sep);
 	parts.pop(); //get rid of /node_modules from the end of the path
@@ -23,16 +25,16 @@ var Woobi = function() {
 	EventEmitter.call(this);
 	
 	
-	this.debug = debug;
+	//console.info = debug;
 
 	this._options = {
 		name: 'woobi',
 		'module root': moduleRoot,
 		moduleRoot: moduleRoot,
 		'media passthrough route': '/media',
-		'media passthrough path': '/media',
+		'media passthrough path': '',
 		'video passthrough route': '/direct',
-		'video passthrough path': '/direct',
+		'video passthrough path': '',
 		port: 8337,
 		proxy: false,
 		host: 'localhost',
@@ -40,17 +42,20 @@ var Woobi = function() {
 		env: process.env.ENV || 'production',
 		artStringReplace: function(art) {
 			//console.log(art);
+			if(!art) return '';
+
 			art = art.replace('Z:', 'http://localhost:8337/woobi/media');
 			return art.replace(/\\/g, '/');
 		},
 		videoStringReplace: function(art) {
+			if(!art) return '';
 			art = art.replace('Z:', 'http://localhost:8337/woobi/direct');
 			return art.replace(/\\/g, '/');
 		},
 		'keep open': false,
 		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe',
-		wobbles: 'wobbles',
-		wobble: 'wobble',
+		channels: 'channels',
+		channel: 'channel',
 	}
 	
 	this.version = require('./package.json').version;
@@ -64,8 +69,9 @@ var Woobi = function() {
 	this.nextSocketId = 0;
 	
 	// source and stream libs
+	debug('IMport methods')
 	this.Source = this.import('lib/source');
-	this.Stream = this.import('lib/stream');
+	this.Stream = this.import('lib/stream', this);
 	/**
 	 * Channel management
 	 * var myChannel = new ss.Channel('8', properties);
@@ -74,12 +80,18 @@ var Woobi = function() {
 	this.Presets =  require('./lib/presets.js')(this);
 	
 	Broadcast = this;
+	console.info('#### Woobie Created ##########################################');
+	console.info('##');
+	console.info('##');
 	
 	return this;
 }
 
 // attach the event emitter
 util.inherits(Woobi, EventEmitter);
+
+// options and utils
+_.extend(Woobi.prototype, require('./lib/core/options')());
 
 Woobi.prototype.init = function (opts, callback) {
 	
@@ -107,36 +119,44 @@ Woobi.prototype.init = function (opts, callback) {
 		// where to save files
 		this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
 		this.dvrPath = opts.dvrPath || path.join(this.mediaPath, 'dvr');
-		this.wobbles = this._options.wobbles
-		this.wobble = this._options.wobble
+		this.proxyRoot = this._options['proxy api'];
+		this.wobbles = this._options.channels
+		this.wobble = this._options.channel
 		this.wobblePath = path.join(this.mediaPath, this.wobbles)
 		
 		fs.ensureDir(this.wobblePath, (err) => {
 			if(err) debug('Error creating mediaPath dir for wobbles', err);
 		
 			this.fillers = [{
-				name: 'woobi', 
-				image: true,
-				inputOptions: '',
+				name: 'filler', 
+				_default: true,
+				debug: false,
+				encode: true,
 				videoFilters: {
 					filter: 'drawtext',
 					options: {
 						//fontfile: '/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
 						text: 'woobi will continue streaming soon',
+						fontfile: path.join(Broadcast.get('module root'), 'lib','assets','Chalkboy.ttf'), 
 						fontcolor: 'white',
-						fontsize: 100,
+						fontsize: 50,
 						box: 1,
-						boxcolor: 'black@0.25',
+						boxcolor: 'black',
 						boxborderw: 25,
-						x: '(w-text_w)',
-						y: '(h-text_h)/2'
+						//w: 'w',
+						//h: 200,
+						x: '(w-text_w)/2',
+						y: '(h-text_h)-10'
 					}
 				},
-				file: path.join(Broadcast.get('module root'), 'lib','assets','fill.jpg'),
+				file: path.join(Broadcast.get('module root'), 'lib','assets','river60.mp4'),
 			}];
-			
+			// filler vid used to go between programs
+			// text can be changed to the program name
 			this.filler = this.fillers[0];
+			// a simple audio file to overlay any videos without an audio stream.
 			this.apad = path.join(Broadcast.get('module root'), 'lib','assets','bg1.mp3')
+
 			if ( opts.proxy ) {
 				debug('got opts.proxy', opts.proxy)
 				if ( opts.proxy === true )  {
@@ -146,6 +166,12 @@ Woobi.prototype.init = function (opts, callback) {
 				this.Stream.proxy.server(opts.proxy, (err, result) => {
 					if(err) console.log('ERROR', err);
 					this.set( 'keep open', true );
+					if(!err) {
+						console.info('#### Server Started ');
+						console.info('##');
+						console.info('##   ' + this.host + ':' + this.port + '/status');
+						console.info('##');
+					}
 					finish.call( this );
 				});
 			} else {
@@ -172,28 +198,38 @@ Woobi.prototype.init = function (opts, callback) {
 					} else next();
 				},
 				(err) => {
-					debug('Init finished');
+					//debug('Init finished');
 					if (opts.loadSaved === true) {
-						this.libs._mongo.ChannelConfig.model.find({ autostart: true }).lean().exec((err, docs) => {
-							debug('start saved channels', err);
-							if (docs) {
-								docs.forEach(c => {
-									let channel = JSON.parse(c.config);
-									this.addChannel(c.name, channel)
-									.catch(e => {
-										debug('error starting', e);
-									});
-								});
-							} 
-							if(_.isFunction(callback)) {
-								callback();
-							}
-							resolve();
-						});
+						debug('start saved channels');
+						let filenames = fs.readdirSync(Broadcast.wobblePath);
+						filenames.filter(r => path.extname(r) == '.json').forEach(file => { 
+							let channel = fs.readJsonSync(path.join( Broadcast.wobblePath, file), { throws: false })
+							//debug(channel)
+							let clone = { ...channel };
+							delete clone.files;
+							delete clone.currentSources;
+							delete clone.currentHistory;
+							this.addChannel(channel.channel, {
+								...clone,
+								files: channel.currentSources || channel.files
+							})
+							.catch(e => {
+								debug('error starting', e);
+							}); 
+						}); 
+						
+						if(_.isFunction(callback)) {
+							callback();
+						}
+						return resolve();
+						
 					} else {
 						if (_.isFunction(callback)) {
 							callback();
 						}
+						console.info('##');
+						console.info('#### Initialized  ');
+						console.info('##');
 						resolve();
 						return; 
 					}
@@ -222,13 +258,13 @@ Woobi.prototype.notify = function(emitter, data) {
 	this.emit( emitter, data );
 }
 
-// options and utils
-_.extend(Woobi.prototype, require('./lib/core/options')());
 // standalone server
 _.extend(Woobi.prototype, require('./lib/core/createServer')());
 
 Woobi.prototype.addChannel = function(channel, opts) {
-		
+	
+	channel = this.camelCaseSanitize(channel);
+	
 	return new Promise((resolve, reject) => { 
 		
 		debug('Add Channel ' + channel);
@@ -245,7 +281,12 @@ Woobi.prototype.addChannel = function(channel, opts) {
 			if ( Broadcast._options.proxy ) {
 				Broadcast.notify('channels', Broadcast.socketListeners.channels());
 			}
-			
+			console.info('##');
+			console.info('#### Channel Added ');
+			console.info('##');
+			console.info('##   ' + channel);
+			console.info('##   ' + this.host + ':' + this.port + '/' + c.id);
+			console.info('##');
 			return resolve(this.channels[channel]);
 		
 		});
