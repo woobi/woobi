@@ -10,7 +10,7 @@ var sanitize = require('sanitize-filename');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-var Broadcast;
+var Woobi;
 
 process.setMaxListeners(125);
 
@@ -19,16 +19,21 @@ var moduleRoot = (function(_rootPath) {
 	parts.pop(); //get rid of /node_modules from the end of the path
 	return parts.join(path.sep);
 })(module.paths[0]);
-
-var Woobi = function() {
+/**
+ * @class
+ * 
+ */
+var Broadcast = function() {
 	
 	EventEmitter.call(this);
 	
-	
+	/**
+	 * @contructor
+	 */
 	//console.info = debug;
 
 	this._options = {
-		name: 'woobi',
+		name: 'Broadcast',
 		'module root': moduleRoot,
 		moduleRoot: moduleRoot,
 		'media passthrough route': '/media',
@@ -56,6 +61,9 @@ var Woobi = function() {
 		'session secret': 'asdfnu8e73q2fh9q8wegf7qawfe',
 		channels: 'channels',
 		channel: 'channel',
+		loadSaved: false,
+		loadSavedExclude: [],
+		adapters:[]
 	}
 	
 	this.version = require('./package.json').version;
@@ -79,7 +87,6 @@ var Woobi = function() {
 	this.Channel =  require('./lib/channel.js')(this);
 	this.Presets =  require('./lib/presets.js')(this);
 	
-	Broadcast = this;
 	console.info('#### Woobie Created ##########################################');
 	console.info('##');
 	console.info('##');
@@ -88,24 +95,27 @@ var Woobi = function() {
 }
 
 // attach the event emitter
-util.inherits(Woobi, EventEmitter);
+util.inherits(Broadcast, EventEmitter);
 
 // options and utils
-_.extend(Woobi.prototype, require('./lib/core/options')());
-
-Woobi.prototype.init = function (opts, callback) {
+_.extend(Broadcast.prototype, require('./lib/core/options')());
+/**
+ *  @method
+ * @param {*} opts 
+ * @param {*} callback 
+ */
+Broadcast.prototype.init = function (options, callback) {
 	
 	return new Promise ((resolve, reject) => {
-		if(!_.isArray(opts.adapters)) {
-			debug('No adapter configs found!');
-			opts.adapters = [];
-		}
+		
 		debug('init! ');
+		var opts = {
+			...this._options,
+			...options
+		}
 		
-		Object.assign(this._options, opts);
-		
-		debug('init! ', opts);
-		
+		this._options = opts;
+				
 		this.channelPort = opts.channelPort || 13000;
 		this.host = opts.host ? this.set('host', opts.host || 'localhost').get('host') : this.get('host');
 		
@@ -137,7 +147,7 @@ Woobi.prototype.init = function (opts, callback) {
 					options: {
 						//fontfile: '/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
 						text: 'woobi will continue streaming soon',
-						fontfile: path.join(Broadcast.get('module root'), 'lib','assets','Chalkboy.ttf'), 
+						fontfile: path.join(this.get('module root'), 'lib','assets','Chalkboy.ttf'), 
 						fontcolor: 'white',
 						fontsize: 50,
 						box: 1,
@@ -149,13 +159,13 @@ Woobi.prototype.init = function (opts, callback) {
 						y: '(h-text_h)-10'
 					}
 				},
-				file: path.join(Broadcast.get('module root'), 'lib','assets','river.mp4'),
+				file: path.join(this.get('module root'), 'lib','assets','river.mp4'),
 			}];
 			// filler vid used to go between programs
 			// text can be changed to the program name
 			this.filler = this.fillers[0];
 			// a simple audio file to overlay any videos without an audio stream.
-			this.apad = path.join(Broadcast.get('module root'), 'lib','assets','bg1.mp3')
+			this.apad = path.join(this.get('module root'), 'lib','assets','bg1.mp3')
 
 			if ( opts.proxy ) {
 				debug('got opts.proxy', opts.proxy)
@@ -199,11 +209,12 @@ Woobi.prototype.init = function (opts, callback) {
 				},
 				(err) => {
 					//debug('Init finished');
+					/* load saved configs if requested */
 					if (opts.loadSaved === true) {
 						debug('start saved channels');
-						let filenames = fs.readdirSync(Broadcast.wobblePath);
-						filenames.filter(r => path.extname(r) == '.json').forEach(file => { 
-							let channel = fs.readJsonSync(path.join( Broadcast.wobblePath, file), { throws: false })
+						let filenames = fs.readdirSync(this.wobblePath);
+						filenames.filter(r => path.extname(r) == '.json' && !opts.loadSavedExclude.includes(path.basename(r, '.json'))).forEach(file => { 
+							let channel = fs.readJsonSync(path.join( this.wobblePath, file), { throws: false })
 							//debug(channel)
 							let clone = { ...channel };
 							delete clone.files;
@@ -239,16 +250,26 @@ Woobi.prototype.init = function (opts, callback) {
 	}); //end promise
 }
 
+/**
+ * @method
+ * @param {*} str 
+ */
 // use camelCase for ids and filenames
-Woobi.prototype.camelCaseSanitize = function camelCase(str) { 
+Broadcast.prototype.camelCaseSanitize = function camelCase(str) { 
 	return sanitize(str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) 
 	{ 
 		return index == 0 ? word.toLowerCase() : word.toUpperCase(); 
 	}).replace(/\s+/g, '')); 
 } 
 
+/**
+ * notify
+ * @method
+ * @param {*} emitter 
+ * @param {*} data 
+ */
 // send socket notifications
-Woobi.prototype.notify = function(emitter, data) {
+Broadcast.prototype.notify = function(emitter, data) {
 	//debug(emitter, data)
 	if ( this.lodge ) {
 		process.nextTick(() => {
@@ -259,9 +280,15 @@ Woobi.prototype.notify = function(emitter, data) {
 }
 
 // standalone server
-_.extend(Woobi.prototype, require('./lib/core/createServer')());
+_.extend(Broadcast.prototype, require('./lib/core/createServer')());
 
-Woobi.prototype.addChannel = function(channel, opts) {
+/**
+ * addChannel
+ * @method
+ * @param {*} channel 
+ * @param {*} opts 
+ */
+Broadcast.prototype.addChannel = function(channel, opts) {
 	
 	channel = this.camelCaseSanitize(channel);
 	
@@ -278,8 +305,8 @@ Woobi.prototype.addChannel = function(channel, opts) {
 			if(err) return reject(err);
 			
 			debug('Added Channel ' + channel); 
-			if ( Broadcast._options.proxy ) {
-				Broadcast.notify('channels', Broadcast.socketListeners.channels());
+			if ( this._options.proxy ) {
+				this.notify('channels', this.socketListeners.channels());
 			}
 			console.info('##');
 			console.info('#### Channel Added ');
@@ -293,7 +320,14 @@ Woobi.prototype.addChannel = function(channel, opts) {
 	});
 }
 
-Woobi.prototype.addProgram = function(program, opts, callback) {
+/**
+ * addProgram
+ * @method
+ * @param {*} program 
+ * @param {*} opts 
+ * @param {*} callback 
+ */
+Broadcast.prototype.addProgram = function(program, opts, callback) {
 	opts.name = program;
 	return this.programs[program] = new this.Source.Program(opts, (err, data) => {
 		if(_.isFunction(callback)) {
@@ -304,18 +338,21 @@ Woobi.prototype.addProgram = function(program, opts, callback) {
 	});
 	
 }
-
-Woobi.prototype.randomName = function(pre) {
+/**
+ * 
+ * randomName
+ * @method
+ * @param {*} pre 
+ */
+Broadcast.prototype.randomName = function(pre) {
 	return sanitize((pre || '') + (+new Date).toString(36).slice(-15)).replace(/\s/g, "");;
 }
 
 
+/** 
+ * Manage broadcast channels
+ * @module Broadcast 
+ * 
+ * */
 
-
-/**
- * The exports object is an instance of Woobi.
- *
- * @api public
- */
-
-module.exports = Woobi;
+module.exports = Broadcast;
