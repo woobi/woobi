@@ -63,6 +63,7 @@ var Broadcast = function() {
 		channel: 'channel',
 		loadSaved: false,
 		loadSavedExclude: [],
+		savedConfigs: [],
 		adapters:[]
 	}
 	
@@ -77,7 +78,7 @@ var Broadcast = function() {
 	this.nextSocketId = 0;
 	
 	// source and stream libs
-	debug('IMport methods')
+	debug('Import methods')
 	this.Source = this.import('lib/source');
 	this.Stream = this.import('lib/stream', this);
 	/**
@@ -90,7 +91,7 @@ var Broadcast = function() {
 	console.info('#### Woobie Created ##########################################');
 	console.info('##');
 	console.info('##');
-	
+	debug(this.get('host'))
 	return this;
 }
 
@@ -130,19 +131,20 @@ Broadcast.prototype.init = function (options, callback) {
 		this.mediaPath = opts.mediaPath || path.join(this.get('module root'), 'media');
 		this.dvrPath = opts.dvrPath || path.join(this.mediaPath, 'dvr');
 		this.proxyRoot = this._options['proxy api'];
-		this.wobbles = this._options.channels
-		this.wobble = this._options.channel
-		this.wobblePath = path.join(this.mediaPath, this.wobbles)
+		this.wobbles = this._options.channels //whatever channels will be called
+		this.wobble = this._options.channel // same but for single
+		this.wobblePath = path.join(this.mediaPath, this.wobbles) // place to store the hls files for streaming and the json config files for channels
 		
+		// create the filler settings for transitions
 		fs.ensureDir(this.wobblePath, (err) => {
 			if(err) debug('Error creating mediaPath dir for wobbles', err);
-		
+			
 			this.fillers = [{
-				name: 'filler', 
-				_default: true,
+				name: 'Waiting for a source', 
+				_default: false,
 				debug: false,
-				encode: true,
-				videoFilters: {
+				overlay: false,
+				videoFilters1: {
 					filter: 'drawtext',
 					options: {
 						//fontfile: '/usr/share/fonts/truetype/freefont/FreeSerif.ttf',
@@ -159,11 +161,32 @@ Broadcast.prototype.init = function (options, callback) {
 						y: '(h-text_h)-10'
 					}
 				},
-				file: path.join(this.get('module root'), 'lib','assets','river.mp4'),
+				metadata:{},
+				file: opts.filler ? opts.filler : path.join(this.get('module root'), 'lib','assets','river.mp4'),
+				/*stream: this.Source.Fluent({
+					name: 'fillerStream',
+					loop: true,
+					file: fillfile,
+					metadata: {},
+					encode: true,
+					//progress: true
+				}).stream,
+				*/
+				
 			}];
+			
 			// filler vid used to go between programs
 			// text can be changed to the program name
 			this.filler = this.fillers[0];
+			// create a test video to push immediately to the broadcaster on end
+			/*this.quickFill = this.Source.Fluent({
+				name: 'fillerStream',
+				loop: true,
+				file: opts.quickFillFIle ? opts.quickFillFIle : path.join(this.get('module root'), 'lib','assets','river.mp4'),
+				metadata: {},
+				encode: true,
+				//progress: true
+			})*/
 			// a simple audio file to overlay any videos without an audio stream.
 			this.apad = path.join(this.get('module root'), 'lib','assets','bg1.mp3')
 
@@ -210,12 +233,13 @@ Broadcast.prototype.init = function (options, callback) {
 				(err) => {
 					//debug('Init finished');
 					/* load saved configs if requested */
-					if (opts.loadSaved === true) {
-						debug('start saved channels');
-						let filenames = fs.readdirSync(this.wobblePath);
-						filenames.filter(r => path.extname(r) == '.json' && !opts.loadSavedExclude.includes(path.basename(r, '.json'))).forEach(file => { 
-							let channel = fs.readJsonSync(path.join( this.wobblePath, file), { throws: false })
-							//debug(channel)
+					let filenames = fs.readdirSync(this.wobblePath);				
+					debug('get saved channels configs');
+					filenames.filter(r => path.extname(r) == '.json' ).forEach(file => { 
+						let channel = fs.readJsonSync(path.join( this.wobblePath, file), { throws: false })
+						//debug(channel)
+						if (opts.loadSaved === true && !opts.loadSavedExclude.includes(path.basename(r, '.json'))) {
+							debug('load saved channels config', channel.id);
 							let clone = { ...channel };
 							delete clone.files;
 							delete clone.currentSources;
@@ -226,24 +250,21 @@ Broadcast.prototype.init = function (options, callback) {
 							})
 							.catch(e => {
 								debug('error starting', e);
-							}); 
-						}); 
-						
-						if(_.isFunction(callback)) {
-							callback();
+							});
 						}
-						return resolve();
-						
-					} else {
-						if (_.isFunction(callback)) {
-							callback();
-						}
-						console.info('##');
-						console.info('#### Initialized  ');
-						console.info('##');
-						resolve();
-						return; 
+						debug('save config file for later', channel.channel)
+						this._options.savedConfigs.push(channel);
+					}); 
+					
+					if(_.isFunction(callback)) {
+						callback();
 					}
+										
+					console.info('##');
+					console.info('#### Initialized  ');
+					console.info('##');
+					return resolve(); 
+					
 				} 
 			);
 		}
@@ -308,6 +329,7 @@ Broadcast.prototype.addChannel = function(channel, opts) {
 			if ( this._options.proxy ) {
 				this.notify('channels', this.socketListeners.channels());
 			}
+			c.state.current = 'Stop';
 			console.info('##');
 			console.info('#### Channel Added ');
 			console.info('##');
