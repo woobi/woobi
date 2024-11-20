@@ -1,6 +1,6 @@
 require('dotenv').config()
 var debug = require('debug')('woobi:main');
-//debug.log = console.info.bind(console);
+//debug.log = debug.bind(console);
 var _ = require('lodash');
 var path = require('path');
 var async = require('async');
@@ -30,7 +30,7 @@ var Broadcast = function() {
 	/**
 	 * @contructor
 	 */
-	//console.info = debug;
+	//debug = debug;
 
 	this._options = {
 		name: 'Broadcast',
@@ -78,7 +78,7 @@ var Broadcast = function() {
 	this.nextSocketId = 0;
 	
 	// source and stream libs
-	debug('Import methods')
+	//debug('Import methods')
 	this.Source = this.import('lib/source');
 	this.Stream = this.import('lib/stream', this);
 	/**
@@ -88,10 +88,13 @@ var Broadcast = function() {
 	this.Channel =  require('./lib/channel.js')(this);
 	this.Presets =  require('./lib/presets.js')(this);
 	
-	console.info('#### Woobie Created ##########################################');
-	console.info('##');
-	console.info('##');
-	debug(this.get('host'))
+	debug('## ## ## ## ## ## ## ## ## ## ## ## ## ## ');
+	debug('##');
+	debug('## ##');
+	debug('## ## ## Woobie Created');
+	debug('## ## ## ## ## ## ## ## ## ##       ## ## ');
+	debug('## ## ## ## ## ## ## ## ## ## ## ## ## ## ');
+	//debug(this.get('host'))
 	return this;
 }
 
@@ -109,7 +112,7 @@ Broadcast.prototype.init = function (options, callback) {
 	
 	return new Promise ((resolve, reject) => {
 		
-		debug('init! ');
+		debug('## ', 'Start Woobi', '## ', );
 		var opts = {
 			...this._options,
 			...options
@@ -191,7 +194,7 @@ Broadcast.prototype.init = function (options, callback) {
 			this.apad = path.join(this.get('module root'), 'lib','assets','bg1.mp3')
 
 			if ( opts.proxy ) {
-				debug('got opts.proxy', opts.proxy)
+				//debug('got opts.proxy', opts.proxy)
 				if ( opts.proxy === true )  {
 					opts.proxy = {};
 				}
@@ -200,10 +203,9 @@ Broadcast.prototype.init = function (options, callback) {
 					if(err) console.log('ERROR', err);
 					this.set( 'keep open', true );
 					if(!err) {
-						console.info('#### Server Started ');
-						console.info('##');
-						console.info('##   ' + this.host + ':' + this.port + '/status');
-						console.info('##');
+						debug('####   Server Started  ####');
+						debug('##   ' + this.host + ':' + this.port + '/status');
+						debug('## ## ## ## ## ## ## ## ## ## ## ## ## ## ');
 					}
 					finish.call( this );
 				});
@@ -218,7 +220,7 @@ Broadcast.prototype.init = function (options, callback) {
 			if(opts.adapters.length === 0) {
 				opts.adapters = [];
 			}
-			debug('adapters! ');
+			debug('Loop through adapters and add new libraries to the object');
 			// set the correct library adapters
 			async.forEach(opts.adapters,
 				(v, next) => {
@@ -234,35 +236,38 @@ Broadcast.prototype.init = function (options, callback) {
 					//debug('Init finished');
 					/* load saved configs if requested */
 					let filenames = fs.readdirSync(this.wobblePath);				
-					debug('get saved channels configs');
+					//debug('get saved channels configs');
 					filenames.filter(r => path.extname(r) == '.json' ).forEach(file => { 
 						let channel = fs.readJsonSync(path.join( this.wobblePath, file), { throws: false })
 						//debug(channel)
-						if (opts.loadSaved === true && !opts.loadSavedExclude.includes(path.basename(r, '.json'))) {
-							debug('load saved channels config', channel.id);
-							let clone = { ...channel };
-							delete clone.files;
-							delete clone.currentSources;
-							delete clone.currentHistory;
-							this.addChannel(channel.channel, {
-								...clone,
-								files: channel.currentSources || channel.files
-							})
-							.catch(e => {
-								debug('error starting', e);
-							});
+						if(channel) {
+							if (opts.loadSaved === true && !opts.loadSavedExclude.includes(path.basename(file, '.json'))) {
+								debug('load saved channels config', channel.id);
+								let clone = { ...channel };
+								delete clone.files;
+								delete clone.currentSources;
+								delete clone.currentHistory;
+								this.addChannel(channel.channel, {
+									...clone,
+									files: channel.currentSources || channel.files
+								})
+								.catch(e => {
+									debug('error starting', e);
+								});
+							}
+							debug('save config file for later', channel.channel)
+							this._options.savedConfigs.push(channel);
 						}
-						debug('save config file for later', channel.channel)
-						this._options.savedConfigs.push(channel);
+							
 					}); 
 					
 					if(_.isFunction(callback)) {
 						callback();
 					}
 										
-					console.info('##');
-					console.info('#### Initialized  ');
-					console.info('##');
+					
+					debug('## Initialized  ');
+					
 					return resolve(); 
 					
 				} 
@@ -325,17 +330,19 @@ Broadcast.prototype.addChannel = function(channel, opts) {
 			
 			if(err) return reject(err);
 			
-			debug('Added Channel ' + channel); 
+			//debug('Added Channel ' + channel); 
 			if ( this._options.proxy ) {
 				this.notify('channels', this.socketListeners.channels());
 			}
 			c.state.current = 'Stop';
-			console.info('##');
-			console.info('#### Channel Added ');
-			console.info('##');
-			console.info('##   ' + channel);
-			console.info('##   ' + this.host + ':' + this.port + '/' + c.id);
-			console.info('##');
+			
+			
+			debug('## ## ## Channel Added  ## ## ## ## ## ##  ');
+			debug('##');
+			debug('##   ' + channel);
+			debug('##   ' + this.host + ':' + this.port + '/' + c.id);
+			debug('##');
+			debug('## ## ## ## ## ## ## ## ## ## ## ## ## ## ');
 			return resolve(this.channels[channel]);
 		
 		});
